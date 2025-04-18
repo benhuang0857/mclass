@@ -5,19 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Contact extends Model
+class NoticeType extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['member_id', 'city', 'region', 'address', 'mobile', 'mobile_valid'];
+    protected $fillable = [
+        'name',
+        'slug',
+        'sort',
+        'status',
+    ];
 
     protected $hidden = [
         'created_at',
         'updated_at',
     ];
 
-    public function member()
+    public function notices()
     {
-        return $this->belongsTo(Member::class);
+        return $this->hasMany(Notice::class);
     }
 }

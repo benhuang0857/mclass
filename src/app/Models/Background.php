@@ -14,6 +14,18 @@ class Background extends Model
         'highest_education', 'school', 'department', 'certificates'
     ];
 
+    protected $casts = [
+        'lang_types' => 'array',
+        'goals' => 'array',
+        'purposes' => 'array',
+        'certificates' => 'array',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function member()
     {
         return $this->belongsTo(Member::class);

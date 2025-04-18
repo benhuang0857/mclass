@@ -11,6 +11,11 @@ class Member extends Model
 
     protected $fillable = ['nickname', 'account', 'email', 'email_valid', 'password', 'status'];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function profile()
     {
         return $this->hasOne(Profile::class);

@@ -11,6 +11,11 @@ class Profile extends Model
 
     protected $fillable = ['member_id', 'lastname', 'firstname', 'gender', 'birthday', 'job'];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     public function member()
     {
         return $this->belongsTo(Member::class);

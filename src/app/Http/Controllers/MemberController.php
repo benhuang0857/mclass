@@ -24,11 +24,11 @@ class MemberController extends Controller
             'member.email' => 'required|email|max:255|unique:members,email',
             'member.email_valid' => 'required|boolean',
             'member.password' => 'required|string|min:8',
-            'member.status' => 'required|string',
+            'member.status' => 'required|boolean',
 
             'profile.lastname' => 'required|string|max:255',
             'profile.firstname' => 'required|string|max:255',
-            'profile.gender' => 'required|string',
+            'profile.gender' => 'required|in:male,female,other',
             'profile.birthday' => 'required|date',
             'profile.job' => 'required|string|max:255',
 
@@ -41,10 +41,10 @@ class MemberController extends Controller
             'background.lang_types' => 'required|array',
             'background.goals' => 'required|array',
             'background.purposes' => 'required|array',
-            'background.level' => 'required|string',
+            'background.level' => 'required|string|max:255',
             'background.highest_education' => 'required|string|max:255',
-            'background.school' => 'required|string|max:255',
-            'background.department' => 'required|string|max:255',
+            'background.school' => 'nullable|string|max:255',
+            'background.department' => 'nullable|string|max:255',
             'background.certificates' => 'required|array',
         ]);
 
@@ -65,27 +65,27 @@ class MemberController extends Controller
     public function update(Request $request, $id)
     {
         $member = Member::findOrFail($id);
-
+    
         $validated = $request->validate([
             'member.nickname' => 'string|max:255',
             'member.account' => 'string|max:255|unique:members,account,' . $id,
             'member.email' => 'email|max:255|unique:members,email,' . $id,
             'member.email_valid' => 'boolean',
             'member.password' => 'string|min:8',
-            'member.status' => 'string',
-
+            'member.status' => 'boolean',
+    
             'profile.lastname' => 'string|max:255',
             'profile.firstname' => 'string|max:255',
             'profile.gender' => 'string',
             'profile.birthday' => 'date',
             'profile.job' => 'string|max:255',
-
+    
             'contact.city' => 'string|max:255',
             'contact.region' => 'string|max:255',
             'contact.address' => 'string|max:255',
-            'contact.mobile' => 'string|max:20|unique:contacts,mobile,' . $member->contact->id,
+            'contact.mobile' => 'string|max:20|unique:contacts,mobile,' . ($member->contact->id ?? 'NULL'),
             'contact.mobile_valid' => 'boolean',
-
+    
             'background.lang_types' => 'array',
             'background.goals' => 'array',
             'background.purposes' => 'array',
@@ -97,12 +97,33 @@ class MemberController extends Controller
         ]);
 
         $member->update($validated['member'] ?? []);
-        $member->profile->update($validated['profile'] ?? []);
-        $member->contact->update($validated['contact'] ?? []);
-        $member->background->update($validated['background'] ?? []);
 
+        if (isset($validated['profile'])) {
+            if ($member->profile) {
+                $member->profile->update($validated['profile']);
+            } else {
+                $member->profile()->create($validated['profile']);
+            }
+        }
+
+        if (isset($validated['contact'])) {
+            if ($member->contact) {
+                $member->contact->update($validated['contact']);
+            } else {
+                $member->contact()->create($validated['contact']);
+            }
+        }
+
+        if (isset($validated['background'])) {
+            if ($member->background) {
+                $member->background->update($validated['background']);
+            } else {
+                $member->background()->create($validated['background']);
+            }
+        }
+    
         return response()->json($member->load(['profile', 'contact', 'background']));
-    }
+    }    
 
     public function destroy($id)
     {
