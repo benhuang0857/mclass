@@ -5,6 +5,15 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MemberController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NoticeTypeController;
+use App\Http\Controllers\InvitationCodeController;
+
+Route::prefix('invitation-codes')->group(function () {
+    Route::get('/', [InvitationCodeController::class, 'index']);
+    Route::post('/', [InvitationCodeController::class, 'store']);
+    Route::get('/{id}', [InvitationCodeController::class, 'show']);
+    Route::put('/{id}', [InvitationCodeController::class, 'update']);
+    Route::delete('/{id}', [InvitationCodeController::class, 'destroy']);
+});
 
 Route::prefix('members')->group(function () {
     Route::get('/', [MemberController::class, 'index']);

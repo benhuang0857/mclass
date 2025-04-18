@@ -61,6 +61,18 @@ return new class extends Migration
             $table->json('certificates')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('invitation_codes', function (Blueprint $table) {
+            $table->id();
+            $table->string('code')->unique();
+            $table->foreignId('from_member_id')->nullable()->constrained('members')->onDelete('set null');
+            $table->foreignId('to_member_id')->nullable()->constrained('members')->onDelete('set null');
+            $table->string('email')->nullable();
+            $table->timestamp('expired')->nullable();
+            $table->boolean('used')->default(false);
+            $table->boolean('status')->default(true);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -68,6 +80,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('invitation_codes');
         Schema::dropIfExists('backgrounds');
         Schema::dropIfExists('contacts');
         Schema::dropIfExists('profiles');
