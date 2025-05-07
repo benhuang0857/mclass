@@ -30,4 +30,9 @@ class Member extends Model
     {
         return $this->hasOne(Background::class);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class, 'member_role');
+    }
 }

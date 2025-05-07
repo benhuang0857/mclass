@@ -6,6 +6,7 @@ use App\Http\Controllers\MemberController;
 use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NoticeTypeController;
 use App\Http\Controllers\InvitationCodeController;
+use App\Http\Controllers\RoleController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -37,4 +38,12 @@ Route::prefix('notice-types')->group(function () {
     Route::get('/{id}', [NoticeTypeController::class, 'show']);
     Route::put('/{id}', [NoticeTypeController::class, 'update']);
     Route::delete('/{id}', [NoticeTypeController::class, 'destroy']);
+});
+
+Route::prefix('roles')->group(function () {
+    Route::get('/', [RoleController::class, 'index']);
+    Route::post('/', [RoleController::class, 'store']);
+    Route::get('/{id}', [RoleController::class, 'show']);
+    Route::put('/{id}', [RoleController::class, 'update']);
+    Route::delete('/{id}', [RoleController::class, 'destroy']);
 });
