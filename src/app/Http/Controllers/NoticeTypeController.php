@@ -18,6 +18,7 @@ class NoticeTypeController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:notice_types,slug',
+            'note' => 'nullable|string',
             'sort' => 'integer',
             'status' => 'boolean',
         ]);
@@ -37,8 +38,9 @@ class NoticeTypeController extends Controller
         $noticeType = NoticeType::findOrFail($id);
 
         $validated = $request->validate([
-            'name' => 'string|max:255',
-            'slug' => 'string|max:255|unique:notice_types,slug,' . $id,
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255|unique:notice_types,slug',
+            'note' => 'nullable|string',
             'sort' => 'integer',
             'status' => 'boolean',
         ]);

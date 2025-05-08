@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Notice extends Model
+class CourseInfoType extends Model
 {
     use HasFactory;
 
-    protected $table = 'notices';
+    protected $table = 'course_info_types';
 
     protected $fillable = [
-        'title',
-        'feature_img',
-        'notice_type_id',
-        'body',
+        'name',
+        'slug',
+        'note',
+        'sort',
         'status',
     ];
 
@@ -23,9 +23,4 @@ class Notice extends Model
         'created_at',
         'updated_at',
     ];
-
-    public function noticeType()
-    {
-        return $this->belongsTo(NoticeType::class);
-    }
 }

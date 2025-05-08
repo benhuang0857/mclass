@@ -11,16 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Notice Types Table
-        Schema::create('notice_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->unique(); // Unique name for each type
-            $table->string('slug')->unique(); // Unique URL slug
-            $table->integer('sort')->default(0); // Sort order
-            $table->boolean('status')->default(true); // Status: active or inactive
-            $table->timestamps();
-        });
-
         // Notices Table
         Schema::create('notices', function (Blueprint $table) {
             $table->id();
@@ -41,6 +31,5 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('notices');
-        Schema::dropIfExists('notice_types');
     }
 };

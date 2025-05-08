@@ -9,9 +9,12 @@ class NoticeType extends Model
 {
     use HasFactory;
 
+    protected $table = 'notice_types';
+
     protected $fillable = [
         'name',
         'slug',
+        'note',
         'sort',
         'status',
     ];

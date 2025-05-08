@@ -9,7 +9,15 @@ class Role extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'note', 'sort', 'status'];
+    protected $table = 'roles';
+
+    protected $fillable = [
+        'name',
+        'slug',
+        'note',
+        'sort',
+        'status',
+    ];
 
     protected $hidden = [
         'created_at',

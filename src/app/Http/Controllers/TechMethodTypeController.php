@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Models\TeachMethodType;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class TechMethodTypeController extends Controller
 {
     public function index()
     {
-        $roles = Role::all();
-        return response()->json($roles);
+        $teachMethodTypes = TeachMethodType::all();
+        return response()->json($teachMethodTypes);
     }
 
     public function store(Request $request)
@@ -23,19 +23,19 @@ class RoleController extends Controller
             'status' => 'boolean',
         ]);
 
-        $role = Role::create($validated);
-        return response()->json($role, 201);
+        $teachMethodType = TeachMethodType::create($validated);
+        return response()->json($teachMethodType, 201);
     }
 
     public function show($id)
     {
-        $role = Role::findOrFail($id);
-        return response()->json($role);
+        $teachMethodType = TeachMethodType::findOrFail($id);
+        return response()->json($teachMethodType);
     }
 
     public function update(Request $request, $id)
     {
-        $role = Role::findOrFail($id);
+        $teachMethodType = TeachMethodType::findOrFail($id);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -45,14 +45,14 @@ class RoleController extends Controller
             'status' => 'boolean',
         ]);
 
-        $role->update($validated);
-        return response()->json($role);
+        $teachMethodType->update($validated);
+        return response()->json($teachMethodType);
     }
 
     public function destroy($id)
     {
-        $role = Role::findOrFail($id);
-        $role->delete();
-        return response()->json(['message' => 'Role deleted successfully.']);
+        $teachMethodType = TeachMethodType::findOrFail($id);
+        $teachMethodType->delete();
+        return response()->json(['message' => 'TeachMethodType deleted successfully.']);
     }
 }

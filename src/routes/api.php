@@ -7,6 +7,10 @@ use App\Http\Controllers\NoticeController;
 use App\Http\Controllers\NoticeTypeController;
 use App\Http\Controllers\InvitationCodeController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\LevelTypeController;
+use App\Http\Controllers\LangTypeController;
+use App\Http\Controllers\TechMethodTypeController;
+use App\Http\Controllers\CourseInfoTypeController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -32,6 +36,16 @@ Route::prefix('notices')->group(function () {
     Route::delete('/{id}', [NoticeController::class, 'destroy']);
 });
 
+########## Types ##########
+
+Route::prefix('roles')->group(function () {
+    Route::get('/', [RoleController::class, 'index']);
+    Route::post('/', [RoleController::class, 'store']);
+    Route::get('/{id}', [RoleController::class, 'show']);
+    Route::put('/{id}', [RoleController::class, 'update']);
+    Route::delete('/{id}', [RoleController::class, 'destroy']);
+});
+
 Route::prefix('notice-types')->group(function () {
     Route::get('/', [NoticeTypeController::class, 'index']);
     Route::post('/', [NoticeTypeController::class, 'store']);
@@ -40,10 +54,34 @@ Route::prefix('notice-types')->group(function () {
     Route::delete('/{id}', [NoticeTypeController::class, 'destroy']);
 });
 
-Route::prefix('roles')->group(function () {
-    Route::get('/', [RoleController::class, 'index']);
-    Route::post('/', [RoleController::class, 'store']);
-    Route::get('/{id}', [RoleController::class, 'show']);
-    Route::put('/{id}', [RoleController::class, 'update']);
-    Route::delete('/{id}', [RoleController::class, 'destroy']);
+Route::prefix('level-types')->group(function () {
+    Route::get('/', [LevelTypeController::class, 'index']);
+    Route::post('/', [LevelTypeController::class, 'store']);
+    Route::get('/{id}', [LevelTypeController::class, 'show']);
+    Route::put('/{id}', [LevelTypeController::class, 'update']);
+    Route::delete('/{id}', [LevelTypeController::class, 'destroy']);
+});
+
+Route::prefix('lang-types')->group(function () {
+    Route::get('/', [LangTypeController::class, 'index']);
+    Route::post('/', [LangTypeController::class, 'store']);
+    Route::get('/{id}', [LangTypeController::class, 'show']);
+    Route::put('/{id}', [LangTypeController::class, 'update']);
+    Route::delete('/{id}', [LangTypeController::class, 'destroy']);
+});
+
+Route::prefix('tech-method-types')->group(function () {
+    Route::get('/', [TechMethodTypeController::class, 'index']);
+    Route::post('/', [TechMethodTypeController::class, 'store']);
+    Route::get('/{id}', [TechMethodTypeController::class, 'show']);
+    Route::put('/{id}', [TechMethodTypeController::class, 'update']);
+    Route::delete('/{id}', [TechMethodTypeController::class, 'destroy']);
+});
+
+Route::prefix('course-info-types')->group(function () {
+    Route::get('/', [CourseInfoTypeController::class, 'index']);
+    Route::post('/', [CourseInfoTypeController::class, 'store']);
+    Route::get('/{id}', [CourseInfoTypeController::class, 'show']);
+    Route::put('/{id}', [CourseInfoTypeController::class, 'update']);
+    Route::delete('/{id}', [CourseInfoTypeController::class, 'destroy']);
 });

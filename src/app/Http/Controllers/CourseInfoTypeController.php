@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Role;
+use App\Models\CourseInfoType;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class CourseInfoTypeController extends Controller
 {
     public function index()
     {
-        $roles = Role::all();
-        return response()->json($roles);
+        $courseInfoTypes = CourseInfoType::all();
+        return response()->json($courseInfoTypes);
     }
 
     public function store(Request $request)
@@ -23,19 +23,19 @@ class RoleController extends Controller
             'status' => 'boolean',
         ]);
 
-        $role = Role::create($validated);
-        return response()->json($role, 201);
+        $courseInfoType = CourseInfoType::create($validated);
+        return response()->json($courseInfoType, 201);
     }
 
     public function show($id)
     {
-        $role = Role::findOrFail($id);
-        return response()->json($role);
+        $courseInfoType = CourseInfoType::findOrFail($id);
+        return response()->json($courseInfoType);
     }
 
     public function update(Request $request, $id)
     {
-        $role = Role::findOrFail($id);
+        $courseInfoType = CourseInfoType::findOrFail($id);
 
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -45,14 +45,14 @@ class RoleController extends Controller
             'status' => 'boolean',
         ]);
 
-        $role->update($validated);
-        return response()->json($role);
+        $courseInfoType->update($validated);
+        return response()->json($courseInfoType);
     }
 
     public function destroy($id)
     {
-        $role = Role::findOrFail($id);
-        $role->delete();
-        return response()->json(['message' => 'Role deleted successfully.']);
+        $courseInfoType = CourseInfoType::findOrFail($id);
+        $courseInfoType->delete();
+        return response()->json(['message' => 'CourseInfoType deleted successfully.']);
     }
 }

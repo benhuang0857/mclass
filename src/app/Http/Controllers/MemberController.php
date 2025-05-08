@@ -12,7 +12,13 @@ class MemberController extends Controller
 {
     public function index()
     {
-        $members = Member::with(['profile', 'contact', 'background'])->get();
+        $members = Member::with([
+            'profile', 
+            'contact', 
+            'background',
+            'background.languages',
+            'background.levels',
+        ])->get();
         return response()->json($members);
     }
 
@@ -38,14 +44,18 @@ class MemberController extends Controller
             'contact.mobile' => 'required|string|max:20|unique:contacts,mobile',
             'contact.mobile_valid' => 'required|boolean',
 
-            'background.lang_types' => 'required|array',
             'background.goals' => 'required|array',
             'background.purposes' => 'required|array',
-            'background.level' => 'required|string|max:255',
             'background.highest_education' => 'required|string|max:255',
-            'background.school' => 'nullable|string|max:255',
-            'background.department' => 'nullable|string|max:255',
+            'background.schools' => 'nullable|array',
+            'background.departments' => 'nullable|array',
             'background.certificates' => 'required|array',
+
+            // relate with background
+            'background.languages' => 'required|array',
+            'background.languages.*' => 'exists:lang_types,id',
+            'background.levels' => 'required|array',
+            'background.levels.*' => 'exists:level_types,id',
         ]);
 
         $member = Member::create($validated['member']);
@@ -53,12 +63,25 @@ class MemberController extends Controller
         $member->contact()->create($validated['contact']);
         $member->background()->create($validated['background']);
 
+        // do sync relation
+        $background = $member->background;
+        if ($background) {
+            $background->languages()->sync($validated['background']['languages']);
+            $background->levels()->sync($validated['background']['levels']);
+        }
+
         return response()->json($member->load(['profile', 'contact', 'background']), 201);
     }
 
     public function show($id)
     {
-        $member = Member::with(['profile', 'contact', 'background'])->findOrFail($id);
+        $member = Member::with([
+            'profile', 
+            'contact', 
+            'background',
+            'background.languages',
+            'background.levels',
+        ])->findOrFail($id);
         return response()->json($member);
     }
 
@@ -86,14 +109,18 @@ class MemberController extends Controller
             'contact.mobile' => 'string|max:20|unique:contacts,mobile,' . ($member->contact->id ?? 'NULL'),
             'contact.mobile_valid' => 'boolean',
     
-            'background.lang_types' => 'array',
-            'background.goals' => 'array',
-            'background.purposes' => 'array',
-            'background.level' => 'string',
-            'background.highest_education' => 'string|max:255',
-            'background.school' => 'string|max:255',
-            'background.department' => 'string|max:255',
-            'background.certificates' => 'array',
+            'background.goals' => 'required|array',
+            'background.purposes' => 'required|array',
+            'background.highest_education' => 'required|string|max:255',
+            'background.schools' => 'nullable|array',
+            'background.departments' => 'nullable|array',
+            'background.certificates' => 'required|array',
+
+            // relate with background
+            'background.languages' => 'required|array',
+            'background.languages.*' => 'exists:lang_types,id',
+            'background.levels' => 'required|array',
+            'background.levels.*' => 'exists:level_types,id',
         ]);
 
         $member->update($validated['member'] ?? []);
@@ -120,6 +147,13 @@ class MemberController extends Controller
             } else {
                 $member->background()->create($validated['background']);
             }
+        }
+
+        // do sync relation
+        $background = $member->background;
+        if ($background) {
+            $background->languages()->sync($validated['background']['languages']);
+            $background->levels()->sync($validated['background']['levels']);
         }
     
         return response()->json($member->load(['profile', 'contact', 'background']));

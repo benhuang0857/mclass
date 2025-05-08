@@ -33,3 +33,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
 - 執行`php artisan route:cache`
 - 執行`php artisan route:list`
+
+## 指令
+- `php artisan db:init-combo`：提供用戶快速生成需要的tables與測試資料
+- `php artisan db:init-necessary`：當有修改`init_necessary.sql`時，可以執行此指令來快速修改tables
