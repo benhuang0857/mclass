@@ -9,6 +9,7 @@ use App\Models\LangType;
 use App\Models\LevelType;
 use App\Models\TeachMethodType;
 use App\Models\CourseInfoType;
+use App\Models\CourseStatusType;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -30,6 +31,7 @@ class DatabaseSeeder extends Seeder
         $this->createLevelTypes();
         $this->createTeachMethodTypes();
         $this->createCourseInfoTypes();
+        $this->createCourseStatusTypes();
     }
 
     /**
@@ -270,6 +272,48 @@ class DatabaseSeeder extends Seeder
 
         foreach ($types as $type) {
             CourseInfoType::firstOrCreate(
+                ['slug' => $type['slug']], // Check for existing role by slug
+                $type // Attributes to create if not exists
+            );
+        }
+    }
+
+    /**
+     * Create predefined Course Status Types if they do not already exist.
+     *
+     * @return void
+     */
+    protected function createCourseStatusTypes(): void
+    {
+        $types = [
+            [
+                'name' => '即將開課',
+                'slug' => 'coming_soon',
+                'sort' => 1,
+                'status' => true,
+            ],
+            [
+                'name' => '臨時停課',
+                'slug' => 'suspension ',
+                'sort' => 2,
+                'status' => true,
+            ],
+            [
+                'name' => '課程關閉',
+                'slug' => 'closed',
+                'sort' => 3,
+                'status' => true,
+            ],
+            [
+                'name' => '課程完成',
+                'slug' => 'completed',
+                'sort' => 4,
+                'status' => true,
+            ],
+        ];
+
+        foreach ($types as $type) {
+            CourseStatusType::firstOrCreate(
                 ['slug' => $type['slug']], // Check for existing role by slug
                 $type // Attributes to create if not exists
             );

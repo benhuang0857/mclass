@@ -4,6 +4,8 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
+// TODO: Product relate with club_course_info
+// TODO: Add flip course
 return new class extends Migration
 {
     /**
@@ -21,12 +23,14 @@ return new class extends Migration
             $table->text('description')->comment('課程簡介／目標');
             $table->text('details')->comment('課程介紹與規劃');
             $table->string('feature_img')->comment('主視覺圖片 (16:9 比例)');
-            $table->json('teaching_modes')->comment('上課方式');
+            $table->enum('teaching_mode', ['Online', 'Offline', 'Hybrid'])->comment('上課方式: 線上／實體／混合');
             $table->string('schedule_display')->comment('上課時間（文字顯示）');
             $table->boolean('is_periodic')->default(false)->comment('是否為週期性課程');
             $table->boolean('elective')->default(false)->comment('是否開放選修');
             $table->integer('max_enrollment')->default(1)->comment('報名上限人數');
             $table->integer('total_sessions')->default(1)->comment('總開課堂數');
+            $table->float('regular_price')->default(0)->comment('費用');
+            $table->float('discount_price')->default(0)->comment('折價後費用');
             $table->boolean('allow_replay')->default(true)->comment('是否允許回放');
             $table->boolean('is_series')->default(false)->comment('是否為系列課程的一部分');
             $table->enum('status', ['Published', 'Unpublished', 'Completed', 'Pending'])->default('Unpublished')->comment('課程狀態');
@@ -44,15 +48,6 @@ return new class extends Migration
             $table->time('end_time')->comment('結束時間');
             $table->timestamps();
             $table->unique(['course_id', 'day_of_week', 'start_time', 'end_time'], 'unique_schedule');
-        });
-    
-        Schema::create('club_course_info_review', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('course_id')->constrained('club_course_infos')->onDelete('cascade')->comment('對應的課程資訊 ID');
-            $table->float('average_rating')->default(0)->comment('平均評價分數');
-            $table->integer('total_reviews')->default(0)->comment('評價總數');
-            $table->float('average_attendance_record')->nullable()->comment('平均出席紀錄');
-            $table->timestamps();
         });
 
         /** Relation */
@@ -105,12 +100,20 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('student_club_course_info', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('學生');
-            $table->foreignId('club_course_info_id')->constrained('club_course_infos')->onDelete('cascade');
-            $table->timestamps();
-        });
+        // TODO: Move these code to products migration
+        // Schema::create('follower_club_course_info', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('追蹤者');
+        //     $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+        //     $table->timestamps();
+        // });
+
+        // Schema::create('visibler_club_course_info', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('可看到的學生');
+        //     $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+        //     $table->timestamps();
+        // });
     
         ####################################################################################################
 
@@ -126,37 +129,12 @@ return new class extends Migration
             $table->string('location')->nullable()->comment('今日課程位置');
             $table->boolean('trial')->default(true)->comment('是否為試聽課程');
             $table->unsignedInteger('sort')->default(0);
-            $table->enum('status', ['Active', 'Cancelled', 'Completed'])->default('Active')->comment('課程狀態');
-            $table->timestamps();
-        });
-    
-        Schema::create('club_course_resources', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('course_id')->constrained('club_courses')->onDelete('cascade')->comment('對應的課程 ID');
-            $table->string('material_link')->nullable()->comment('今日教材連結');
-            $table->string('replay_link')->nullable()->comment('回放影片連結');
-            $table->string('replay_title')->nullable()->comment('回放影片標題');
-            $table->unsignedInteger('replay_duration')->nullable()->comment('回放影片時長（以秒為單位）');
             $table->timestamps();
         });
 
-        Schema::create('sysman_club_course', function (Blueprint $table) {
+        Schema::create('course_status_type_club_course', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->comment('操作人員');
-            $table->foreignId('club_course_id')->constrained('club_courses')->onDelete('cascade');
-            $table->timestamps();
-        });
-
-        Schema::create('teacher_club_course', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('教師');
-            $table->foreignId('club_course_id')->constrained('club_courses')->onDelete('cascade');
-            $table->timestamps();
-        });
-
-        Schema::create('student_club_course', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('學生');
+            $table->foreignId('course_status_type_id')->constrained('course_status_types')->onDelete('cascade')->comment('課堂狀態種類');
             $table->foreignId('club_course_id')->constrained('club_courses')->onDelete('cascade');
             $table->timestamps();
         });
@@ -167,12 +145,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('student_club_course');
-        Schema::dropIfExists('teacher_club_course');
-        Schema::dropIfExists('sysman_club_course');
-        Schema::dropIfExists('club_course_resources');
+        Schema::dropIfExists('course_status_type_club_course');
         Schema::dropIfExists('club_courses');
-        Schema::dropIfExists('student_club_course_info');
         Schema::dropIfExists('assistant_club_course_info');
         Schema::dropIfExists('teacher_club_course_info');
         Schema::dropIfExists('sysman_club_course_info');
@@ -180,7 +154,6 @@ return new class extends Migration
         Schema::dropIfExists('course_info_type_club_course_info');
         Schema::dropIfExists('level_type_club_course_info');
         Schema::dropIfExists('lang_type_club_course_info');
-        Schema::dropIfExists('club_course_info_review');
         Schema::dropIfExists('club_course_info_schedule');
         Schema::dropIfExists('club_course_infos');
     }

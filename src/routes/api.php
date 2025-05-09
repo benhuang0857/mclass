@@ -11,6 +11,9 @@ use App\Http\Controllers\LevelTypeController;
 use App\Http\Controllers\LangTypeController;
 use App\Http\Controllers\TechMethodTypeController;
 use App\Http\Controllers\CourseInfoTypeController;
+use App\Http\Controllers\CourseStatusTypeController;
+use App\Http\Controllers\ClubCourseInfoController;
+use App\Http\Controllers\ClubCourseController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -84,4 +87,28 @@ Route::prefix('course-info-types')->group(function () {
     Route::get('/{id}', [CourseInfoTypeController::class, 'show']);
     Route::put('/{id}', [CourseInfoTypeController::class, 'update']);
     Route::delete('/{id}', [CourseInfoTypeController::class, 'destroy']);
+});
+
+Route::prefix('course-status-types')->group(function () {
+    Route::get('/', [CourseStatusTypeController::class, 'index']);
+    Route::post('/', [CourseStatusTypeController::class, 'store']);
+    Route::get('/{id}', [CourseStatusTypeController::class, 'show']);
+    Route::put('/{id}', [CourseStatusTypeController::class, 'update']);
+    Route::delete('/{id}', [CourseStatusTypeController::class, 'destroy']);
+});
+
+Route::prefix('club-course-info')->group(function () {
+    Route::get('/', [ClubCourseInfoController::class, 'index']);
+    Route::post('/', [ClubCourseInfoController::class, 'store']);
+    Route::get('/{id}', [ClubCourseInfoController::class, 'show']);
+    Route::put('/{id}', [ClubCourseInfoController::class, 'update']);
+    Route::delete('/{id}', [ClubCourseInfoController::class, 'destroy']);
+});
+
+Route::prefix('club-course')->group(function () {
+    Route::get('/', [ClubCourseController::class, 'index']);
+    Route::post('/', [ClubCourseController::class, 'store']);
+    Route::get('/{id}', [ClubCourseController::class, 'show']);
+    Route::put('/{id}', [ClubCourseController::class, 'update']);
+    Route::delete('/{id}', [ClubCourseController::class, 'destroy']);
 });
