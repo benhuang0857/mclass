@@ -20,26 +20,22 @@ class ClubCourseInfo extends Model
         'teaching_mode',
         'schedule_display',
         'is_periodic',
-        'elective',
-        'max_enrollment',
         'total_sessions',
-        'regular_price',
-        'discount_price',
         'allow_replay',
-        'is_series',
         'status',
-        'is_visible_to_specific_students',
     ];
 
     protected $casts = [
         'is_periodic' => 'boolean',
-        'elective' => 'boolean',
         'allow_replay' => 'boolean',
-        'is_series' => 'boolean',
-        'is_visible_to_specific_students' => 'boolean',
         'teaching_mode' => 'string',
         'status' => 'string',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 
     public function schedules()
     {

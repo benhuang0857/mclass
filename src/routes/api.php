@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\LevelTypeController;
 use App\Http\Controllers\LangTypeController;
 use App\Http\Controllers\TechMethodTypeController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CourseInfoTypeController;
 use App\Http\Controllers\CourseStatusTypeController;
 use App\Http\Controllers\ClubCourseInfoController;
@@ -79,6 +80,22 @@ Route::prefix('tech-method-types')->group(function () {
     Route::get('/{id}', [TechMethodTypeController::class, 'show']);
     Route::put('/{id}', [TechMethodTypeController::class, 'update']);
     Route::delete('/{id}', [TechMethodTypeController::class, 'destroy']);
+});
+
+Route::prefix('products')->group(function () {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::post('/', [ProductController::class, 'store']);
+    Route::get('/{id}', [ProductController::class, 'show']);
+    Route::put('/{id}', [ProductController::class, 'update']);
+    Route::delete('/{id}', [ProductController::class, 'destroy']);
+
+    // Follower-related routes
+    Route::post('/{id}/follower', [ProductController::class, 'addFollower']);
+    Route::delete('/{id}/follower', [ProductController::class, 'removeFollower']);
+
+    // Visibler-related routes
+    Route::post('/{id}/visibler', [ProductController::class, 'addVisibler']);
+    Route::delete('/{id}/visibler', [ProductController::class, 'removeVisibler']);
 });
 
 Route::prefix('course-info-types')->group(function () {

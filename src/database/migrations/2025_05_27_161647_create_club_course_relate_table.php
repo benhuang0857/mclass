@@ -4,7 +4,6 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-// TODO: Product relate with club_course_info
 // TODO: Add flip course
 return new class extends Migration
 {
@@ -18,32 +17,27 @@ return new class extends Migration
          */
         Schema::create('club_course_infos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade')->comment('對應的商品 ID');
             $table->string('name')->comment('課程名稱');
             $table->string('code')->unique()->comment('課程代碼');
-            $table->text('description')->comment('課程簡介／目標');
+            $table->text('description')->comment('課程簡介/目標');
             $table->text('details')->comment('課程介紹與規劃');
             $table->string('feature_img')->comment('主視覺圖片 (16:9 比例)');
-            $table->enum('teaching_mode', ['Online', 'Offline', 'Hybrid'])->comment('上課方式: 線上／實體／混合');
+            $table->enum('teaching_mode', ['online', 'offline', 'hybrid'])->comment('上課方式: 線上/實體/混合');
             $table->string('schedule_display')->comment('上課時間（文字顯示）');
             $table->boolean('is_periodic')->default(false)->comment('是否為週期性課程');
-            $table->boolean('elective')->default(false)->comment('是否開放選修');
-            $table->integer('max_enrollment')->default(1)->comment('報名上限人數');
             $table->integer('total_sessions')->default(1)->comment('總開課堂數');
-            $table->float('regular_price')->default(0)->comment('費用');
-            $table->float('discount_price')->default(0)->comment('折價後費用');
             $table->boolean('allow_replay')->default(true)->comment('是否允許回放');
-            $table->boolean('is_series')->default(false)->comment('是否為系列課程的一部分');
-            $table->enum('status', ['Published', 'Unpublished', 'Completed', 'Pending'])->default('Unpublished')->comment('課程狀態');
-            $table->boolean('is_visible_to_specific_students')->default(false)->comment('僅指定學員可見');
+            $table->enum('status', ['published', 'unpublished', 'completed', 'pending'])->default('unpublished')->comment('課程狀態');
             $table->timestamps();
         });
-    
+
         Schema::create('club_course_info_schedule', function (Blueprint $table) {
             $table->id();
             $table->foreignId('course_id')->constrained('club_course_infos')->onDelete('cascade')->comment('對應的課程資訊 ID');
             $table->date('start_date')->comment('週期開始日期');
             $table->date('end_date')->comment('週期結束日期');
-            $table->enum('day_of_week', ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'])->comment('星期幾');
+            $table->enum('day_of_week', ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])->comment('星期幾');
             $table->time('start_time')->comment('開始時間');
             $table->time('end_time')->comment('結束時間');
             $table->timestamps();
@@ -100,21 +94,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        // TODO: Move these code to products migration
-        // Schema::create('follower_club_course_info', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('追蹤者');
-        //     $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-        //     $table->timestamps();
-        // });
-
-        // Schema::create('visibler_club_course_info', function (Blueprint $table) {
-        //     $table->id();
-        //     $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('可看到的學生');
-        //     $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-        //     $table->timestamps();
-        // });
-    
         ####################################################################################################
 
         /**
