@@ -12,6 +12,7 @@ class ClubCourseInfo extends Model
     protected $table = 'club_course_infos';
 
     protected $fillable = [
+        'product_id',
         'name',
         'code',
         'description',

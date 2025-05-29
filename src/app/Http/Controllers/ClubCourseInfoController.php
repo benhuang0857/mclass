@@ -35,21 +35,22 @@ class ClubCourseInfoController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
             'name' => 'required|string|max:255',
             'code' => 'required|string|unique:club_course_infos,code',
             'description' => 'required|string',
             'details' => 'required|string',
             'feature_img' => 'required|string',
-            'teaching_mode' => 'required|in:Online,Offline,Hybrid',
+            'teaching_mode' => 'required|in:online,offline,hybrid',
             'schedule_display' => 'required|string',
             'is_periodic' => 'boolean',
             'total_sessions' => 'required|integer|min:1',
             'allow_replay' => 'boolean',
-            'status' => 'required|in:Published,Unpublished,Completed,Pending',
+            'status' => 'required|in:published,unpublished,completed,pending',
             'schedules' => 'array|required_if:is_periodic,true',
             'schedules.*.start_date' => 'required_if:is_periodic,true|date',
             'schedules.*.end_date' => 'required_if:is_periodic,true|date|after_or_equal:schedules.*.start_date',
-            'schedules.*.day_of_week' => 'required_if:is_periodic,true|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'schedules.*.day_of_week' => 'required_if:is_periodic,true|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'schedules.*.start_time' => 'required_if:is_periodic,true|date_format:H:i',
             'schedules.*.end_time' => 'required_if:is_periodic,true|date_format:H:i|after:schedules.*.start_time',
         ]);
@@ -85,25 +86,34 @@ class ClubCourseInfoController extends Controller
     {
         $courseInfo = ClubCourseInfo::findOrFail($id);
 
-        $validated = $request->validate([
+        $rules = [
+            'product_id' => 'required|exists:products,id',
             'name' => 'sometimes|required|string|max:255',
-            'code' => 'sometimes|required|string|unique:club_course_infos,code,' . $id,
             'description' => 'sometimes|required|string',
             'details' => 'sometimes|required|string',
             'feature_img' => 'sometimes|required|string',
-            'teaching_mode' => 'sometimes|required|in:Online,Offline,Hybrid',
+            'teaching_mode' => 'sometimes|required|in:online,offline,hybrid',
             'schedule_display' => 'sometimes|required|string',
             'is_periodic' => 'boolean',
             'total_sessions' => 'sometimes|required|integer|min:1',
             'allow_replay' => 'sometimes|boolean',
-            'status' => 'sometimes|required|in:Published,Unpublished,Completed,Pending',
+            'status' => 'sometimes|required|in:published,unpublished,completed,pending',
             'schedules' => 'array|required_if:is_periodic,true',
             'schedules.*.start_date' => 'required_if:is_periodic,true|date',
             'schedules.*.end_date' => 'required_if:is_periodic,true|date|after_or_equal:schedules.*.start_date',
-            'schedules.*.day_of_week' => 'required_if:is_periodic,true|in:Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday',
+            'schedules.*.day_of_week' => 'required_if:is_periodic,true|in:monday,tuesday,wednesday,thursday,friday,saturday,sunday',
             'schedules.*.start_time' => 'required_if:is_periodic,true|date_format:H:i',
             'schedules.*.end_time' => 'required_if:is_periodic,true|date_format:H:i|after:schedules.*.start_time',
-        ]);
+        ];
+
+        // 只有當 code 有變更時才加上唯一性驗證
+        if ($request->has('code') && $request->input('code') !== $courseInfo->code) {
+            $rules['code'] = 'required|string|unique:club_course_infos,code,' . $id;
+        } else {
+            $rules['code'] = 'sometimes|required|string';
+        }
+
+        $validated = $request->validate($rules);
 
         DB::beginTransaction();
         try {
@@ -190,7 +200,7 @@ class ClubCourseInfoController extends Controller
             $sort = 1;
 
             while ($currentDate->lte($endDate)) {
-                if ($currentDate->englishDayOfWeek === $dayOfWeek) {
+                if (strtolower($currentDate->englishDayOfWeek) === strtolower($dayOfWeek)) {
                     ClubCourse::create([
                         'course_id' => $courseInfo->id,
                         'start_time' => $currentDate->copy()->setTime($startTime->hour, $startTime->minute),

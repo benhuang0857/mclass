@@ -30,7 +30,8 @@ class ProductController extends Controller
     public function show($id)
     {
         $course = Product::with([
-            'clubCourseInfo',
+            'clubCourseInfo.clubCourses',
+            'clubCourseInfo.schedules',
             'followers',
             'visibleStudents',
         ])->findOrFail($id);
