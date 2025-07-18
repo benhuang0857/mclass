@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Commentable;
 
 class ClubCourseInfo extends Model
 {
-    use HasFactory;
+    use HasFactory, Commentable;
 
     protected $table = 'club_course_infos';
 
