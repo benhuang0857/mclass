@@ -37,4 +37,44 @@ class ClubCourse extends Model
     {
         return $this->belongsToMany(CourseStatusType::class, 'course_status_type_club_course', 'club_course_id', 'course_status_type_id');
     }
+
+    /**
+     * 關聯到 Zoom 會議詳情
+     */
+    public function zoomMeetDetail()
+    {
+        return $this->hasOne(ZoomMeetDetail::class, 'club_course_id');
+    }
+
+    /**
+     * 檢查是否有 Zoom 會議
+     */
+    public function hasZoomMeeting(): bool
+    {
+        return $this->zoomMeetDetail !== null;
+    }
+
+    /**
+     * 獲取 Zoom 會議加入連結
+     */
+    public function getZoomJoinUrl(): ?string
+    {
+        return $this->zoomMeetDetail?->join_url ?? $this->link;
+    }
+
+    /**
+     * 獲取 Zoom 會議開始連結（主持人用）
+     */
+    public function getZoomStartUrl(): ?string
+    {
+        return $this->zoomMeetDetail?->start_url;
+    }
+
+    /**
+     * 檢查是否可以加入 Zoom 會議
+     */
+    public function canJoinZoomMeeting(): bool
+    {
+        return $this->zoomMeetDetail?->canJoinNow() ?? false;
+    }
 }

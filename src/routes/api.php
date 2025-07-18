@@ -18,6 +18,7 @@ use App\Http\Controllers\ClubCourseController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ZoomController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -191,4 +192,26 @@ Route::prefix('comments')->group(function () {
         Route::post('/reaction', [CommentController::class, 'addReaction']);
         Route::post('/report', [CommentController::class, 'report']);
     });
+});
+
+########## Zoom API ##########
+
+Route::prefix('zoom')->group(function () {
+    // 檢查 Zoom API 連接
+    Route::get('/check', [ZoomController::class, 'checkConnection']);
+    
+    // 為課程創建 Zoom 會議
+    Route::post('/courses/{course}/meeting', [ZoomController::class, 'createMeetingForCourse']);
+    
+    // 獲取課程 Zoom 會議資訊
+    Route::get('/courses/{course}/meeting', [ZoomController::class, 'getCourseZoomInfo']);
+    
+    // 刪除課程 Zoom 會議
+    Route::delete('/courses/{course}/meeting', [ZoomController::class, 'deleteMeeting']);
+    
+    // 獲取學生加入連結
+    Route::get('/courses/{course}/join', [ZoomController::class, 'getCourseJoinUrl']);
+    
+    // 獲取老師開始連結
+    Route::get('/courses/{course}/start', [ZoomController::class, 'getHostStartUrl']);
 });
