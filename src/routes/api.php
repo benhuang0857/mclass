@@ -19,6 +19,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ZoomController;
+use App\Http\Controllers\ZoomCredentialController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -197,6 +198,17 @@ Route::prefix('comments')->group(function () {
 ########## Zoom API ##########
 
 Route::prefix('zoom')->group(function () {
+    // Zoom 憑證管理
+    Route::prefix('credentials')->group(function () {
+        Route::get('/', [ZoomCredentialController::class, 'index']);
+        Route::post('/', [ZoomCredentialController::class, 'store']);
+        Route::get('/{zoomCredential}', [ZoomCredentialController::class, 'show']);
+        Route::put('/{zoomCredential}', [ZoomCredentialController::class, 'update']);
+        Route::delete('/{zoomCredential}', [ZoomCredentialController::class, 'destroy']);
+        Route::post('/{zoomCredential}/test', [ZoomCredentialController::class, 'testConnection']);
+        Route::post('/{zoomCredential}/reset-count', [ZoomCredentialController::class, 'resetMeetingCount']);
+    });
+    
     // 檢查 Zoom API 連接
     Route::get('/check', [ZoomController::class, 'checkConnection']);
     

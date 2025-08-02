@@ -60,6 +60,15 @@ Artisan::command('db:init-combo', function () {
         }
         $this->info('db:seed completed successfully.');
 
+        // Step 4: Run ZoomCredentialSeeder
+        $this->info('Running ZoomCredentialSeeder...');
+        $result = Artisan::call('db:seed', ['--class' => 'ZoomCredentialSeeder']);
+        if ($result !== Command::SUCCESS) {
+            $this->error('Failed to run ZoomCredentialSeeder.');
+            return Command::FAILURE;
+        }
+        $this->info('ZoomCredentialSeeder completed successfully.');
+
         $this->info('init_combo completed successfully.');
         return Command::SUCCESS;
     } catch (\Exception $e) {

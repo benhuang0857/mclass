@@ -14,6 +14,7 @@ class ZoomMeetDetail extends Model
 
     protected $fillable = [
         'club_course_id',
+        'zoom_credential_id',
         'zoom_meeting_id',
         'zoom_meeting_uuid',
         'host_id',
@@ -49,6 +50,14 @@ class ZoomMeetDetail extends Model
     public function clubCourse(): BelongsTo
     {
         return $this->belongsTo(ClubCourse::class, 'club_course_id');
+    }
+
+    /**
+     * 關聯到 Zoom 憑證
+     */
+    public function zoomCredential(): BelongsTo
+    {
+        return $this->belongsTo(ZoomCredential::class, 'zoom_credential_id');
     }
 
     /**

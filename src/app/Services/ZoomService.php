@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\ClubCourse;
 use App\Models\ClubCourseInfo;
+use App\Models\ZoomCredential;
 use Carbon\Carbon;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
@@ -13,40 +14,36 @@ use Illuminate\Support\Str;
 class ZoomService
 {
     protected $baseUrl;
-    protected $accountId;
-    protected $clientId;
-    protected $clientSecret;
-    protected $accessToken;
+    protected $accessTokens = []; // 儲存多個帳號的 access token
 
     public function __construct()
     {
         $this->baseUrl = config('zoom.base_url');
-        $this->accountId = config('zoom.account_id');
-        $this->clientId = config('zoom.client_id');
-        $this->clientSecret = config('zoom.client_secret');
     }
 
     /**
-     * 獲取 Access Token
+     * 獲取指定憑證的 Access Token
      */
-    protected function getAccessToken(): string
+    protected function getAccessToken(ZoomCredential $credential): string
     {
-        if ($this->accessToken) {
-            return $this->accessToken;
+        $credentialId = $credential->id;
+        
+        if (isset($this->accessTokens[$credentialId])) {
+            return $this->accessTokens[$credentialId];
         }
 
         try {
-            $response = Http::withBasicAuth($this->clientId, $this->clientSecret)
+            $response = Http::withBasicAuth($credential->client_id, $credential->client_secret)
                 ->asForm()
                 ->post('https://zoom.us/oauth/token', [
                     'grant_type' => 'account_credentials',
-                    'account_id' => $this->accountId,
+                    'account_id' => $credential->account_id,
                 ]);
 
             if ($response->successful()) {
                 $data = $response->json();
-                $this->accessToken = $data['access_token'];
-                return $this->accessToken;
+                $this->accessTokens[$credentialId] = $data['access_token'];
+                return $this->accessTokens[$credentialId];
             }
 
             throw new \Exception('Failed to get access token: ' . $response->body());
@@ -57,27 +54,52 @@ class ZoomService
     }
 
     /**
+     * 選擇可用的 Zoom 憑證
+     */
+    protected function selectAvailableCredential(): ?ZoomCredential
+    {
+        // 優先選擇使用率最低的可用帳號
+        return ZoomCredential::available()
+            ->orderBy('current_meetings', 'asc')
+            ->orderBy('last_used_at', 'asc')
+            ->first();
+    }
+
+    /**
      * 為課程創建 Zoom 會議
      */
     public function createMeetingForCourse(ClubCourse $course, array $options = []): array
     {
         try {
+            // 選擇可用的 Zoom 憑證
+            $credential = $this->selectAvailableCredential();
+            
+            if (!$credential) {
+                return [
+                    'success' => false,
+                    'message' => '目前沒有可用的 Zoom 帳號，請稍後再試'
+                ];
+            }
+
             $courseInfo = $course->courseInfo;
             
             // 準備會議資料
             $meetingData = $this->prepareMeetingData($course, $courseInfo, $options);
             
             // 調用 Zoom API 創建會議
-            $response = $this->createZoomMeeting($meetingData);
+            $response = $this->createZoomMeeting($meetingData, $credential);
             
             if ($response['success']) {
                 // 自動更新課程連結
-                $this->updateCourseLink($course, $response['data']);
+                $this->updateCourseLink($course, $response['data'], $credential);
                 
                 return [
                     'success' => true,
-                    'data' => $response['data'],
-                    'message' => '會議創建成功並已自動更新課程連結'
+                    'data' => array_merge($response['data'], [
+                        'credential_name' => $credential->name,
+                        'credential_email' => $credential->email,
+                    ]),
+                    'message' => "會議創建成功並已自動更新課程連結（使用帳號：{$credential->name}）"
                 ];
             }
             
@@ -130,11 +152,11 @@ class ZoomService
     /**
      * 創建 Zoom 會議
      */
-    protected function createZoomMeeting(array $data): array
+    protected function createZoomMeeting(array $data, ZoomCredential $credential): array
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Authorization' => 'Bearer ' . $this->getAccessToken($credential),
                 'Content-Type' => 'application/json'
             ])->post($this->baseUrl . '/users/me/meetings', $data);
 
@@ -258,7 +280,7 @@ class ZoomService
     /**
      * 更新課程連結
      */
-    protected function updateCourseLink(ClubCourse $course, array $meetingData): void
+    protected function updateCourseLink(ClubCourse $course, array $meetingData, ZoomCredential $credential): void
     {
         // 更新課程表的 link 欄位（暫時保留）
         $course->update([
@@ -269,6 +291,7 @@ class ZoomService
         $course->zoomMeetDetail()->updateOrCreate(
             ['club_course_id' => $course->id],
             [
+                'zoom_credential_id' => $credential->id,
                 'zoom_meeting_id' => $meetingData['id'],
                 'zoom_meeting_uuid' => $meetingData['uuid'],
                 'host_id' => $meetingData['host_id'],
@@ -290,6 +313,9 @@ class ZoomService
                 'zoom_created_at' => $meetingData['created_at'],
             ]
         );
+
+        // 增加憑證的會議計數
+        $credential->incrementMeetings();
     }
 
     /**
@@ -307,11 +333,23 @@ class ZoomService
                 ];
             }
 
+            $credential = $zoomDetail->zoomCredential;
+            
+            if (!$credential) {
+                return [
+                    'success' => false,
+                    'message' => 'Zoom 憑證不存在'
+                ];
+            }
+
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->getAccessToken(),
+                'Authorization' => 'Bearer ' . $this->getAccessToken($credential),
             ])->delete($this->baseUrl . '/meetings/' . $zoomDetail->zoom_meeting_id);
 
             if ($response->successful()) {
+                // 減少憑證的會議計數
+                $credential->decrementMeetings();
+                
                 // 刪除本地 Zoom 會議記錄
                 $zoomDetail->delete();
                 

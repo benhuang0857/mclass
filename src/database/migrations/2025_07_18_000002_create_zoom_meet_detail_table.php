@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('zoom_meet_detail', function (Blueprint $table) {
             $table->id();
             $table->foreignId('club_course_id')->constrained('club_courses')->onDelete('cascade')->comment('課程ID');
+            $table->foreignId('zoom_credential_id')->constrained('zoom_credentials')->onDelete('cascade')->comment('使用的 Zoom 憑證');
             $table->string('zoom_meeting_id')->unique()->comment('Zoom 會議 ID');
             $table->string('zoom_meeting_uuid')->nullable()->comment('Zoom 會議 UUID');
             $table->string('host_id')->nullable()->comment('主持人 ID');
@@ -37,6 +38,7 @@ return new class extends Migration
             
             // 索引
             $table->index('club_course_id');
+            $table->index('zoom_credential_id');
             $table->index('zoom_meeting_id');
             $table->index('start_time');
             $table->index('status');

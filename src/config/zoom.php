@@ -14,18 +14,8 @@ return [
 
     'base_url' => env('ZOOM_BASE_URL', 'https://api.zoom.us/v2'),
     
-    // Server-to-Server OAuth App 設定（推薦）
-    'account_id' => env('ZOOM_ACCOUNT_ID', ''),
-    'client_id' => env('ZOOM_CLIENT_ID', ''),
-    'client_secret' => env('ZOOM_CLIENT_SECRET', ''),
-    
-    // JWT App 設定（已棄用，僅供舊版本使用）
-    'api_key' => env('ZOOM_API_KEY', ''),
-    'api_secret' => env('ZOOM_API_SECRET', ''),
-    'jwt_token' => env('ZOOM_JWT_TOKEN', ''),
-    
-    // OAuth App 設定（用於用戶授權）
-    'redirect_uri' => env('ZOOM_REDIRECT_URI', ''),
+    // 注意：認證資訊現在儲存在 zoom_credentials 資料表中
+    // 以下設定已棄用，保留僅供向後相容
     
     // 預設會議設定
     'default_settings' => [
