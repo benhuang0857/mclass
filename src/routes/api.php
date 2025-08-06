@@ -20,6 +20,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ZoomController;
 use App\Http\Controllers\ZoomCredentialController;
+use App\Http\Controllers\AttendanceController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -226,4 +227,32 @@ Route::prefix('zoom')->group(function () {
     
     // 獲取老師開始連結
     Route::get('/courses/{course}/start', [ZoomController::class, 'getHostStartUrl']);
+});
+
+########## Attendance API ##########
+
+Route::prefix('attendance')->group(function () {
+    // 取得可用的出席狀態列表
+    Route::get('/statuses', [AttendanceController::class, 'getAvailableStatuses']);
+    
+    // 課程點名相關
+    Route::prefix('courses/{course}')->group(function () {
+        // 取得課程點名清單
+        Route::get('/', [AttendanceController::class, 'getCourseAttendance']);
+        
+        // 批量點名
+        Route::post('/batch', [AttendanceController::class, 'batchMarkAttendance']);
+        
+        // 自動生成點名清單
+        Route::post('/generate-roster', [AttendanceController::class, 'generateRoster']);
+        
+        // 取得課程出席統計
+        Route::get('/stats', [AttendanceController::class, 'getCourseAttendanceStats']);
+        
+        // 修改單一學生出席記錄
+        Route::put('/members/{member}', [AttendanceController::class, 'updateAttendance']);
+    });
+    
+    // 學生出席統計
+    Route::get('/members/{member}/stats', [AttendanceController::class, 'getMemberAttendanceStats']);
 });

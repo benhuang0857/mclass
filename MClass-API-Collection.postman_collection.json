@@ -1,0 +1,2509 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "MClass Course Management System API",
+		"description": "Complete API collection for MClass - Laravel 11 課程管理系統\n\n基本資訊:\n- Base URL: http://localhost:8001/api\n- Content-Type: application/json\n- Accept: application/json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12345678"
+	},
+	"item": [
+		{
+			"name": "Invitation Codes",
+			"item": [
+				{
+					"name": "Get All Invitation Codes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/invitation-codes",
+							"host": ["{{base_url}}"],
+							"path": ["invitation-codes"]
+						}
+					}
+				},
+				{
+					"name": "Create Invitation Code",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"code\": \"INVITE2024\",\n    \"description\": \"2024年度邀請碼\",\n    \"max_uses\": 100,\n    \"expires_at\": \"2024-12-31\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/invitation-codes",
+							"host": ["{{base_url}}"],
+							"path": ["invitation-codes"]
+						}
+					}
+				},
+				{
+					"name": "Get Invitation Code",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/invitation-codes/1",
+							"host": ["{{base_url}}"],
+							"path": ["invitation-codes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Invitation Code",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"更新後的邀請碼描述\",\n    \"max_uses\": 200\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/invitation-codes/1",
+							"host": ["{{base_url}}"],
+							"path": ["invitation-codes", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Invitation Code",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/invitation-codes/1",
+							"host": ["{{base_url}}"],
+							"path": ["invitation-codes", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Members",
+			"item": [
+				{
+					"name": "Get All Members",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/members",
+							"host": ["{{base_url}}"],
+							"path": ["members"]
+						}
+					}
+				},
+				{
+					"name": "Create Member",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nickname\": \"新會員\",\n    \"email\": \"member@example.com\",\n    \"password\": \"password123\",\n    \"role_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/members",
+							"host": ["{{base_url}}"],
+							"path": ["members"]
+						}
+					}
+				},
+				{
+					"name": "Get Member",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/members/1",
+							"host": ["{{base_url}}"],
+							"path": ["members", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Member",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nickname\": \"更新後的會員\",\n    \"email\": \"updated@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/members/1",
+							"host": ["{{base_url}}"],
+							"path": ["members", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Member",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/members/1",
+							"host": ["{{base_url}}"],
+							"path": ["members", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Notices",
+			"item": [
+				{
+					"name": "Get All Notices",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notices",
+							"host": ["{{base_url}}"],
+							"path": ["notices"]
+						}
+					}
+				},
+				{
+					"name": "Create Notice",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"重要通知\",\n    \"content\": \"這是一個重要的通知內容\",\n    \"notice_type_id\": 1,\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notices",
+							"host": ["{{base_url}}"],
+							"path": ["notices"]
+						}
+					}
+				},
+				{
+					"name": "Get Notice",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notices/1",
+							"host": ["{{base_url}}"],
+							"path": ["notices", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Notice",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"更新後的通知\",\n    \"content\": \"更新後的通知內容\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notices/1",
+							"host": ["{{base_url}}"],
+							"path": ["notices", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Notice",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notices/1",
+							"host": ["{{base_url}}"],
+							"path": ["notices", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": ["{{base_url}}"],
+							"path": ["products"]
+						}
+					}
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"新課程產品\",\n    \"description\": \"課程產品描述\",\n    \"price\": 1000,\n    \"is_active\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": ["{{base_url}}"],
+							"path": ["products"]
+						}
+					}
+				},
+				{
+					"name": "Get Product",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Product",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"更新後的課程\",\n    \"price\": 1200\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/products/1",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1"]
+						}
+					}
+				},
+				{
+					"name": "Add Product Follower",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1/follower",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1", "follower"]
+						}
+					}
+				},
+				{
+					"name": "Remove Product Follower",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1/follower",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1", "follower"]
+						}
+					}
+				},
+				{
+					"name": "Add Product Visibler",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1/visibler",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1", "visibler"]
+						}
+					}
+				},
+				{
+					"name": "Remove Product Visibler",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/products/1/visibler",
+							"host": ["{{base_url}}"],
+							"path": ["products", "1", "visibler"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Get All Orders",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": ["{{base_url}}"],
+							"path": ["orders"]
+						}
+					}
+				},
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1,\n    \"product_id\": 1,\n    \"quantity\": 1,\n    \"total_amount\": 1000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders",
+							"host": ["{{base_url}}"],
+							"path": ["orders"]
+						}
+					}
+				},
+				{
+					"name": "Get Order",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders/1",
+							"host": ["{{base_url}}"],
+							"path": ["orders", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Order",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": \"completed\",\n    \"total_amount\": 1200\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/orders/1",
+							"host": ["{{base_url}}"],
+							"path": ["orders", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Order",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/orders/1",
+							"host": ["{{base_url}}"],
+							"path": ["orders", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Course Info Types",
+			"item": [
+				{
+					"name": "Get All Course Info Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/course-info-types",
+							"host": ["{{base_url}}"],
+							"path": ["course-info-types"]
+						}
+					}
+				},
+				{
+					"name": "Create Course Info Type",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"程式設計\",\n    \"description\": \"程式設計相關課程\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/course-info-types",
+							"host": ["{{base_url}}"],
+							"path": ["course-info-types"]
+						}
+					}
+				},
+				{
+					"name": "Get Course Info Type",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/course-info-types/1",
+							"host": ["{{base_url}}"],
+							"path": ["course-info-types", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Course Info Type",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"進階程式設計\",\n    \"description\": \"進階程式設計相關課程\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/course-info-types/1",
+							"host": ["{{base_url}}"],
+							"path": ["course-info-types", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Course Info Type",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/course-info-types/1",
+							"host": ["{{base_url}}"],
+							"path": ["course-info-types", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Course Status Types",
+			"item": [
+				{
+					"name": "Get All Course Status Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/course-status-types",
+							"host": ["{{base_url}}"],
+							"path": ["course-status-types"]
+						}
+					}
+				},
+				{
+					"name": "Create Course Status Type",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"進行中\",\n    \"description\": \"課程正在進行中\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/course-status-types",
+							"host": ["{{base_url}}"],
+							"path": ["course-status-types"]
+						}
+					}
+				},
+				{
+					"name": "Get Course Status Type",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/course-status-types/1",
+							"host": ["{{base_url}}"],
+							"path": ["course-status-types", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Course Status Type",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"已完成\",\n    \"description\": \"課程已經完成\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/course-status-types/1",
+							"host": ["{{base_url}}"],
+							"path": ["course-status-types", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Course Status Type",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/course-status-types/1",
+							"host": ["{{base_url}}"],
+							"path": ["course-status-types", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Club Course Info",
+			"item": [
+				{
+					"name": "Get All Club Course Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/club-course-info",
+							"host": ["{{base_url}}"],
+							"path": ["club-course-info"]
+						}
+					}
+				},
+				{
+					"name": "Create Club Course Info",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Python 基礎課程\",\n    \"description\": \"Python 程式設計基礎課程\",\n    \"price\": 3000,\n    \"duration_hours\": 40\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/club-course-info",
+							"host": ["{{base_url}}"],
+							"path": ["club-course-info"]
+						}
+					}
+				},
+				{
+					"name": "Get Club Course Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/club-course-info/1",
+							"host": ["{{base_url}}"],
+							"path": ["club-course-info", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Club Course Info",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Python 進階課程\",\n    \"price\": 3500\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/club-course-info/1",
+							"host": ["{{base_url}}"],
+							"path": ["club-course-info", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Club Course Info",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/club-course-info/1",
+							"host": ["{{base_url}}"],
+							"path": ["club-course-info", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Club Course",
+			"item": [
+				{
+					"name": "Get All Club Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/club-course",
+							"host": ["{{base_url}}"],
+							"path": ["club-course"]
+						}
+					}
+				},
+				{
+					"name": "Create Club Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"course_info_id\": 1,\n    \"start_time\": \"2024-01-15 10:00:00\",\n    \"end_time\": \"2024-01-15 12:00:00\",\n    \"location\": \"教室A\",\n    \"max_students\": 30,\n    \"trial\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/club-course",
+							"host": ["{{base_url}}"],
+							"path": ["club-course"]
+						}
+					}
+				},
+				{
+					"name": "Get Club Course",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/club-course/1",
+							"host": ["{{base_url}}"],
+							"path": ["club-course", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Club Course",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"location\": \"教室B\",\n    \"max_students\": 25\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/club-course/1",
+							"host": ["{{base_url}}"],
+							"path": ["club-course", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Club Course",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/club-course/1",
+							"host": ["{{base_url}}"],
+							"path": ["club-course", "1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Type Management",
+			"item": [
+				{
+					"name": "Roles",
+					"item": [
+						{
+							"name": "Get All Roles",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/roles",
+									"host": ["{{base_url}}"],
+									"path": ["roles"]
+								}
+							}
+						},
+						{
+							"name": "Create Role",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"teacher\",\n    \"display_name\": \"講師\",\n    \"description\": \"課程講師\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/roles",
+									"host": ["{{base_url}}"],
+									"path": ["roles"]
+								}
+							}
+						},
+						{
+							"name": "Get Role",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/roles/1",
+									"host": ["{{base_url}}"],
+									"path": ["roles", "1"]
+								}
+							}
+						},
+						{
+							"name": "Update Role",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"display_name\": \"資深講師\",\n    \"description\": \"資深課程講師\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/roles/1",
+									"host": ["{{base_url}}"],
+									"path": ["roles", "1"]
+								}
+							}
+						},
+						{
+							"name": "Delete Role",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/roles/1",
+									"host": ["{{base_url}}"],
+									"path": ["roles", "1"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Notice Types",
+					"item": [
+						{
+							"name": "Get All Notice Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/notice-types",
+									"host": ["{{base_url}}"],
+									"path": ["notice-types"]
+								}
+							}
+						},
+						{
+							"name": "Create Notice Type",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"system\",\n    \"display_name\": \"系統通知\",\n    \"description\": \"系統相關通知\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notice-types",
+									"host": ["{{base_url}}"],
+									"path": ["notice-types"]
+								}
+							}
+						},
+						{
+							"name": "Get Notice Type",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/notice-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["notice-types", "1"]
+								}
+							}
+						},
+						{
+							"name": "Update Notice Type",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"display_name\": \"重要系統通知\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notice-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["notice-types", "1"]
+								}
+							}
+						},
+						{
+							"name": "Delete Notice Type",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/notice-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["notice-types", "1"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Level Types",
+					"item": [
+						{
+							"name": "Get All Level Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/level-types",
+									"host": ["{{base_url}}"],
+									"path": ["level-types"]
+								}
+							}
+						},
+						{
+							"name": "Create Level Type",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"beginner\",\n    \"display_name\": \"初級\",\n    \"description\": \"適合初學者\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/level-types",
+									"host": ["{{base_url}}"],
+									"path": ["level-types"]
+								}
+							}
+						},
+						{
+							"name": "Get Level Type",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/level-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["level-types", "1"]
+								}
+							}
+						},
+						{
+							"name": "Update Level Type",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"display_name\": \"入門級\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/level-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["level-types", "1"]
+								}
+							}
+						},
+						{
+							"name": "Delete Level Type",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/level-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["level-types", "1"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Language Types",
+					"item": [
+						{
+							"name": "Get All Language Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/lang-types",
+									"host": ["{{base_url}}"],
+									"path": ["lang-types"]
+								}
+							}
+						},
+						{
+							"name": "Create Language Type",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"python\",\n    \"display_name\": \"Python\",\n    \"description\": \"Python 程式語言\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/lang-types",
+									"host": ["{{base_url}}"],
+									"path": ["lang-types"]
+								}
+							}
+						},
+						{
+							"name": "Get Language Type",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/lang-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["lang-types", "1"]
+								}
+							}
+						},
+						{
+							"name": "Update Language Type",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"display_name\": \"Python 3.x\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/lang-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["lang-types", "1"]
+								}
+							}
+						},
+						{
+							"name": "Delete Language Type",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/lang-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["lang-types", "1"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Teaching Method Types",
+					"item": [
+						{
+							"name": "Get All Teaching Method Types",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/tech-method-types",
+									"host": ["{{base_url}}"],
+									"path": ["tech-method-types"]
+								}
+							}
+						},
+						{
+							"name": "Create Teaching Method Type",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"online\",\n    \"display_name\": \"線上教學\",\n    \"description\": \"透過網路進行的線上課程\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/tech-method-types",
+									"host": ["{{base_url}}"],
+									"path": ["tech-method-types"]
+								}
+							}
+						},
+						{
+							"name": "Get Teaching Method Type",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/tech-method-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["tech-method-types", "1"]
+								}
+							}
+						},
+						{
+							"name": "Update Teaching Method Type",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"display_name\": \"即時線上教學\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/tech-method-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["tech-method-types", "1"]
+								}
+							}
+						},
+						{
+							"name": "Delete Teaching Method Type",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/tech-method-types/1",
+									"host": ["{{base_url}}"],
+									"path": ["tech-method-types", "1"]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Search API",
+			"item": [
+				{
+					"name": "Universal Search",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search?q=python&type=course&limit=10",
+							"host": ["{{base_url}}"],
+							"path": ["search"],
+							"query": [
+								{
+									"key": "q",
+									"value": "python"
+								},
+								{
+									"key": "type",
+									"value": "course"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Global Search",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search/global?q=程式設計",
+							"host": ["{{base_url}}"],
+							"path": ["search", "global"],
+							"query": [
+								{
+									"key": "q",
+									"value": "程式設計"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Search Suggestions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search/suggestions?q=py",
+							"host": ["{{base_url}}"],
+							"path": ["search", "suggestions"],
+							"query": [
+								{
+									"key": "q",
+									"value": "py"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Available Filters",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search/filters",
+							"host": ["{{base_url}}"],
+							"path": ["search", "filters"]
+						}
+					}
+				},
+				{
+					"name": "Search Members",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search/members?q=john&role=student",
+							"host": ["{{base_url}}"],
+							"path": ["search", "members"],
+							"query": [
+								{
+									"key": "q",
+									"value": "john"
+								},
+								{
+									"key": "role",
+									"value": "student"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Search Products",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search/products?q=課程&min_price=1000&max_price=5000",
+							"host": ["{{base_url}}"],
+							"path": ["search", "products"],
+							"query": [
+								{
+									"key": "q",
+									"value": "課程"
+								},
+								{
+									"key": "min_price",
+									"value": "1000"
+								},
+								{
+									"key": "max_price",
+									"value": "5000"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Search Courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/search/courses?q=python&level=beginner&lang=python",
+							"host": ["{{base_url}}"],
+							"path": ["search", "courses"],
+							"query": [
+								{
+									"key": "q",
+									"value": "python"
+								},
+								{
+									"key": "level",
+									"value": "beginner"
+								},
+								{
+									"key": "lang",
+									"value": "python"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Comments API",
+			"item": [
+				{
+					"name": "Get All Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/comments?page=1&per_page=10&target_type=course&target_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["comments"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "per_page",
+									"value": "10"
+								},
+								{
+									"key": "target_type",
+									"value": "course"
+								},
+								{
+									"key": "target_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"target_type\": \"course\",\n    \"target_id\": 1,\n    \"content\": \"這個課程很棒！\",\n    \"rating\": 5,\n    \"is_anonymous\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/comments",
+							"host": ["{{base_url}}"],
+							"path": ["comments"]
+						}
+					}
+				},
+				{
+					"name": "Search Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/comments/search?q=很棒&target_type=course",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "search"],
+							"query": [
+								{
+									"key": "q",
+									"value": "很棒"
+								},
+								{
+									"key": "target_type",
+									"value": "course"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Trending Comments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/comments/trending?limit=20&days=7",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "trending"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "days",
+									"value": "7"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Comments Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/comments/statistics?target_type=course&target_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "statistics"],
+							"query": [
+								{
+									"key": "target_type",
+									"value": "course"
+								},
+								{
+									"key": "target_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Single Comment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/comments/1",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "1"]
+						}
+					}
+				},
+				{
+					"name": "Update Comment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"content\": \"更新後的評論內容\",\n    \"rating\": 4\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/comments/1",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "1"]
+						}
+					}
+				},
+				{
+					"name": "Delete Comment",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/comments/1",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "1"]
+						}
+					}
+				},
+				{
+					"name": "Toggle Like Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "{{base_url}}/comments/1/like",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "1", "like"]
+						}
+					}
+				},
+				{
+					"name": "Add Reaction to Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reaction_type\": \"heart\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/comments/1/reaction",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "1", "reaction"]
+						}
+					}
+				},
+				{
+					"name": "Report Comment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"reason\": \"inappropriate_content\",\n    \"description\": \"內容不當\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/comments/1/report",
+							"host": ["{{base_url}}"],
+							"path": ["comments", "1", "report"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Zoom API",
+			"item": [
+				{
+					"name": "Zoom Credentials",
+					"item": [
+						{
+							"name": "Get All Zoom Credentials",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/zoom/credentials",
+									"host": ["{{base_url}}"],
+									"path": ["zoom", "credentials"]
+								}
+							}
+						},
+						{
+							"name": "Create Zoom Credential",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"主要 Zoom 帳號\",\n    \"api_key\": \"your_zoom_api_key\",\n    \"api_secret\": \"your_zoom_api_secret\",\n    \"account_id\": \"your_zoom_account_id\",\n    \"max_meetings_per_day\": 10,\n    \"is_active\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/zoom/credentials",
+									"host": ["{{base_url}}"],
+									"path": ["zoom", "credentials"]
+								}
+							}
+						},
+						{
+							"name": "Get Zoom Credential",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/zoom/credentials/1",
+									"host": ["{{base_url}}"],
+									"path": ["zoom", "credentials", "1"]
+								}
+							}
+						},
+						{
+							"name": "Update Zoom Credential",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"更新後的 Zoom 帳號\",\n    \"max_meetings_per_day\": 15\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/zoom/credentials/1",
+									"host": ["{{base_url}}"],
+									"path": ["zoom", "credentials", "1"]
+								}
+							}
+						},
+						{
+							"name": "Delete Zoom Credential",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/zoom/credentials/1",
+									"host": ["{{base_url}}"],
+									"path": ["zoom", "credentials", "1"]
+								}
+							}
+						},
+						{
+							"name": "Test Zoom Connection",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/zoom/credentials/1/test",
+									"host": ["{{base_url}}"],
+									"path": ["zoom", "credentials", "1", "test"]
+								}
+							}
+						},
+						{
+							"name": "Reset Meeting Count",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/zoom/credentials/1/reset-count",
+									"host": ["{{base_url}}"],
+									"path": ["zoom", "credentials", "1", "reset-count"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Check Zoom Connection",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/zoom/check",
+							"host": ["{{base_url}}"],
+							"path": ["zoom", "check"]
+						}
+					}
+				},
+				{
+					"name": "Create Meeting for Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"topic\": \"課程會議\",\n    \"type\": 2,\n    \"duration\": 60,\n    \"password\": \"123456\",\n    \"waiting_room\": true,\n    \"auto_recording\": \"cloud\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/zoom/courses/1/meeting",
+							"host": ["{{base_url}}"],
+							"path": ["zoom", "courses", "1", "meeting"]
+						}
+					}
+				},
+				{
+					"name": "Get Course Zoom Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/zoom/courses/1/meeting",
+							"host": ["{{base_url}}"],
+							"path": ["zoom", "courses", "1", "meeting"]
+						}
+					}
+				},
+				{
+					"name": "Delete Course Meeting",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/zoom/courses/1/meeting",
+							"host": ["{{base_url}}"],
+							"path": ["zoom", "courses", "1", "meeting"]
+						}
+					}
+				},
+				{
+					"name": "Get Student Join URL",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/zoom/courses/1/join",
+							"host": ["{{base_url}}"],
+							"path": ["zoom", "courses", "1", "join"]
+						}
+					}
+				},
+				{
+					"name": "Get Teacher Start URL",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/zoom/courses/1/start",
+							"host": ["{{base_url}}"],
+							"path": ["zoom", "courses", "1", "start"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Attendance API",
+			"item": [
+				{
+					"name": "Get Attendance Statuses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/attendance/statuses",
+							"host": ["{{base_url}}"],
+							"path": ["attendance", "statuses"]
+						}
+					}
+				},
+				{
+					"name": "Course Attendance",
+					"item": [
+						{
+							"name": "Get Course Attendance List",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/attendance/courses/1",
+									"host": ["{{base_url}}"],
+									"path": ["attendance", "courses", "1"]
+								}
+							}
+						},
+						{
+							"name": "Batch Mark Attendance",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"attendances\": [\n        {\n            \"member_id\": 1,\n            \"status\": \"present\",\n            \"check_in_time\": \"2024-01-15 10:00:00\",\n            \"check_out_time\": \"2024-01-15 12:00:00\",\n            \"note\": \"準時出席\"\n        },\n        {\n            \"member_id\": 2,\n            \"status\": \"late\",\n            \"check_in_time\": \"2024-01-15 10:15:00\",\n            \"note\": \"遲到15分鐘\"\n        },\n        {\n            \"member_id\": 3,\n            \"status\": \"absent\",\n            \"note\": \"未出席\"\n        }\n    ],\n    \"marked_by\": 1\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/attendance/courses/1/batch",
+									"host": ["{{base_url}}"],
+									"path": ["attendance", "courses", "1", "batch"]
+								}
+							}
+						},
+						{
+							"name": "Generate Attendance Roster",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/attendance/courses/1/generate-roster",
+									"host": ["{{base_url}}"],
+									"path": ["attendance", "courses", "1", "generate-roster"]
+								}
+							}
+						},
+						{
+							"name": "Get Course Attendance Stats",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/attendance/courses/1/stats",
+									"host": ["{{base_url}}"],
+									"path": ["attendance", "courses", "1", "stats"]
+								}
+							}
+						},
+						{
+							"name": "Update Single Member Attendance",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"status\": \"present\",\n    \"check_in_time\": \"2024-01-15 10:05:00\",\n    \"check_out_time\": \"2024-01-15 12:00:00\",\n    \"note\": \"修正為出席\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/attendance/courses/1/members/1",
+									"host": ["{{base_url}}"],
+									"path": ["attendance", "courses", "1", "members", "1"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Get Member Attendance Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/attendance/members/1/stats?start_date=2024-01-01&end_date=2024-12-31&course_info_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["attendance", "members", "1", "stats"],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-01-01"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-12-31"
+								},
+								{
+									"key": "course_info_id",
+									"value": "1"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8001/api",
+			"type": "string"
+		}
+	]
+}

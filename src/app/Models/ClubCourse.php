@@ -77,4 +77,12 @@ class ClubCourse extends Model
     {
         return $this->zoomMeetDetail?->canJoinNow() ?? false;
     }
+
+    /**
+     * 關聯到出席記錄
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'club_course_id');
+    }
 }

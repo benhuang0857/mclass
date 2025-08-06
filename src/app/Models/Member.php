@@ -38,4 +38,12 @@ class Member extends Model
     {
         return $this->belongsToMany(Role::class, 'member_role');
     }
+
+    /**
+     * 關聯到出席記錄
+     */
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'member_id');
+    }
 }
