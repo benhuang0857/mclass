@@ -46,4 +46,12 @@ class Member extends Model
     {
         return $this->hasMany(Attendance::class, 'member_id');
     }
+
+    /**
+     * 關聯到訂單
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'member_id');
+    }
 }

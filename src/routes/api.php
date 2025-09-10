@@ -23,6 +23,7 @@ use App\Http\Controllers\ZoomCredentialController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CounselingInfoController;
 use App\Http\Controllers\CounselingAppointmentController;
+use App\Http\Controllers\MemberScheduleController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -38,6 +39,7 @@ Route::prefix('members')->group(function () {
     Route::get('/{id}', [MemberController::class, 'show']);
     Route::put('/{id}', [MemberController::class, 'update']);
     Route::delete('/{id}', [MemberController::class, 'destroy']);
+    Route::get('/{id}/schedule', [MemberScheduleController::class, 'getSchedule']);
 });
 
 Route::prefix('notices')->group(function () {

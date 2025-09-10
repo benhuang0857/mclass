@@ -6,6 +6,7 @@ use App\Models\CounselingAppointment;
 use App\Models\CounselingInfo;
 use App\Models\Member;
 use App\Models\OrderIteam;
+use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -375,15 +376,26 @@ class CounselingSeeder extends Seeder
         foreach ($students as $index => $student) {
             if (isset($counselingInfos[$index])) {
                 $counselingInfo = $counselingInfos[$index];
+                $product = Product::find($counselingInfo->product_id);
                 
-                // 創建假的訂單項目（實際應該由完整的訂單系統產生）
-                $orderItem = OrderIteam::create([
-                    'product_id' => $counselingInfo->product_id,
+                if (!$product) continue;
+                
+                // 先創建訂單
+                $order = Order::create([
                     'member_id' => $student->id,
+                    'code' => 'ORD-' . strtoupper(uniqid()),
+                    'total' => $product->discount_price ?: $product->regular_price,
+                    'currency' => 'TWD',
+                    'status' => 'completed',
+                ]);
+                
+                // 再創建訂單項目
+                $orderItem = OrderIteam::create([
+                    'order_id' => $order->id,
+                    'product_id' => $counselingInfo->product_id,
+                    'product_name' => $product->name,
                     'quantity' => 1,
-                    'unit_price' => 1500.00,
-                    'total_price' => 1500.00,
-                    'status' => 'paid',
+                    'price' => $product->discount_price ?: $product->regular_price,
                 ]);
 
                 $orderItems[] = $orderItem;
