@@ -85,4 +85,13 @@ class ClubCourse extends Model
     {
         return $this->hasMany(Attendance::class, 'club_course_id');
     }
+
+    /**
+     * 關聯到通知
+     */
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'related_id')
+                    ->where('related_type', 'course');
+    }
 }

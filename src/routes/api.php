@@ -24,6 +24,8 @@ use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\CounselingInfoController;
 use App\Http\Controllers\CounselingAppointmentController;
 use App\Http\Controllers\MemberScheduleController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationPreferenceController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -287,4 +289,45 @@ Route::prefix('counseling-appointments')->group(function () {
     // 預約狀態管理
     Route::post('/{id}/confirm', [CounselingAppointmentController::class, 'confirm']);
     Route::post('/{id}/complete', [CounselingAppointmentController::class, 'complete']);
+});
+
+########## Notification API ##########
+
+Route::prefix('notifications')->group(function () {
+    // 基本通知操作
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/{id}', [NotificationController::class, 'show']);
+    Route::delete('/{id}', [NotificationController::class, 'destroy']);
+    
+    // 標記已讀功能
+    Route::put('/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::put('/batch/read', [NotificationController::class, 'markMultipleAsRead']);
+    Route::put('/all/read', [NotificationController::class, 'markAllAsRead']);
+    
+    // 統計資料
+    Route::get('/stats/summary', [NotificationController::class, 'getStats']);
+    
+    // 手動觸發提醒（測試/管理用）
+    Route::post('/trigger/course-reminder', [NotificationController::class, 'triggerCourseReminder']);
+    Route::post('/trigger/counseling-reminder', [NotificationController::class, 'triggerCounselingReminder']);
+    Route::post('/trigger/counseling-confirmation', [NotificationController::class, 'triggerCounselingConfirmation']);
+    Route::post('/trigger/counseling-status-change', [NotificationController::class, 'triggerCounselingStatusChange']);
+    Route::post('/trigger/counseling-time-change', [NotificationController::class, 'triggerCounselingTimeChange']);
+    Route::post('/trigger/counselor-new-service', [NotificationController::class, 'triggerCounselorNewService']);
+});
+
+########## Notification Preferences API ##########
+
+Route::prefix('notification-preferences')->group(function () {
+    // 獲取和管理通知偏好
+    Route::get('/', [NotificationPreferenceController::class, 'index']);
+    Route::put('/{id}', [NotificationPreferenceController::class, 'update']);
+    Route::put('/batch/update', [NotificationPreferenceController::class, 'batchUpdate']);
+    
+    // 快速設定
+    Route::post('/quick-setting', [NotificationPreferenceController::class, 'quickSetting']);
+    Route::post('/reset-defaults', [NotificationPreferenceController::class, 'resetToDefaults']);
+    
+    // 測試通知
+    Route::post('/test', [NotificationPreferenceController::class, 'testNotification']);
 });

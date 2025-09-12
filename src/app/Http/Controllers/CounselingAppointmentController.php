@@ -5,10 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\CounselingAppointment;
 use App\Models\CounselingInfo;
 use App\Models\OrderIteam;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class CounselingAppointmentController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
     public function index(Request $request)
     {
         $query = CounselingAppointment::with(['orderItem', 'counselingInfo', 'student', 'counselor']);
@@ -78,6 +85,8 @@ class CounselingAppointmentController extends Controller
     public function update(Request $request, $id)
     {
         $appointment = CounselingAppointment::findOrFail($id);
+        $oldStatus = $appointment->status;
+        $oldTime = $appointment->confirmed_datetime ?: $appointment->preferred_datetime;
 
         $validated = $request->validate([
             'title' => 'string|max:255',
@@ -97,6 +106,26 @@ class CounselingAppointmentController extends Controller
         ]);
 
         $appointment->update($validated);
+
+        // 檢查狀態是否變更，發送通知
+        if (isset($validated['status']) && $validated['status'] !== $oldStatus) {
+            $this->notificationService->createCounselingStatusChangeNotifications(
+                $appointment->id, 
+                $oldStatus, 
+                $validated['status']
+            );
+        }
+
+        // 檢查時間是否變更，發送通知
+        $newTime = $validated['confirmed_datetime'] ?? $validated['preferred_datetime'] ?? null;
+        if ($newTime && $newTime !== $oldTime) {
+            $this->notificationService->createCounselingTimeChangeNotifications(
+                $appointment->id,
+                $oldTime,
+                $newTime
+            );
+        }
+
         return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
     }
 
@@ -130,6 +159,12 @@ class CounselingAppointmentController extends Controller
         $appointment->update(array_merge($validated, [
             'status' => 'confirmed'
         ]));
+
+        // 發送確認通知
+        $this->notificationService->createCounselingConfirmationNotifications($appointment->id);
+
+        // 自動創建提醒通知（1小時前）
+        $this->notificationService->createCounselingReminderNotifications($appointment->id, 60);
 
         return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
     }

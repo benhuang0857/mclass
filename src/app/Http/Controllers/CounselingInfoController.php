@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\CounselingInfo;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class CounselingInfoController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
     public function index()
     {
         $counselingInfos = CounselingInfo::with(['product', 'counselors'])->get();
@@ -78,9 +85,22 @@ class CounselingInfoController extends Controller
             'is_primary' => 'boolean'
         ]);
 
+        // 檢查是否已經指派過該諮商師
+        $alreadyAssigned = $counselingInfo->counselors()
+            ->where('counselor_id', $validated['counselor_id'])
+            ->exists();
+
         $counselingInfo->counselors()->attach($validated['counselor_id'], [
             'is_primary' => $validated['is_primary'] ?? false
         ]);
+
+        // 如果是新指派的諮商師，發送新服務通知給曾經預約該諮商師的用戶
+        if (!$alreadyAssigned) {
+            $this->notificationService->createCounselorNewServiceNotifications(
+                $validated['counselor_id'],
+                $id
+            );
+        }
 
         return response()->json(['message' => 'Counselor assigned successfully.']);
     }

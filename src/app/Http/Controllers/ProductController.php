@@ -5,11 +5,18 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\FollowerClubCourseInfo;
 use App\Models\VisiblerClubCourseInfo;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use DB;
 
 class ProductController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
     /**
      * 顯示所有課程實例
      */
@@ -76,6 +83,10 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $course = Product::findOrFail($id);
+        
+        // 記錄舊值用於比較
+        $oldPrice = $course->discount_price ?: $course->regular_price;
+        $oldStatus = $course->status;
 
         $rules = [
             'name' => 'sometimes|string|max:255',
@@ -105,6 +116,29 @@ class ProductController extends Controller
         DB::beginTransaction();
         try {
             $course->update($validated);
+            
+            // 檢查價格是否變更
+            if (isset($validated['regular_price']) || isset($validated['discount_price'])) {
+                $newPrice = $validated['discount_price'] ?? $validated['regular_price'] ?? $course->discount_price ?: $course->regular_price;
+                
+                if ($newPrice != $oldPrice) {
+                    $this->notificationService->createCoursePriceChangeNotifications(
+                        $id,
+                        $oldPrice,
+                        $newPrice
+                    );
+                }
+            }
+            
+            // 檢查狀態是否變更
+            if (isset($validated['status']) && $validated['status'] !== $oldStatus) {
+                $this->notificationService->createCourseStatusChangeNotifications(
+                    $id,
+                    $oldStatus,
+                    $validated['status']
+                );
+            }
+            
             DB::commit();
             return response()->json($course->load('clubCourseInfo'));
         } catch (\Exception $e) {
