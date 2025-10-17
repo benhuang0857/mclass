@@ -29,7 +29,7 @@ return new class extends Migration
                 'all' // 全部類型的總開關
             ])->comment('通知類型');
             $table->boolean('enabled')->default(true)->comment('是否啟用');
-            $table->json('delivery_methods')->default('["database"]')->comment('推送方式 [database, email, push, sms]');
+            $table->json('delivery_methods')->comment('推送方式 [database, email, push, sms]');
             $table->integer('advance_minutes')->nullable()->comment('提前多久提醒（分鐘）');
             $table->json('schedule_settings')->nullable()->comment('排程設定（如靜音時間等）');
             $table->timestamps();

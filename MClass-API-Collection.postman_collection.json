@@ -2513,6 +2513,484 @@
 			]
 		},
 		{
+			"name": "Notifications API",
+			"item": [
+				{
+					"name": "Get Notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications?member_id=1&unread_only=true&type=course_reminder&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["notifications"],
+							"query": [
+								{
+									"key": "member_id",
+									"value": "1",
+									"description": "Required: Member ID to get notifications for"
+								},
+								{
+									"key": "unread_only",
+									"value": "true",
+									"description": "Optional: Show only unread notifications (true/false/1/0)"
+								},
+								{
+									"key": "type",
+									"value": "course_reminder",
+									"description": "Optional: Filter by notification type"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Optional: Number of notifications per page (1-100)"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Single Notification",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/1",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "1"]
+						}
+					}
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/1/read",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "1", "read"]
+						}
+					}
+				},
+				{
+					"name": "Mark Multiple Notifications as Read",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"notification_ids\": [1, 2, 3],\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notifications/batch/read",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "batch", "read"]
+						}
+					}
+				},
+				{
+					"name": "Mark All Notifications as Read",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notifications/all/read",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "all", "read"]
+						}
+					}
+				},
+				{
+					"name": "Delete Notification",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/1",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Notification Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/stats/summary?member_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "stats", "summary"],
+							"query": [
+								{
+									"key": "member_id",
+									"value": "1",
+									"description": "Required: Member ID to get statistics for"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Testing",
+					"item": [
+						{
+							"name": "Trigger Course Reminder",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"course_id\": 1,\n    \"minutes_before\": 60\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/course-reminder",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "course-reminder"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counseling Reminder",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"appointment_id\": 1,\n    \"minutes_before\": 30\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counseling-reminder",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counseling-reminder"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counseling Confirmation",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"appointment_id\": 1\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counseling-confirmation",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counseling-confirmation"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counseling Status Change",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"appointment_id\": 1,\n    \"old_status\": \"pending\",\n    \"new_status\": \"confirmed\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counseling-status-change",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counseling-status-change"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counseling Time Change",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"appointment_id\": 1,\n    \"old_time\": \"2024-12-15 14:00:00\",\n    \"new_time\": \"2024-12-15 16:00:00\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counseling-time-change",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counseling-time-change"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counselor New Service",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"counselor_id\": 2,\n    \"counseling_info_id\": 1\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counselor-new-service",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counselor-new-service"]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Notification Preferences API",
+			"item": [
+				{
+					"name": "Get All Notification Preferences",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notification-preferences?member_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences"],
+							"query": [
+								{
+									"key": "member_id",
+									"value": "1",
+									"description": "Optional: Filter by member ID"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Notification Preference",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"enabled\": true,\n    \"delivery_methods\": [\"database\", \"email\"],\n    \"advance_minutes\": 30,\n    \"schedule_settings\": {\n        \"quiet_hours\": {\n            \"start\": \"22:00\",\n            \"end\": \"08:00\"\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/1",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "1"]
+						}
+					}
+				},
+				{
+					"name": "Batch Update Notification Preferences",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1,\n    \"preferences\": [\n        {\n            \"notification_type\": \"course_reminder\",\n            \"enabled\": true,\n            \"delivery_methods\": [\"database\", \"email\"],\n            \"advance_minutes\": 60\n        },\n        {\n            \"notification_type\": \"counseling_reminder\",\n            \"enabled\": true,\n            \"delivery_methods\": [\"database\"],\n            \"advance_minutes\": 30\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/batch/update",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "batch", "update"]
+						}
+					}
+				},
+				{
+					"name": "Quick Setting",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1,\n    \"setting_type\": \"enable_all\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/quick-setting",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "quick-setting"]
+						}
+					}
+				},
+				{
+					"name": "Reset to Defaults",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/reset-defaults",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "reset-defaults"]
+						}
+					}
+				},
+				{
+					"name": "Test Notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1,\n    \"notification_type\": \"course_reminder\",\n    \"delivery_method\": \"database\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/test",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "test"]
+						}
+					}
+				}
+			]
+		},
+		{
 			"name": "Counseling API",
 			"item": [
 				{

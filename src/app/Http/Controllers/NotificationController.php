@@ -22,7 +22,7 @@ class NotificationController extends Controller
     {
         $request->validate([
             'member_id' => 'required|exists:members,id',
-            'unread_only' => 'boolean',
+            'unread_only' => 'sometimes|in:true,false,1,0',
             'type' => 'string|in:course_reminder,course_change,counseling_reminder,counseling_confirmed,course_follower,counselor_specific',
             'limit' => 'integer|min:1|max:100',
         ]);

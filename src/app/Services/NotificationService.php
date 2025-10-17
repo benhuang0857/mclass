@@ -52,7 +52,7 @@ class NotificationService
     /**
      * 批量創建通知
      */
-    public function createBulkNotifications(array $members, array $notificationData)
+    public function createBulkNotifications($members, array $notificationData)
     {
         $notifications = [];
         foreach ($members as $member) {
