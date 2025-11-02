@@ -5,12 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\ClubCourse;
 use App\Models\ClubCourseInfo;
 use App\Models\ClubCourseInfoSchedule;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
 
 class ClubCourseController extends Controller
 {
+    protected $notificationService;
+
+    public function __construct(NotificationService $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
     /**
      * 顯示所有課程實例
      */
@@ -47,6 +54,13 @@ class ClubCourseController extends Controller
         DB::beginTransaction();
         try {
             $course = ClubCourse::create($validated);
+            
+            // 發送新班次通知給追蹤該課程的用戶
+            $this->notificationService->createCourseNewClassNotifications($course->id);
+            
+            // 創建報名截止提醒（課程開始前24小時）
+            $this->notificationService->createCourseRegistrationDeadlineNotifications($course->id, 24);
+            
             DB::commit();
             return response()->json($course->load('courseInfo'), 201);
         } catch (\Exception $e) {
@@ -61,6 +75,8 @@ class ClubCourseController extends Controller
     public function update(Request $request, $id)
     {
         $course = ClubCourse::findOrFail($id);
+        $oldStartTime = $course->start_time;
+        $oldLocation = $course->location;
 
         $validated = $request->validate([
             'course_id' => 'sometimes|required|exists:club_course_infos,id',
@@ -75,6 +91,27 @@ class ClubCourseController extends Controller
         DB::beginTransaction();
         try {
             $course->update($validated);
+            
+            // 檢查時間是否變更
+            if (isset($validated['start_time']) && $validated['start_time'] !== $oldStartTime) {
+                $this->notificationService->createCourseChangeNotifications(
+                    $id, 
+                    'time', 
+                    $oldStartTime, 
+                    $validated['start_time']
+                );
+            }
+            
+            // 檢查地點是否變更
+            if (isset($validated['location']) && $validated['location'] !== $oldLocation) {
+                $this->notificationService->createCourseChangeNotifications(
+                    $id, 
+                    'location', 
+                    $oldLocation, 
+                    $validated['location']
+                );
+            }
+            
             DB::commit();
             return response()->json($course->load('courseInfo'));
         } catch (\Exception $e) {

@@ -216,6 +216,40 @@
 							"path": ["members", "1"]
 						}
 					}
+				},
+				{
+					"name": "Get Member Schedule",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/members/1/schedule?start_date=2024-12-01&end_date=2024-12-31&roles=student,teacher",
+							"host": ["{{base_url}}"],
+							"path": ["members", "1", "schedule"],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-12-01",
+									"description": "Optional: Schedule start date (default: start of current week)"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-12-31",
+									"description": "Optional: Schedule end date (default: end of current week)"
+								},
+								{
+									"key": "roles",
+									"value": "student,teacher",
+									"description": "Optional: Filter by roles (comma-separated: student,teacher,assistant,counselor)"
+								}
+							]
+						}
+					}
 				}
 			]
 		},
@@ -2475,6 +2509,819 @@
 							]
 						}
 					}
+				}
+			]
+		},
+		{
+			"name": "Notifications API",
+			"item": [
+				{
+					"name": "Get Notifications",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications?member_id=1&unread_only=true&type=course_reminder&limit=20",
+							"host": ["{{base_url}}"],
+							"path": ["notifications"],
+							"query": [
+								{
+									"key": "member_id",
+									"value": "1",
+									"description": "Required: Member ID to get notifications for"
+								},
+								{
+									"key": "unread_only",
+									"value": "true",
+									"description": "Optional: Show only unread notifications (true/false/1/0)"
+								},
+								{
+									"key": "type",
+									"value": "course_reminder",
+									"description": "Optional: Filter by notification type"
+								},
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Optional: Number of notifications per page (1-100)"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Single Notification",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/1",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "1"]
+						}
+					}
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/1/read",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "1", "read"]
+						}
+					}
+				},
+				{
+					"name": "Mark Multiple Notifications as Read",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"notification_ids\": [1, 2, 3],\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notifications/batch/read",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "batch", "read"]
+						}
+					}
+				},
+				{
+					"name": "Mark All Notifications as Read",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notifications/all/read",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "all", "read"]
+						}
+					}
+				},
+				{
+					"name": "Delete Notification",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/1",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "1"]
+						}
+					}
+				},
+				{
+					"name": "Get Notification Statistics",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notifications/stats/summary?member_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["notifications", "stats", "summary"],
+							"query": [
+								{
+									"key": "member_id",
+									"value": "1",
+									"description": "Required: Member ID to get statistics for"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Testing",
+					"item": [
+						{
+							"name": "Trigger Course Reminder",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"course_id\": 1,\n    \"minutes_before\": 60\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/course-reminder",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "course-reminder"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counseling Reminder",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"appointment_id\": 1,\n    \"minutes_before\": 30\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counseling-reminder",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counseling-reminder"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counseling Confirmation",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"appointment_id\": 1\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counseling-confirmation",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counseling-confirmation"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counseling Status Change",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"appointment_id\": 1,\n    \"old_status\": \"pending\",\n    \"new_status\": \"confirmed\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counseling-status-change",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counseling-status-change"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counseling Time Change",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"appointment_id\": 1,\n    \"old_time\": \"2024-12-15 14:00:00\",\n    \"new_time\": \"2024-12-15 16:00:00\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counseling-time-change",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counseling-time-change"]
+								}
+							}
+						},
+						{
+							"name": "Trigger Counselor New Service",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"counselor_id\": 2,\n    \"counseling_info_id\": 1\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/notifications/trigger/counselor-new-service",
+									"host": ["{{base_url}}"],
+									"path": ["notifications", "trigger", "counselor-new-service"]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Notification Preferences API",
+			"item": [
+				{
+					"name": "Get All Notification Preferences",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/notification-preferences?member_id=1",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences"],
+							"query": [
+								{
+									"key": "member_id",
+									"value": "1",
+									"description": "Optional: Filter by member ID"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Update Notification Preference",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"enabled\": true,\n    \"delivery_methods\": [\"database\", \"email\"],\n    \"advance_minutes\": 30,\n    \"schedule_settings\": {\n        \"quiet_hours\": {\n            \"start\": \"22:00\",\n            \"end\": \"08:00\"\n        }\n    }\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/1",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "1"]
+						}
+					}
+				},
+				{
+					"name": "Batch Update Notification Preferences",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1,\n    \"preferences\": [\n        {\n            \"notification_type\": \"course_reminder\",\n            \"enabled\": true,\n            \"delivery_methods\": [\"database\", \"email\"],\n            \"advance_minutes\": 60\n        },\n        {\n            \"notification_type\": \"counseling_reminder\",\n            \"enabled\": true,\n            \"delivery_methods\": [\"database\"],\n            \"advance_minutes\": 30\n        }\n    ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/batch/update",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "batch", "update"]
+						}
+					}
+				},
+				{
+					"name": "Quick Setting",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1,\n    \"setting_type\": \"enable_all\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/quick-setting",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "quick-setting"]
+						}
+					}
+				},
+				{
+					"name": "Reset to Defaults",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/reset-defaults",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "reset-defaults"]
+						}
+					}
+				},
+				{
+					"name": "Test Notification",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"member_id\": 1,\n    \"notification_type\": \"course_reminder\",\n    \"delivery_method\": \"database\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/notification-preferences/test",
+							"host": ["{{base_url}}"],
+							"path": ["notification-preferences", "test"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Counseling API",
+			"item": [
+				{
+					"name": "Counseling Info",
+					"item": [
+						{
+							"name": "Get All Counseling Infos",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/counseling-infos",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-infos"]
+								}
+							}
+						},
+						{
+							"name": "Create Counseling Info",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": 1,\n    \"name\": \"學業規劃諮商服務\",\n    \"code\": \"COUNSELING-ACADEMIC-001\",\n    \"description\": \"協助學生解決學習困難，規劃學業發展方向\",\n    \"details\": \"提供個人化的學業指導，包含選課建議、學習方法改善、時間管理、考試策略等\",\n    \"feature_img\": \"counseling/academic-counseling.jpg\",\n    \"counseling_mode\": \"both\",\n    \"session_duration\": 60,\n    \"total_sessions\": 1,\n    \"allow_reschedule\": true,\n    \"status\": \"active\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-infos",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-infos"]
+								}
+							}
+						},
+						{
+							"name": "Get Counseling Info",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/counseling-infos/1",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-infos", "1"]
+								}
+							}
+						},
+						{
+							"name": "Update Counseling Info",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": 1,\n    \"name\": \"學業規劃諮商服務 (更新)\",\n    \"code\": \"COUNSELING-ACADEMIC-001\",\n    \"description\": \"協助學生解決學習困難，規劃學業發展方向\",\n    \"details\": \"提供個人化的學業指導，包含選課建議、學習方法改善、時間管理、考試策略等。已更新服務內容。\",\n    \"feature_img\": \"counseling/academic-counseling.jpg\",\n    \"counseling_mode\": \"both\",\n    \"session_duration\": 90,\n    \"total_sessions\": 1,\n    \"allow_reschedule\": true,\n    \"status\": \"active\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-infos/1",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-infos", "1"]
+								}
+							}
+						},
+						{
+							"name": "Delete Counseling Info",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/counseling-infos/1",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-infos", "1"]
+								}
+							}
+						},
+						{
+							"name": "Assign Counselor",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"counselor_id\": 2,\n    \"is_primary\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-infos/1/counselors",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-infos", "1", "counselors"]
+								}
+							}
+						},
+						{
+							"name": "Remove Counselor",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"counselor_id\": 2\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-infos/1/counselors",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-infos", "1", "counselors"]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Counseling Appointments",
+					"item": [
+						{
+							"name": "Get All Appointments",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/counseling-appointments?student_id=1&status=pending",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-appointments"],
+									"query": [
+										{
+											"key": "student_id",
+											"value": "1",
+											"description": "Optional: Filter by student"
+										},
+										{
+											"key": "counselor_id",
+											"value": "2",
+											"description": "Optional: Filter by counselor",
+											"disabled": true
+										},
+										{
+											"key": "status",
+											"value": "pending",
+											"description": "Optional: Filter by status (pending, confirmed, completed, cancelled)"
+										}
+									]
+								}
+							}
+						},
+						{
+							"name": "Create Appointment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"order_item_id\": 1,\n    \"counseling_info_id\": 1,\n    \"student_id\": 1,\n    \"counselor_id\": 2,\n    \"title\": \"期中考準備策略諮商\",\n    \"description\": \"希望諮詢如何有效準備期中考試，改善學習方法\",\n    \"type\": \"academic\",\n    \"preferred_datetime\": \"2024-12-15T14:00:00\",\n    \"duration\": 60,\n    \"method\": \"online\",\n    \"is_urgent\": false\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-appointments",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-appointments"]
+								}
+							}
+						},
+						{
+							"name": "Get Appointment",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/counseling-appointments/1",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-appointments", "1"]
+								}
+							}
+						},
+						{
+							"name": "Update Appointment",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"期中考準備策略諮商 (更新)\",\n    \"description\": \"希望諮詢如何有效準備期中考試，改善學習方法。已更新需求。\",\n    \"preferred_datetime\": \"2024-12-16T15:00:00\",\n    \"duration\": 90,\n    \"method\": \"offline\",\n    \"location\": \"諮商室B\",\n    \"is_urgent\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-appointments/1",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-appointments", "1"]
+								}
+							}
+						},
+						{
+							"name": "Delete Appointment",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/counseling-appointments/1",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-appointments", "1"]
+								}
+							}
+						},
+						{
+							"name": "Confirm Appointment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"confirmed_datetime\": \"2024-12-15T14:00:00\",\n    \"method\": \"online\",\n    \"meeting_url\": \"https://meet.google.com/abc-defg-hij\",\n    \"location\": null,\n    \"counselor_notes\": \"已確認預約時間，請準時參加\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-appointments/1/confirm",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-appointments", "1", "confirm"]
+								}
+							}
+						},
+						{
+							"name": "Complete Appointment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"counselor_notes\": \"學員學習了有效的考試準備技巧，建議持續練習時間管理方法\",\n    \"student_feedback\": \"諮商師提供了很多實用的學習建議，非常有幫助\",\n    \"rating\": 5\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-appointments/1/complete",
+									"host": ["{{base_url}}"],
+									"path": ["counseling-appointments", "1", "complete"]
+								}
+							}
+						}
+					]
 				}
 			]
 		}

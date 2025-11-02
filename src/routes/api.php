@@ -21,6 +21,11 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ZoomController;
 use App\Http\Controllers\ZoomCredentialController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\CounselingInfoController;
+use App\Http\Controllers\CounselingAppointmentController;
+use App\Http\Controllers\MemberScheduleController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationPreferenceController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -36,6 +41,7 @@ Route::prefix('members')->group(function () {
     Route::get('/{id}', [MemberController::class, 'show']);
     Route::put('/{id}', [MemberController::class, 'update']);
     Route::delete('/{id}', [MemberController::class, 'destroy']);
+    Route::get('/{id}/schedule', [MemberScheduleController::class, 'getSchedule']);
 });
 
 Route::prefix('notices')->group(function () {
@@ -255,4 +261,73 @@ Route::prefix('attendance')->group(function () {
     
     // 學生出席統計
     Route::get('/members/{member}/stats', [AttendanceController::class, 'getMemberAttendanceStats']);
+});
+
+########## Counseling API ##########
+
+// 諮商服務資訊管理
+Route::prefix('counseling-infos')->group(function () {
+    Route::get('/', [CounselingInfoController::class, 'index']);
+    Route::post('/', [CounselingInfoController::class, 'store']);
+    Route::get('/{id}', [CounselingInfoController::class, 'show']);
+    Route::put('/{id}', [CounselingInfoController::class, 'update']);
+    Route::delete('/{id}', [CounselingInfoController::class, 'destroy']);
+    
+    // 諮商師管理
+    Route::post('/{id}/counselors', [CounselingInfoController::class, 'assignCounselor']);
+    Route::delete('/{id}/counselors', [CounselingInfoController::class, 'removeCounselor']);
+});
+
+// 諮商預約管理
+Route::prefix('counseling-appointments')->group(function () {
+    Route::get('/', [CounselingAppointmentController::class, 'index']);
+    Route::post('/', [CounselingAppointmentController::class, 'store']);
+    Route::get('/{id}', [CounselingAppointmentController::class, 'show']);
+    Route::put('/{id}', [CounselingAppointmentController::class, 'update']);
+    Route::delete('/{id}', [CounselingAppointmentController::class, 'destroy']);
+    
+    // 預約狀態管理
+    Route::post('/{id}/confirm', [CounselingAppointmentController::class, 'confirm']);
+    Route::post('/{id}/complete', [CounselingAppointmentController::class, 'complete']);
+});
+
+########## Notification API ##########
+
+Route::prefix('notifications')->group(function () {
+    // 基本通知操作
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/{id}', [NotificationController::class, 'show']);
+    Route::delete('/{id}', [NotificationController::class, 'destroy']);
+    
+    // 標記已讀功能
+    Route::put('/{id}/read', [NotificationController::class, 'markAsRead']);
+    Route::put('/batch/read', [NotificationController::class, 'markMultipleAsRead']);
+    Route::put('/all/read', [NotificationController::class, 'markAllAsRead']);
+    
+    // 統計資料
+    Route::get('/stats/summary', [NotificationController::class, 'getStats']);
+    
+    // 手動觸發提醒（測試/管理用）
+    Route::post('/trigger/course-reminder', [NotificationController::class, 'triggerCourseReminder']);
+    Route::post('/trigger/counseling-reminder', [NotificationController::class, 'triggerCounselingReminder']);
+    Route::post('/trigger/counseling-confirmation', [NotificationController::class, 'triggerCounselingConfirmation']);
+    Route::post('/trigger/counseling-status-change', [NotificationController::class, 'triggerCounselingStatusChange']);
+    Route::post('/trigger/counseling-time-change', [NotificationController::class, 'triggerCounselingTimeChange']);
+    Route::post('/trigger/counselor-new-service', [NotificationController::class, 'triggerCounselorNewService']);
+});
+
+########## Notification Preferences API ##########
+
+Route::prefix('notification-preferences')->group(function () {
+    // 獲取和管理通知偏好
+    Route::get('/', [NotificationPreferenceController::class, 'index']);
+    Route::put('/{id}', [NotificationPreferenceController::class, 'update']);
+    Route::put('/batch/update', [NotificationPreferenceController::class, 'batchUpdate']);
+    
+    // 快速設定
+    Route::post('/quick-setting', [NotificationPreferenceController::class, 'quickSetting']);
+    Route::post('/reset-defaults', [NotificationPreferenceController::class, 'resetToDefaults']);
+    
+    // 測試通知
+    Route::post('/test', [NotificationPreferenceController::class, 'testNotification']);
 });

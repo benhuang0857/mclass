@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schedule;
 use Symfony\Component\Console\Command\Command;
 
 Artisan::command("inspire", function () {
@@ -78,3 +79,24 @@ Artisan::command('db:init-combo', function () {
         return Command::FAILURE;
     }
 })->describe('Run db:init-necessary, migrate, and db:seed to initialize the database');
+
+// Notification System Scheduling
+Schedule::command('notifications:generate-course-reminders --minutes-before=60')
+    ->everyFiveMinutes()
+    ->description('Generate course reminders (1 hour before)');
+
+Schedule::command('notifications:generate-course-reminders --minutes-before=1440')
+    ->dailyAt('09:00')
+    ->description('Generate course reminders (24 hours before)');
+
+Schedule::command('notifications:generate-counseling-reminders --minutes-before=60')
+    ->everyFiveMinutes()
+    ->description('Generate counseling reminders (1 hour before)');
+
+Schedule::command('notifications:generate-counseling-reminders --minutes-before=1440')
+    ->dailyAt('09:00')
+    ->description('Generate counseling reminders (24 hours before)');
+
+Schedule::command('notifications:send')
+    ->everyMinute()
+    ->description('Send pending notifications');

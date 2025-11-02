@@ -48,6 +48,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('product_relate');
+        Schema::dropIfExists('visibler_club_course_info');
+        Schema::dropIfExists('follower_club_course_info');
+        Schema::dropIfExists('products');
     }
 };
