@@ -18,6 +18,33 @@ class ProductController extends Controller
         $this->notificationService = $notificationService;
     }
     /**
+     * @OA\Get(
+     *     path="/api/products",
+     *     summary="Get all products (courses)",
+     *     description="Retrieve a list of all course products with their information, followers, and visible students",
+     *     operationId="getProductsList",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="club_course_info_id", type="integer", example=1),
+     *                 @OA\Property(property="price", type="number", format="float", example=99.99),
+     *                 @OA\Property(property="inventory", type="integer", example=50)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 顯示所有課程實例
      */
     public function index()
@@ -32,6 +59,41 @@ class ProductController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/products/{id}",
+     *     summary="Get a specific product",
+     *     description="Retrieve detailed information about a specific course product",
+     *     operationId="getProductById",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Product ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="club_course_info_id", type="integer", example=1),
+     *             @OA\Property(property="price", type="number", format="float", example=99.99),
+     *             @OA\Property(property="inventory", type="integer", example=50)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 顯示單一課程實例
      */
     public function show($id)

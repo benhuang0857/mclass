@@ -10,6 +10,35 @@ use Illuminate\Http\Request;
 
 class MemberController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/members",
+     *     summary="Get all members",
+     *     description="Retrieve a list of all members with their profiles, contacts, and backgrounds",
+     *     operationId="getMembersList",
+     *     tags={"Members"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="nickname", type="string", example="JohnDoe"),
+     *                 @OA\Property(property="account", type="string", example="john.doe"),
+     *                 @OA\Property(property="email", type="string", example="john@example.com"),
+     *                 @OA\Property(property="status", type="boolean", example=true)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function index()
     {
         $members = Member::with([
@@ -22,6 +51,61 @@ class MemberController extends Controller
         return response()->json($members);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/members",
+     *     summary="Create a new member",
+     *     description="Create a new member with profile, contact, and background information",
+     *     operationId="createMember",
+     *     tags={"Members"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Member data",
+     *         @OA\JsonContent(
+     *             required={"member", "profile", "contact", "background"},
+     *             @OA\Property(
+     *                 property="member",
+     *                 type="object",
+     *                 @OA\Property(property="nickname", type="string", example="JohnDoe"),
+     *                 @OA\Property(property="account", type="string", example="john.doe"),
+     *                 @OA\Property(property="email", type="string", format="email", example="john@example.com"),
+     *                 @OA\Property(property="email_valid", type="boolean", example=true),
+     *                 @OA\Property(property="password", type="string", format="password", example="password123"),
+     *                 @OA\Property(property="status", type="boolean", example=true)
+     *             ),
+     *             @OA\Property(
+     *                 property="profile",
+     *                 type="object",
+     *                 @OA\Property(property="lastname", type="string", example="Doe"),
+     *                 @OA\Property(property="firstname", type="string", example="John"),
+     *                 @OA\Property(property="gender", type="string", enum={"male", "female", "other"}, example="male"),
+     *                 @OA\Property(property="birthday", type="string", format="date", example="1990-01-01"),
+     *                 @OA\Property(property="job", type="string", example="Software Engineer")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Member created successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="nickname", type="string", example="JohnDoe"),
+     *             @OA\Property(property="account", type="string", example="john.doe"),
+     *             @OA\Property(property="email", type="string", example="john@example.com")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
