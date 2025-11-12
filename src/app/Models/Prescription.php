@@ -16,6 +16,7 @@ class Prescription extends Model
     protected $fillable = [
         'flip_course_case_id',
         'counselor_id',
+        'counseling_appointment_id',
         'cycle_number',
         'strategy_report',
         'counseling_notes',
@@ -47,6 +48,14 @@ class Prescription extends Model
     public function counselor(): BelongsTo
     {
         return $this->belongsTo(Member::class, 'counselor_id');
+    }
+
+    /**
+     * 關聯的諮商會議
+     */
+    public function counselingAppointment(): BelongsTo
+    {
+        return $this->belongsTo(CounselingAppointment::class);
     }
 
     /**

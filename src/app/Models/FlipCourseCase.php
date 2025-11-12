@@ -125,6 +125,14 @@ class FlipCourseCase extends Model
     }
 
     /**
+     * 諮商會議
+     */
+    public function counselingAppointments(): HasMany
+    {
+        return $this->hasMany(CounselingAppointment::class);
+    }
+
+    /**
      * 檢查是否在循環階段
      */
     public function isInCycle(): bool

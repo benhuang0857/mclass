@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Assessment;
+use App\Models\CounselingAppointment;
 use App\Models\FlipCourseCase;
 use App\Models\FlipCourseInfo;
 use App\Models\Member;
@@ -29,7 +30,7 @@ class FlipCourseWorkflowService
                 'flip_course_info_id' => $flipCourseInfo->id,
                 'student_id' => $student->id,
                 'planner_id' => $planner->id,
-                'order_id' => $order?->id,
+                'order_id' => $order->id,
                 'workflow_stage' => 'planning',
                 'payment_status' => $order ? 'pending' : 'confirmed',
             ]);
@@ -144,21 +145,65 @@ class FlipCourseWorkflowService
     }
 
     /**
-     * 6. 諮商師建立學習策略
+     * 5.5. 諮商師預約諮商會議
      */
-    public function createStrategy(FlipCourseCase $case, array $strategyData): Prescription
+    public function scheduleCounselingMeeting(FlipCourseCase $case, array $meetingData): CounselingAppointment
     {
-        return DB::transaction(function () use ($case, $strategyData) {
+        return DB::transaction(function () use ($case, $meetingData) {
+            // 建立諮商會議
+            $appointment = CounselingAppointment::create([
+                'flip_course_case_id' => $case->id,
+                'counseling_info_id' => $meetingData['counseling_info_id'] ?? null, // 可選
+                'student_id' => $case->student_id,
+                'counselor_id' => $case->counselor_id,
+                'title' => $meetingData['title'] ?? "翻轉課程諮商（循環 #" . ($case->cycle_count + 1) . "）",
+                'description' => $meetingData['description'] ?? null,
+                'status' => 'confirmed',
+                'type' => $meetingData['type'] ?? 'academic',
+                'preferred_datetime' => $meetingData['preferred_datetime'],
+                'confirmed_datetime' => $meetingData['confirmed_datetime'] ?? $meetingData['preferred_datetime'],
+                'duration' => $meetingData['duration'] ?? 60,
+                'method' => $meetingData['method'] ?? 'online',
+                'location' => $meetingData['location'] ?? null,
+                'meeting_url' => $meetingData['meeting_url'] ?? null,
+            ]);
+
+            // 發送諮商確認通知
+            // Notification::send([$case->student, $case->counselor],
+            //     new CounselingConfirmedNotification($appointment));
+
+            return $appointment;
+        });
+    }
+
+    /**
+     * 6. 諮商師建立學習策略（基於諮商會議）
+     */
+    public function createStrategy(
+        FlipCourseCase $case,
+        array $strategyData,
+        ?CounselingAppointment $counselingAppointment = null
+    ): Prescription {
+        return DB::transaction(function () use ($case, $strategyData, $counselingAppointment) {
             // 建立處方簽（草稿狀態）
             $prescription = Prescription::create([
                 'flip_course_case_id' => $case->id,
                 'counselor_id' => $case->counselor_id,
+                'counseling_appointment_id' => $counselingAppointment?->id,
                 'cycle_number' => $case->cycle_count + 1,
                 'strategy_report' => $strategyData['strategy_report'],
                 'counseling_notes' => $strategyData['counseling_notes'] ?? null,
                 'learning_goals' => $strategyData['learning_goals'] ?? null,
                 'status' => 'draft',
             ]);
+
+            // 如果有諮商會議，更新會議的備註
+            if ($counselingAppointment) {
+                $counselingAppointment->update([
+                    'status' => 'completed',
+                    'counselor_notes' => $strategyData['counseling_notes'] ?? $counselingAppointment->counselor_notes,
+                ]);
+            }
 
             // 完成「建立學習策略」任務
             Task::where('flip_course_case_id', $case->id)
@@ -467,21 +512,21 @@ class FlipCourseWorkflowService
 
         $tasks = [
             [
-                'type' => 'create_strategy',
-                'title' => "建立學習策略{$cycleText}",
-                'description' => '根據學生的背景和目標，建立個人化的學習策略報告。',
+                'type' => 'conduct_counseling',
+                'title' => "預約並進行諮商會議{$cycleText}",
+                'description' => '與學生預約諮商時間，並進行諮商會議，了解其學習需求和困難。',
                 'priority' => 'high',
             ],
             [
-                'type' => 'conduct_counseling',
-                'title' => "進行諮商{$cycleText}",
-                'description' => '與學生進行諮商會議，了解其學習需求和困難。',
+                'type' => 'create_strategy',
+                'title' => "建立學習策略{$cycleText}",
+                'description' => '根據諮商結果和學生的背景目標，建立個人化的學習策略報告。',
                 'priority' => 'high',
             ],
             [
                 'type' => 'issue_prescription',
                 'title' => "開立處方簽{$cycleText}",
-                'description' => '根據諮商結果，開立包含學習任務和課程的處方簽。',
+                'description' => '根據學習策略，開立包含學習任務和課程的處方簽。',
                 'priority' => 'normal',
             ],
         ];
