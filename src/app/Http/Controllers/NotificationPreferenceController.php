@@ -45,14 +45,22 @@ class NotificationPreferenceController extends Controller
                 'course_price_change' => '課程價格變動',
                 'course_status_change' => '課程狀態變更',
                 'course_registration_deadline' => '報名截止提醒',
-                
+
                 // 諮商相關
                 'counseling_reminder' => '諮商開始提醒',
                 'counseling_confirmed' => '諮商預約確認',
                 'counseling_status_change' => '諮商狀態變更',
                 'counseling_time_change' => '諮商時間變更',
                 'counselor_new_service' => '諮商師新服務',
-                
+
+                // 翻轉課程相關
+                'flip_case_assigned' => '翻轉課程案例指派',
+                'flip_task_assigned' => '翻轉課程任務指派',
+                'flip_prescription_issued' => '學習處方簽開立',
+                'flip_analysis_completed' => '學習分析報告完成',
+                'flip_cycle_started' => '新學習循環開始',
+                'flip_case_completed' => '翻轉課程案例完成',
+
                 // 總開關
                 'all' => '所有通知總開關',
             ]
@@ -199,6 +207,10 @@ class NotificationPreferenceController extends Controller
                     'counseling_reminder',
                     'counseling_confirmed',
                     'counseling_time_change',
+                    'flip_case_assigned',
+                    'flip_task_assigned',
+                    'flip_prescription_issued',
+                    'flip_analysis_completed',
                 ];
                 
                 NotificationPreference::forMember($memberId)

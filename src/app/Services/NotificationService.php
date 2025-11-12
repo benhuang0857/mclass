@@ -677,7 +677,282 @@ class NotificationService
         if ($adjustedTime->isPast()) {
             $adjustedTime->addDay();
         }
-        
+
         return $adjustedTime;
+    }
+
+    // ==========================================
+    // 翻轉課程 (Flip Course) 相關通知
+    // ==========================================
+
+    /**
+     * 翻轉課程案例指派通知
+     */
+    public function createFlipCaseAssignedNotification($caseId, $assigneeId, $role)
+    {
+        $case = \App\Models\FlipCourseCase::with(['student', 'flipCourseInfo'])->findOrFail($caseId);
+
+        $roleNames = [
+            'planner' => '規劃師',
+            'counselor' => '諮商師',
+            'analyst' => '分析師',
+        ];
+
+        $roleName = $roleNames[$role] ?? $role;
+
+        $notificationData = [
+            'member_id' => $assigneeId,
+            'type' => 'flip_case_assigned',
+            'related_type' => 'flip_course_case',
+            'related_id' => $caseId,
+            'title' => "新的翻轉課程案例已指派給您",
+            'content' => "您已被指派為學生「{$case->student->name}」的{$roleName}，課程：{$case->flipCourseInfo->name}",
+            'data' => [
+                'case_id' => $caseId,
+                'student_name' => $case->student->name,
+                'course_name' => $case->flipCourseInfo->name,
+                'role' => $role,
+                'workflow_stage' => $case->workflow_stage,
+            ],
+            'scheduled_at' => now(),
+        ];
+
+        return $this->createNotification($notificationData);
+    }
+
+    /**
+     * 任務指派通知
+     */
+    public function createFlipTaskAssignedNotification($taskId)
+    {
+        $task = \App\Models\Task::with(['assignee', 'flipCourseCase.student'])->findOrFail($taskId);
+
+        $notificationData = [
+            'member_id' => $task->assignee_id,
+            'type' => 'flip_task_assigned',
+            'related_type' => 'task',
+            'related_id' => $taskId,
+            'title' => "新任務：{$task->title}",
+            'content' => $task->description ?? "您有一個新的待辦任務",
+            'data' => [
+                'task_id' => $taskId,
+                'task_type' => $task->type,
+                'task_title' => $task->title,
+                'priority' => $task->priority,
+                'due_date' => $task->due_date,
+                'case_id' => $task->flip_course_case_id,
+                'student_name' => $task->flipCourseCase->student->name ?? null,
+            ],
+            'scheduled_at' => now(),
+        ];
+
+        return $this->createNotification($notificationData);
+    }
+
+    /**
+     * 處方簽開立通知（通知分析師）
+     */
+    public function createFlipPrescriptionIssuedNotification($prescriptionId)
+    {
+        $prescription = \App\Models\Prescription::with([
+            'flipCourseCase.analyst',
+            'flipCourseCase.student',
+            'counselor'
+        ])->findOrFail($prescriptionId);
+
+        $case = $prescription->flipCourseCase;
+
+        // 通知分析師
+        if ($case->analyst_id) {
+            $notificationData = [
+                'member_id' => $case->analyst_id,
+                'type' => 'flip_prescription_issued',
+                'related_type' => 'prescription',
+                'related_id' => $prescriptionId,
+                'title' => "新的處方簽待分析",
+                'content' => "諮商師 {$prescription->counselor->name} 已為學生「{$case->student->name}」開立處方簽（循環 #{$prescription->cycle_number}），請進行分析",
+                'data' => [
+                    'prescription_id' => $prescriptionId,
+                    'case_id' => $case->id,
+                    'student_name' => $case->student->name,
+                    'counselor_name' => $prescription->counselor->name,
+                    'cycle_number' => $prescription->cycle_number,
+                    'strategy_report' => $prescription->strategy_report,
+                ],
+                'scheduled_at' => now(),
+            ];
+
+            $this->createNotification($notificationData);
+        }
+
+        // 也通知學生
+        $studentNotificationData = [
+            'member_id' => $case->student_id,
+            'type' => 'flip_prescription_issued',
+            'related_type' => 'prescription',
+            'related_id' => $prescriptionId,
+            'title' => "您的學習處方簽已開立",
+            'content' => "諮商師已為您制定新的學習策略和任務（循環 #{$prescription->cycle_number}），請查看詳情",
+            'data' => [
+                'prescription_id' => $prescriptionId,
+                'case_id' => $case->id,
+                'counselor_name' => $prescription->counselor->name,
+                'cycle_number' => $prescription->cycle_number,
+                'learning_tasks_count' => $prescription->learningTasks()->count(),
+                'club_courses_count' => $prescription->clubCourses()->count(),
+            ],
+            'scheduled_at' => now(),
+        ];
+
+        $this->createNotification($studentNotificationData);
+    }
+
+    /**
+     * 分析完成通知（通知諮商師）
+     */
+    public function createFlipAnalysisCompletedNotification($assessmentId)
+    {
+        $assessment = \App\Models\Assessment::with([
+            'prescription.flipCourseCase.counselor',
+            'prescription.flipCourseCase.student',
+            'analyst'
+        ])->findOrFail($assessmentId);
+
+        $case = $assessment->prescription->flipCourseCase;
+
+        // 通知諮商師
+        $notificationData = [
+            'member_id' => $case->counselor_id,
+            'type' => 'flip_analysis_completed',
+            'related_type' => 'assessment',
+            'related_id' => $assessmentId,
+            'title' => "學習分析報告已完成",
+            'content' => "分析師 {$assessment->analyst->name} 已完成學生「{$case->student->name}」的學習分析（循環 #{$assessment->prescription->cycle_number}），請審查",
+            'data' => [
+                'assessment_id' => $assessmentId,
+                'prescription_id' => $assessment->prescription_id,
+                'case_id' => $case->id,
+                'student_name' => $case->student->name,
+                'analyst_name' => $assessment->analyst->name,
+                'cycle_number' => $assessment->prescription->cycle_number,
+                'test_score' => $assessment->test_score,
+                'study_hours' => $assessment->study_hours,
+                'tasks_completed' => $assessment->tasks_completed,
+            ],
+            'scheduled_at' => now(),
+        ];
+
+        $this->createNotification($notificationData);
+
+        // 也通知學生
+        $studentNotificationData = [
+            'member_id' => $case->student_id,
+            'type' => 'flip_analysis_completed',
+            'related_type' => 'assessment',
+            'related_id' => $assessmentId,
+            'title' => "您的學習分析報告已完成",
+            'content' => "分析師已完成您的學習成效分析，諮商師將根據報告調整學習策略",
+            'data' => [
+                'assessment_id' => $assessmentId,
+                'case_id' => $case->id,
+                'cycle_number' => $assessment->prescription->cycle_number,
+                'test_score' => $assessment->test_score,
+            ],
+            'scheduled_at' => now(),
+        ];
+
+        $this->createNotification($studentNotificationData);
+    }
+
+    /**
+     * 新循環開始通知
+     */
+    public function createFlipCycleStartedNotification($caseId)
+    {
+        $case = \App\Models\FlipCourseCase::with(['student', 'counselor', 'flipCourseInfo'])
+            ->findOrFail($caseId);
+
+        // 通知諮商師
+        $counselorNotificationData = [
+            'member_id' => $case->counselor_id,
+            'type' => 'flip_cycle_started',
+            'related_type' => 'flip_course_case',
+            'related_id' => $caseId,
+            'title' => "新循環開始",
+            'content' => "學生「{$case->student->name}」的翻轉課程進入第 {$case->cycle_count} 次循環，請準備新的諮商和策略",
+            'data' => [
+                'case_id' => $caseId,
+                'student_name' => $case->student->name,
+                'course_name' => $case->flipCourseInfo->name,
+                'cycle_count' => $case->cycle_count,
+            ],
+            'scheduled_at' => now(),
+        ];
+
+        $this->createNotification($counselorNotificationData);
+
+        // 通知學生
+        $studentNotificationData = [
+            'member_id' => $case->student_id,
+            'type' => 'flip_cycle_started',
+            'related_type' => 'flip_course_case',
+            'related_id' => $caseId,
+            'title' => "新學習循環開始",
+            'content' => "您的翻轉課程進入第 {$case->cycle_count} 次循環，諮商師將與您討論新的學習策略",
+            'data' => [
+                'case_id' => $caseId,
+                'course_name' => $case->flipCourseInfo->name,
+                'cycle_count' => $case->cycle_count,
+            ],
+            'scheduled_at' => now(),
+        ];
+
+        $this->createNotification($studentNotificationData);
+    }
+
+    /**
+     * 案例完成通知
+     */
+    public function createFlipCaseCompletedNotification($caseId)
+    {
+        $case = \App\Models\FlipCourseCase::with([
+            'student',
+            'planner',
+            'counselor',
+            'analyst',
+            'flipCourseInfo'
+        ])->findOrFail($caseId);
+
+        $recipients = collect([
+            $case->student_id,
+            $case->planner_id,
+            $case->counselor_id,
+            $case->analyst_id,
+        ])->filter()->unique();
+
+        foreach ($recipients as $recipientId) {
+            $isStudent = $recipientId === $case->student_id;
+
+            $notificationData = [
+                'member_id' => $recipientId,
+                'type' => 'flip_case_completed',
+                'related_type' => 'flip_course_case',
+                'related_id' => $caseId,
+                'title' => $isStudent ? "恭喜！您的翻轉課程已完成" : "翻轉課程案例已完成",
+                'content' => $isStudent
+                    ? "恭喜您完成「{$case->flipCourseInfo->name}」翻轉課程，共經歷 {$case->cycle_count} 次學習循環"
+                    : "學生「{$case->student->name}」的翻轉課程案例已完成，共 {$case->cycle_count} 次循環",
+                'data' => [
+                    'case_id' => $caseId,
+                    'student_name' => $case->student->name,
+                    'course_name' => $case->flipCourseInfo->name,
+                    'cycle_count' => $case->cycle_count,
+                    'completed_at' => $case->completed_at,
+                ],
+                'scheduled_at' => now(),
+            ];
+
+            $this->createNotification($notificationData);
+        }
     }
 }

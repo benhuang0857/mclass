@@ -102,14 +102,22 @@ class NotificationPreference extends Model
             ['notification_type' => 'course_price_change', 'enabled' => false], // 預設關閉
             ['notification_type' => 'course_status_change', 'advance_minutes' => null],
             ['notification_type' => 'course_registration_deadline', 'advance_minutes' => null],
-            
+
             // 諮商相關
             ['notification_type' => 'counseling_reminder', 'advance_minutes' => 60],
             ['notification_type' => 'counseling_confirmed', 'advance_minutes' => null],
             ['notification_type' => 'counseling_status_change', 'advance_minutes' => null],
             ['notification_type' => 'counseling_time_change', 'advance_minutes' => null],
             ['notification_type' => 'counselor_new_service', 'enabled' => false], // 預設關閉
-            
+
+            // 翻轉課程相關
+            ['notification_type' => 'flip_case_assigned', 'advance_minutes' => null],
+            ['notification_type' => 'flip_task_assigned', 'advance_minutes' => null],
+            ['notification_type' => 'flip_prescription_issued', 'advance_minutes' => null],
+            ['notification_type' => 'flip_analysis_completed', 'advance_minutes' => null],
+            ['notification_type' => 'flip_cycle_started', 'advance_minutes' => null],
+            ['notification_type' => 'flip_case_completed', 'advance_minutes' => null],
+
             // 總開關
             ['notification_type' => 'all', 'advance_minutes' => null],
         ];

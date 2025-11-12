@@ -15,21 +15,36 @@ return new class extends Migration
             $table->id();
             $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('接收通知的用戶');
             $table->enum('type', [
-                'course_reminder', 
+                'course_reminder',
                 'course_change',
                 'course_new_class',
                 'course_price_change',
                 'course_status_change',
                 'course_registration_deadline',
-                'counseling_reminder', 
+                'counseling_reminder',
                 'counseling_confirmed',
                 'counseling_status_change',
                 'counseling_time_change',
                 'course_follower',
                 'counselor_new_service',
-                'counselor_specific'
+                'counselor_specific',
+                'flip_case_assigned',
+                'flip_task_assigned',
+                'flip_prescription_issued',
+                'flip_analysis_completed',
+                'flip_cycle_started',
+                'flip_case_completed'
             ])->comment('通知類型');
-            $table->enum('related_type', ['course', 'counseling', 'counselor', 'product'])->comment('關聯對象類型');
+            $table->enum('related_type', [
+                'course',
+                'counseling',
+                'counselor',
+                'product',
+                'flip_course_case',
+                'prescription',
+                'assessment',
+                'task'
+            ])->comment('關聯對象類型');
             $table->unsignedBigInteger('related_id')->comment('關聯對象ID');
             $table->string('title')->comment('通知標題');
             $table->text('content')->comment('通知內容');

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('member_id')->constrained('members')->onDelete('cascade')->comment('用戶ID');
             $table->enum('notification_type', [
                 'course_reminder',
-                'course_change', 
+                'course_change',
                 'course_new_class',
                 'course_price_change',
                 'course_status_change',
@@ -26,6 +26,12 @@ return new class extends Migration
                 'counseling_status_change',
                 'counseling_time_change',
                 'counselor_new_service',
+                'flip_case_assigned',           // 翻轉課程案例指派
+                'flip_task_assigned',           // 翻轉課程任務指派
+                'flip_prescription_issued',     // 處方簽開立
+                'flip_analysis_completed',      // 分析報告完成
+                'flip_cycle_started',           // 新循環開始
+                'flip_case_completed',          // 案例完成
                 'all' // 全部類型的總開關
             ])->comment('通知類型');
             $table->boolean('enabled')->default(true)->comment('是否啟用');

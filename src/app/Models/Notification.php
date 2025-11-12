@@ -65,4 +65,44 @@ class Notification extends Model
     {
         $this->update(['sent_at' => now()]);
     }
+
+    /**
+     * 範圍查詢：翻轉課程相關通知
+     */
+    public function scopeFlipCourseRelated($query)
+    {
+        return $query->whereIn('type', [
+            'flip_case_assigned',
+            'flip_task_assigned',
+            'flip_prescription_issued',
+            'flip_analysis_completed',
+            'flip_cycle_started',
+            'flip_case_completed',
+        ]);
+    }
+
+    /**
+     * 範圍查詢：課程相關通知
+     */
+    public function scopeCourseRelated($query)
+    {
+        return $query->where('type', 'like', 'course_%');
+    }
+
+    /**
+     * 範圍查詢：諮商相關通知
+     */
+    public function scopeCounselingRelated($query)
+    {
+        return $query->where('type', 'like', 'counseling_%')
+                    ->orWhere('type', 'like', 'counselor_%');
+    }
+
+    /**
+     * 檢查是否為翻轉課程通知
+     */
+    public function isFlipCourseNotification(): bool
+    {
+        return str_starts_with($this->type, 'flip_');
+    }
 }

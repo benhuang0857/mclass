@@ -23,7 +23,7 @@ class NotificationController extends Controller
         $request->validate([
             'member_id' => 'required|exists:members,id',
             'unread_only' => 'sometimes|in:true,false,1,0',
-            'type' => 'string|in:course_reminder,course_change,counseling_reminder,counseling_confirmed,course_follower,counselor_specific',
+            'type' => 'string|in:course_reminder,course_change,counseling_reminder,counseling_confirmed,course_follower,counselor_specific,flip_case_assigned,flip_task_assigned,flip_prescription_issued,flip_analysis_completed,flip_cycle_started,flip_case_completed',
             'limit' => 'integer|min:1|max:100',
         ]);
 
