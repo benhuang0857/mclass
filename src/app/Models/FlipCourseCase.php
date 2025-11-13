@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class FlipCourseCase extends Model
 {
@@ -98,6 +99,21 @@ class FlipCourseCase extends Model
     public function latestPrescription()
     {
         return $this->hasOne(Prescription::class)->latestOfMany();
+    }
+
+    /**
+     * 評估/測驗 (透過處方簽)
+     */
+    public function assessments(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+            Assessment::class,
+            Prescription::class,
+            'flip_course_case_id', // prescriptions 表的外鍵
+            'prescription_id',     // assessments 表的外鍵
+            'id',                  // flip_course_cases 表的主鍵
+            'id'                   // prescriptions 表的主鍵
+        );
     }
 
     /**
