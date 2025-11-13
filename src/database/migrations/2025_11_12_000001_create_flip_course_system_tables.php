@@ -95,6 +95,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('flip_course_case_id')->constrained('flip_course_cases')->onDelete('cascade')->comment('翻轉課程案例');
             $table->foreignId('counselor_id')->constrained('members')->onDelete('cascade')->comment('開立處方的諮商師');
+            $table->foreignId('counseling_appointment_id')->nullable()->constrained('counseling_appointments')->onDelete('set null')->comment('關聯的諮商會議');
             $table->integer('cycle_number')->comment('第幾次循環');
 
             // 處方內容
@@ -269,6 +270,28 @@ return new class extends Migration
 
             $table->index(['flip_course_case_id', 'note_type']);
         });
+
+        // ==========================================
+        // 7. 修改現有的 counseling_appointments 表以支援翻轉課程
+        // ==========================================
+
+        Schema::table('counseling_appointments', function (Blueprint $table) {
+            // 將 order_item_id 改為可選，因為翻轉課程不是透過一般訂單購買
+            $table->foreignId('order_item_id')
+                  ->nullable()
+                  ->change();
+
+            // 新增關聯翻轉課程案例
+            $table->foreignId('flip_course_case_id')
+                  ->nullable()
+                  ->after('order_item_id')
+                  ->constrained('flip_course_cases')
+                  ->onDelete('cascade')
+                  ->comment('關聯的翻轉課程案例（如果是翻轉課程諮商）');
+
+            // 新增索引
+            $table->index('flip_course_case_id');
+        });
     }
 
     /**
@@ -276,6 +299,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // 先還原 counseling_appointments 的修改
+        Schema::table('counseling_appointments', function (Blueprint $table) {
+            $table->dropForeign(['flip_course_case_id']);
+            $table->dropIndex(['flip_course_case_id']);
+            $table->dropColumn('flip_course_case_id');
+        });
+
+        // 再刪除翻轉課程相關的表
         Schema::dropIfExists('flip_course_case_notes');
         Schema::dropIfExists('task_dependencies');
         Schema::dropIfExists('tasks');

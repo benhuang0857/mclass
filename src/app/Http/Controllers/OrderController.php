@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\FlipCourseCase;
+use App\Services\FlipCourseWorkflowService;
 use Illuminate\Http\Request;
+use DB;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        $courses = Order::with('orderItem')->get();
+        $courses = Order::with('orderItems')->get();
         return response()->json($courses);
     }
 
     public function show($id)
     {
-        $order = Order::with('orderItem')->findOrFail($id);
+        $order = Order::with('orderItems')->findOrFail($id);
         return response()->json($order);
     }
 
@@ -39,16 +43,49 @@ class OrderController extends Controller
             'items.*.options' => 'nullable|array',
         ]);
 
-        // 創建訂單
-        $order = Order::create($validated);
+        DB::beginTransaction();
+        try {
+            // 創建訂單
+            $order = Order::create($validated);
 
-        // 插入訂單項目
-        foreach ($validated['items'] as $item) {
-            $item['options'] = isset($item['options']) ? json_encode($item['options']) : null;
-            $order->orderItem()->create($item);
+            // 插入訂單項目並檢查翻轉課程
+            foreach ($validated['items'] as $item) {
+                $orderItem = $order->orderItems()->create([
+                    'product_id' => $item['product_id'],
+                    'product_name' => $item['product_name'],
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
+                    'options' => isset($item['options']) ? json_encode($item['options']) : null,
+                ]);
+
+                // 檢查是否為翻轉課程商品
+                $product = Product::with('flipCourseInfo')->find($item['product_id']);
+
+                if ($product && $product->flipCourseInfo) {
+                    // 解析 options
+                    $options = $item['options'] ?? [];
+
+                    // 自動建立翻轉課程案例
+                    FlipCourseCase::create([
+                        'flip_course_info_id' => $product->flipCourseInfo->id,
+                        'student_id' => $validated['member_id'],
+                        'order_id' => $order->id,
+                        'planner_id' => $options['planner_id'] ?? null,
+                        'counselor_id' => $options['counselor_id'] ?? null,
+                        'analyst_id' => $options['analyst_id'] ?? null,
+                        'workflow_stage' => 'created',
+                        'payment_status' => 'pending',
+                        'cycle_count' => 0,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return response()->json($order->load('orderItems'), 201);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        return response()->json($order->load('orderItem'), 201);
     }
 
     public function update(Request $request, $id)
@@ -87,18 +124,18 @@ class OrderController extends Controller
                     }
                 } else {
                     $item['options'] = isset($item['options']) ? json_encode($item['options']) : null;
-                    $order->orderItem()->create($item);
+                    $order->orderItems()->create($item);
                 }
             }
         }
 
-        return response()->json($order->load('orderItem'));
+        return response()->json($order->load('orderItems'));
     }
 
     public function destroy($id)
     {
         $order = Order::findOrFail($id);
-        $order->orderItem()->delete();
+        $order->orderItems()->delete();
         $order->delete();
 
         return response()->json(['message' => 'Order deleted']);

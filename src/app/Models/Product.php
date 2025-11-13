@@ -45,6 +45,14 @@ class Product extends Model
     }
 
     /**
+     * 翻轉課程資訊 (一對一關聯)
+     */
+    public function flipCourseInfo()
+    {
+        return $this->hasOne(FlipCourseInfo::class, 'product_id');
+    }
+
+    /**
      * 追蹤者 (多對多關聯)
      */
     public function followers()

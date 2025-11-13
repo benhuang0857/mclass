@@ -26,6 +26,8 @@ use App\Http\Controllers\CounselingAppointmentController;
 use App\Http\Controllers\MemberScheduleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationPreferenceController;
+use App\Http\Controllers\FlipCourseInfoController;
+use App\Http\Controllers\FlipCourseCaseController;
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
@@ -330,4 +332,47 @@ Route::prefix('notification-preferences')->group(function () {
     
     // 測試通知
     Route::post('/test', [NotificationPreferenceController::class, 'testNotification']);
+});
+
+########## Flip Course API ##########
+
+// 翻轉課程模板管理
+Route::prefix('flip-course-infos')->group(function () {
+    Route::get('/', [FlipCourseInfoController::class, 'index']);
+    Route::post('/', [FlipCourseInfoController::class, 'store']);
+    Route::get('/{id}', [FlipCourseInfoController::class, 'show']);
+    Route::put('/{id}', [FlipCourseInfoController::class, 'update']);
+    Route::delete('/{id}', [FlipCourseInfoController::class, 'destroy']);
+
+    // 統計資料
+    Route::get('/{id}/statistics', [FlipCourseInfoController::class, 'getStatistics']);
+});
+
+// 翻轉課程案例管理與工作流
+Route::prefix('flip-course-cases')->group(function () {
+    // 基本 CRUD
+    Route::get('/', [FlipCourseCaseController::class, 'index']);
+    Route::get('/{id}', [FlipCourseCaseController::class, 'show']);
+
+    // Phase 1: 規劃師操作
+    Route::post('/{id}/confirm-payment', [FlipCourseCaseController::class, 'confirmPayment']);
+    Route::post('/{id}/create-line-group', [FlipCourseCaseController::class, 'createLineGroup']);
+    Route::post('/{id}/assign-counselor', [FlipCourseCaseController::class, 'assignCounselor']);
+    Route::post('/{id}/assign-analyst', [FlipCourseCaseController::class, 'assignAnalyst']);
+
+    // Phase 2: 諮商師操作
+    Route::post('/{id}/schedule-counseling', [FlipCourseCaseController::class, 'scheduleCounseling']);
+    Route::post('/{id}/issue-prescription', [FlipCourseCaseController::class, 'issuePrescription']);
+    Route::post('/{id}/review-analysis', [FlipCourseCaseController::class, 'reviewAnalysis']);
+
+    // Phase 3: 分析師操作
+    Route::post('/{id}/create-assessment', [FlipCourseCaseController::class, 'createAssessment']);
+    Route::post('/{id}/submit-analysis', [FlipCourseCaseController::class, 'submitAnalysis']);
+
+    // 查詢相關資料
+    Route::get('/{id}/prescriptions', [FlipCourseCaseController::class, 'getPrescriptions']);
+    Route::get('/{id}/assessments', [FlipCourseCaseController::class, 'getAssessments']);
+    Route::get('/{id}/tasks', [FlipCourseCaseController::class, 'getTasks']);
+    Route::get('/{id}/notes', [FlipCourseCaseController::class, 'getNotes']);
+    Route::get('/{id}/statistics', [FlipCourseCaseController::class, 'getStatistics']);
 });

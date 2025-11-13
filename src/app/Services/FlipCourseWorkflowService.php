@@ -189,7 +189,7 @@ class FlipCourseWorkflowService
             $prescription = Prescription::create([
                 'flip_course_case_id' => $case->id,
                 'counselor_id' => $case->counselor_id,
-                'counseling_appointment_id' => $counselingAppointment?->id,
+                'counseling_appointment_id' => $counselingAppointment->id,
                 'cycle_number' => $case->cycle_count + 1,
                 'strategy_report' => $strategyData['strategy_report'],
                 'counseling_notes' => $strategyData['counseling_notes'] ?? null,
@@ -391,7 +391,7 @@ class FlipCourseWorkflowService
                     'workflow_stage' => 'counseling',
                 ]);
 
-                $this->createCounselorTasks($case, isNewCycle: true);
+                $this->createCounselorTasks(true);
 
                 // 通知諮商師
                 // Notification::send($case->counselor, new NewCycleStartedNotification($case));

@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         // 建立課程相關的假資料
         $this->call(ClubCourseSeeder::class);
         $this->call(CounselingSeeder::class);
+        $this->call(FlipCourseSeeder::class);
     }
 
     /**
@@ -89,6 +90,27 @@ class DatabaseSeeder extends Seeder
                 'slug' => 'sales',
                 'note' => 'A sales representative managing courses.',
                 'sort' => 4,
+                'status' => true,
+            ],
+            [
+                'name' => '規劃師',
+                'slug' => 'planner',
+                'note' => 'A planner managing flip course workflow and assignments.',
+                'sort' => 5,
+                'status' => true,
+            ],
+            [
+                'name' => '諮商師',
+                'slug' => 'counselor',
+                'note' => 'A counselor providing learning guidance and strategy.',
+                'sort' => 6,
+                'status' => true,
+            ],
+            [
+                'name' => '分析師',
+                'slug' => 'analyst',
+                'note' => 'An analyst evaluating learning outcomes and performance.',
+                'sort' => 7,
                 'status' => true,
             ],
         ];

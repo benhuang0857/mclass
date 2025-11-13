@@ -22,8 +22,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/invitation-codes",
-							"host": ["{{base_url}}"],
-							"path": ["invitation-codes"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invitation-codes"
+							]
 						}
 					}
 				},
@@ -47,8 +51,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/invitation-codes",
-							"host": ["{{base_url}}"],
-							"path": ["invitation-codes"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invitation-codes"
+							]
 						}
 					}
 				},
@@ -64,8 +72,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/invitation-codes/1",
-							"host": ["{{base_url}}"],
-							"path": ["invitation-codes", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invitation-codes",
+								"1"
+							]
 						}
 					}
 				},
@@ -89,8 +102,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/invitation-codes/1",
-							"host": ["{{base_url}}"],
-							"path": ["invitation-codes", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invitation-codes",
+								"1"
+							]
 						}
 					}
 				},
@@ -106,8 +124,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/invitation-codes/1",
-							"host": ["{{base_url}}"],
-							"path": ["invitation-codes", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"invitation-codes",
+								"1"
+							]
 						}
 					}
 				}
@@ -128,8 +151,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/members",
-							"host": ["{{base_url}}"],
-							"path": ["members"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members"
+							]
 						}
 					}
 				},
@@ -153,8 +180,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/members",
-							"host": ["{{base_url}}"],
-							"path": ["members"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members"
+							]
 						}
 					}
 				},
@@ -170,8 +201,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/members/1",
-							"host": ["{{base_url}}"],
-							"path": ["members", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"1"
+							]
 						}
 					}
 				},
@@ -195,8 +231,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/members/1",
-							"host": ["{{base_url}}"],
-							"path": ["members", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"1"
+							]
 						}
 					}
 				},
@@ -212,8 +253,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/members/1",
-							"host": ["{{base_url}}"],
-							"path": ["members", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"1"
+							]
 						}
 					}
 				},
@@ -229,8 +275,14 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/members/1/schedule?start_date=2024-12-01&end_date=2024-12-31&roles=student,teacher",
-							"host": ["{{base_url}}"],
-							"path": ["members", "1", "schedule"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"1",
+								"schedule"
+							],
 							"query": [
 								{
 									"key": "start_date",
@@ -268,8 +320,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notices",
-							"host": ["{{base_url}}"],
-							"path": ["notices"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notices"
+							]
 						}
 					}
 				},
@@ -293,8 +349,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notices",
-							"host": ["{{base_url}}"],
-							"path": ["notices"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notices"
+							]
 						}
 					}
 				},
@@ -310,8 +370,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notices/1",
-							"host": ["{{base_url}}"],
-							"path": ["notices", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notices",
+								"1"
+							]
 						}
 					}
 				},
@@ -335,8 +400,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notices/1",
-							"host": ["{{base_url}}"],
-							"path": ["notices", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notices",
+								"1"
+							]
 						}
 					}
 				},
@@ -352,8 +422,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notices/1",
-							"host": ["{{base_url}}"],
-							"path": ["notices", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notices",
+								"1"
+							]
 						}
 					}
 				}
@@ -374,8 +449,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/products",
-							"host": ["{{base_url}}"],
-							"path": ["products"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
 						}
 					}
 				},
@@ -399,8 +478,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/products",
-							"host": ["{{base_url}}"],
-							"path": ["products"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
 						}
 					}
 				},
@@ -416,8 +499,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/products/1",
-							"host": ["{{base_url}}"],
-							"path": ["products", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
 						}
 					}
 				},
@@ -441,8 +529,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/products/1",
-							"host": ["{{base_url}}"],
-							"path": ["products", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
 						}
 					}
 				},
@@ -458,8 +551,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/products/1",
-							"host": ["{{base_url}}"],
-							"path": ["products", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1"
+							]
 						}
 					}
 				},
@@ -483,8 +581,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/products/1/follower",
-							"host": ["{{base_url}}"],
-							"path": ["products", "1", "follower"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1",
+								"follower"
+							]
 						}
 					}
 				},
@@ -508,8 +612,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/products/1/follower",
-							"host": ["{{base_url}}"],
-							"path": ["products", "1", "follower"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1",
+								"follower"
+							]
 						}
 					}
 				},
@@ -533,8 +643,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/products/1/visibler",
-							"host": ["{{base_url}}"],
-							"path": ["products", "1", "visibler"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1",
+								"visibler"
+							]
 						}
 					}
 				},
@@ -558,8 +674,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/products/1/visibler",
-							"host": ["{{base_url}}"],
-							"path": ["products", "1", "visibler"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products",
+								"1",
+								"visibler"
+							]
 						}
 					}
 				}
@@ -580,8 +702,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/orders",
-							"host": ["{{base_url}}"],
-							"path": ["orders"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							]
 						}
 					}
 				},
@@ -605,8 +731,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/orders",
-							"host": ["{{base_url}}"],
-							"path": ["orders"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders"
+							]
 						}
 					}
 				},
@@ -622,8 +752,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/orders/1",
-							"host": ["{{base_url}}"],
-							"path": ["orders", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
 						}
 					}
 				},
@@ -647,8 +782,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/orders/1",
-							"host": ["{{base_url}}"],
-							"path": ["orders", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
 						}
 					}
 				},
@@ -664,8 +804,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/orders/1",
-							"host": ["{{base_url}}"],
-							"path": ["orders", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"orders",
+								"1"
+							]
 						}
 					}
 				}
@@ -686,8 +831,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/course-info-types",
-							"host": ["{{base_url}}"],
-							"path": ["course-info-types"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-info-types"
+							]
 						}
 					}
 				},
@@ -711,8 +860,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/course-info-types",
-							"host": ["{{base_url}}"],
-							"path": ["course-info-types"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-info-types"
+							]
 						}
 					}
 				},
@@ -728,8 +881,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/course-info-types/1",
-							"host": ["{{base_url}}"],
-							"path": ["course-info-types", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-info-types",
+								"1"
+							]
 						}
 					}
 				},
@@ -753,8 +911,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/course-info-types/1",
-							"host": ["{{base_url}}"],
-							"path": ["course-info-types", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-info-types",
+								"1"
+							]
 						}
 					}
 				},
@@ -770,8 +933,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/course-info-types/1",
-							"host": ["{{base_url}}"],
-							"path": ["course-info-types", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-info-types",
+								"1"
+							]
 						}
 					}
 				}
@@ -792,8 +960,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/course-status-types",
-							"host": ["{{base_url}}"],
-							"path": ["course-status-types"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-status-types"
+							]
 						}
 					}
 				},
@@ -817,8 +989,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/course-status-types",
-							"host": ["{{base_url}}"],
-							"path": ["course-status-types"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-status-types"
+							]
 						}
 					}
 				},
@@ -834,8 +1010,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/course-status-types/1",
-							"host": ["{{base_url}}"],
-							"path": ["course-status-types", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-status-types",
+								"1"
+							]
 						}
 					}
 				},
@@ -859,8 +1040,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/course-status-types/1",
-							"host": ["{{base_url}}"],
-							"path": ["course-status-types", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-status-types",
+								"1"
+							]
 						}
 					}
 				},
@@ -876,8 +1062,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/course-status-types/1",
-							"host": ["{{base_url}}"],
-							"path": ["course-status-types", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"course-status-types",
+								"1"
+							]
 						}
 					}
 				}
@@ -898,8 +1089,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/club-course-info",
-							"host": ["{{base_url}}"],
-							"path": ["club-course-info"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course-info"
+							]
 						}
 					}
 				},
@@ -923,8 +1118,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/club-course-info",
-							"host": ["{{base_url}}"],
-							"path": ["club-course-info"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course-info"
+							]
 						}
 					}
 				},
@@ -940,8 +1139,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/club-course-info/1",
-							"host": ["{{base_url}}"],
-							"path": ["club-course-info", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course-info",
+								"1"
+							]
 						}
 					}
 				},
@@ -965,8 +1169,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/club-course-info/1",
-							"host": ["{{base_url}}"],
-							"path": ["club-course-info", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course-info",
+								"1"
+							]
 						}
 					}
 				},
@@ -982,8 +1191,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/club-course-info/1",
-							"host": ["{{base_url}}"],
-							"path": ["club-course-info", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course-info",
+								"1"
+							]
 						}
 					}
 				}
@@ -1004,8 +1218,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/club-course",
-							"host": ["{{base_url}}"],
-							"path": ["club-course"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course"
+							]
 						}
 					}
 				},
@@ -1029,8 +1247,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/club-course",
-							"host": ["{{base_url}}"],
-							"path": ["club-course"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course"
+							]
 						}
 					}
 				},
@@ -1046,8 +1268,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/club-course/1",
-							"host": ["{{base_url}}"],
-							"path": ["club-course", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course",
+								"1"
+							]
 						}
 					}
 				},
@@ -1071,8 +1298,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/club-course/1",
-							"host": ["{{base_url}}"],
-							"path": ["club-course", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course",
+								"1"
+							]
 						}
 					}
 				},
@@ -1088,8 +1320,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/club-course/1",
-							"host": ["{{base_url}}"],
-							"path": ["club-course", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"club-course",
+								"1"
+							]
 						}
 					}
 				}
@@ -1113,8 +1350,12 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/roles",
-									"host": ["{{base_url}}"],
-									"path": ["roles"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles"
+									]
 								}
 							}
 						},
@@ -1138,8 +1379,12 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/roles",
-									"host": ["{{base_url}}"],
-									"path": ["roles"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles"
+									]
 								}
 							}
 						},
@@ -1155,8 +1400,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/roles/1",
-									"host": ["{{base_url}}"],
-									"path": ["roles", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										"1"
+									]
 								}
 							}
 						},
@@ -1180,8 +1430,13 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/roles/1",
-									"host": ["{{base_url}}"],
-									"path": ["roles", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										"1"
+									]
 								}
 							}
 						},
@@ -1197,8 +1452,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/roles/1",
-									"host": ["{{base_url}}"],
-									"path": ["roles", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"roles",
+										"1"
+									]
 								}
 							}
 						}
@@ -1219,8 +1479,12 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/notice-types",
-									"host": ["{{base_url}}"],
-									"path": ["notice-types"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notice-types"
+									]
 								}
 							}
 						},
@@ -1244,8 +1508,12 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/notice-types",
-									"host": ["{{base_url}}"],
-									"path": ["notice-types"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notice-types"
+									]
 								}
 							}
 						},
@@ -1261,8 +1529,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/notice-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["notice-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notice-types",
+										"1"
+									]
 								}
 							}
 						},
@@ -1286,8 +1559,13 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/notice-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["notice-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notice-types",
+										"1"
+									]
 								}
 							}
 						},
@@ -1303,8 +1581,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/notice-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["notice-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notice-types",
+										"1"
+									]
 								}
 							}
 						}
@@ -1325,8 +1608,12 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/level-types",
-									"host": ["{{base_url}}"],
-									"path": ["level-types"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"level-types"
+									]
 								}
 							}
 						},
@@ -1350,8 +1637,12 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/level-types",
-									"host": ["{{base_url}}"],
-									"path": ["level-types"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"level-types"
+									]
 								}
 							}
 						},
@@ -1367,8 +1658,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/level-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["level-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"level-types",
+										"1"
+									]
 								}
 							}
 						},
@@ -1392,8 +1688,13 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/level-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["level-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"level-types",
+										"1"
+									]
 								}
 							}
 						},
@@ -1409,8 +1710,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/level-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["level-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"level-types",
+										"1"
+									]
 								}
 							}
 						}
@@ -1431,8 +1737,12 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/lang-types",
-									"host": ["{{base_url}}"],
-									"path": ["lang-types"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"lang-types"
+									]
 								}
 							}
 						},
@@ -1456,8 +1766,12 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/lang-types",
-									"host": ["{{base_url}}"],
-									"path": ["lang-types"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"lang-types"
+									]
 								}
 							}
 						},
@@ -1473,8 +1787,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/lang-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["lang-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"lang-types",
+										"1"
+									]
 								}
 							}
 						},
@@ -1498,8 +1817,13 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/lang-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["lang-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"lang-types",
+										"1"
+									]
 								}
 							}
 						},
@@ -1515,8 +1839,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/lang-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["lang-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"lang-types",
+										"1"
+									]
 								}
 							}
 						}
@@ -1537,8 +1866,12 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/tech-method-types",
-									"host": ["{{base_url}}"],
-									"path": ["tech-method-types"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tech-method-types"
+									]
 								}
 							}
 						},
@@ -1562,8 +1895,12 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/tech-method-types",
-									"host": ["{{base_url}}"],
-									"path": ["tech-method-types"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tech-method-types"
+									]
 								}
 							}
 						},
@@ -1579,8 +1916,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/tech-method-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["tech-method-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tech-method-types",
+										"1"
+									]
 								}
 							}
 						},
@@ -1604,8 +1946,13 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/tech-method-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["tech-method-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tech-method-types",
+										"1"
+									]
 								}
 							}
 						},
@@ -1621,8 +1968,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/tech-method-types/1",
-									"host": ["{{base_url}}"],
-									"path": ["tech-method-types", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"tech-method-types",
+										"1"
+									]
 								}
 							}
 						}
@@ -1645,8 +1997,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/search?q=python&type=course&limit=10",
-							"host": ["{{base_url}}"],
-							"path": ["search"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search"
+							],
 							"query": [
 								{
 									"key": "q",
@@ -1676,8 +2032,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/search/global?q=程式設計",
-							"host": ["{{base_url}}"],
-							"path": ["search", "global"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"global"
+							],
 							"query": [
 								{
 									"key": "q",
@@ -1699,8 +2060,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/search/suggestions?q=py",
-							"host": ["{{base_url}}"],
-							"path": ["search", "suggestions"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"suggestions"
+							],
 							"query": [
 								{
 									"key": "q",
@@ -1722,8 +2088,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/search/filters",
-							"host": ["{{base_url}}"],
-							"path": ["search", "filters"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"filters"
+							]
 						}
 					}
 				},
@@ -1739,8 +2110,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/search/members?q=john&role=student",
-							"host": ["{{base_url}}"],
-							"path": ["search", "members"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"members"
+							],
 							"query": [
 								{
 									"key": "q",
@@ -1766,8 +2142,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/search/products?q=課程&min_price=1000&max_price=5000",
-							"host": ["{{base_url}}"],
-							"path": ["search", "products"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"products"
+							],
 							"query": [
 								{
 									"key": "q",
@@ -1797,8 +2178,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/search/courses?q=python&level=beginner&lang=python",
-							"host": ["{{base_url}}"],
-							"path": ["search", "courses"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"search",
+								"courses"
+							],
 							"query": [
 								{
 									"key": "q",
@@ -1833,8 +2219,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/comments?page=1&per_page=10&target_type=course&target_id=1",
-							"host": ["{{base_url}}"],
-							"path": ["comments"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments"
+							],
 							"query": [
 								{
 									"key": "page",
@@ -1876,8 +2266,12 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/comments",
-							"host": ["{{base_url}}"],
-							"path": ["comments"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments"
+							]
 						}
 					}
 				},
@@ -1893,8 +2287,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/comments/search?q=很棒&target_type=course",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "search"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"search"
+							],
 							"query": [
 								{
 									"key": "q",
@@ -1920,8 +2319,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/comments/trending?limit=20&days=7",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "trending"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"trending"
+							],
 							"query": [
 								{
 									"key": "limit",
@@ -1947,8 +2351,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/comments/statistics?target_type=course&target_id=1",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "statistics"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"statistics"
+							],
 							"query": [
 								{
 									"key": "target_type",
@@ -1974,8 +2383,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/comments/1",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"1"
+							]
 						}
 					}
 				},
@@ -1999,8 +2413,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/comments/1",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"1"
+							]
 						}
 					}
 				},
@@ -2016,8 +2435,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/comments/1",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"1"
+							]
 						}
 					}
 				},
@@ -2041,8 +2465,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/comments/1/like",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "1", "like"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"1",
+								"like"
+							]
 						}
 					}
 				},
@@ -2066,8 +2496,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/comments/1/reaction",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "1", "reaction"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"1",
+								"reaction"
+							]
 						}
 					}
 				},
@@ -2091,8 +2527,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/comments/1/report",
-							"host": ["{{base_url}}"],
-							"path": ["comments", "1", "report"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments",
+								"1",
+								"report"
+							]
 						}
 					}
 				}
@@ -2116,8 +2558,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/zoom/credentials",
-									"host": ["{{base_url}}"],
-									"path": ["zoom", "credentials"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"zoom",
+										"credentials"
+									]
 								}
 							}
 						},
@@ -2141,8 +2588,13 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/zoom/credentials",
-									"host": ["{{base_url}}"],
-									"path": ["zoom", "credentials"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"zoom",
+										"credentials"
+									]
 								}
 							}
 						},
@@ -2158,8 +2610,14 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/zoom/credentials/1",
-									"host": ["{{base_url}}"],
-									"path": ["zoom", "credentials", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"zoom",
+										"credentials",
+										"1"
+									]
 								}
 							}
 						},
@@ -2183,8 +2641,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/zoom/credentials/1",
-									"host": ["{{base_url}}"],
-									"path": ["zoom", "credentials", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"zoom",
+										"credentials",
+										"1"
+									]
 								}
 							}
 						},
@@ -2200,8 +2664,14 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/zoom/credentials/1",
-									"host": ["{{base_url}}"],
-									"path": ["zoom", "credentials", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"zoom",
+										"credentials",
+										"1"
+									]
 								}
 							}
 						},
@@ -2217,8 +2687,15 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/zoom/credentials/1/test",
-									"host": ["{{base_url}}"],
-									"path": ["zoom", "credentials", "1", "test"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"zoom",
+										"credentials",
+										"1",
+										"test"
+									]
 								}
 							}
 						},
@@ -2234,8 +2711,15 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/zoom/credentials/1/reset-count",
-									"host": ["{{base_url}}"],
-									"path": ["zoom", "credentials", "1", "reset-count"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"zoom",
+										"credentials",
+										"1",
+										"reset-count"
+									]
 								}
 							}
 						}
@@ -2253,8 +2737,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/zoom/check",
-							"host": ["{{base_url}}"],
-							"path": ["zoom", "check"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"zoom",
+								"check"
+							]
 						}
 					}
 				},
@@ -2278,8 +2767,15 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/zoom/courses/1/meeting",
-							"host": ["{{base_url}}"],
-							"path": ["zoom", "courses", "1", "meeting"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"zoom",
+								"courses",
+								"1",
+								"meeting"
+							]
 						}
 					}
 				},
@@ -2295,8 +2791,15 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/zoom/courses/1/meeting",
-							"host": ["{{base_url}}"],
-							"path": ["zoom", "courses", "1", "meeting"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"zoom",
+								"courses",
+								"1",
+								"meeting"
+							]
 						}
 					}
 				},
@@ -2312,8 +2815,15 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/zoom/courses/1/meeting",
-							"host": ["{{base_url}}"],
-							"path": ["zoom", "courses", "1", "meeting"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"zoom",
+								"courses",
+								"1",
+								"meeting"
+							]
 						}
 					}
 				},
@@ -2329,8 +2839,15 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/zoom/courses/1/join",
-							"host": ["{{base_url}}"],
-							"path": ["zoom", "courses", "1", "join"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"zoom",
+								"courses",
+								"1",
+								"join"
+							]
 						}
 					}
 				},
@@ -2346,8 +2863,15 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/zoom/courses/1/start",
-							"host": ["{{base_url}}"],
-							"path": ["zoom", "courses", "1", "start"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"zoom",
+								"courses",
+								"1",
+								"start"
+							]
 						}
 					}
 				}
@@ -2368,8 +2892,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/attendance/statuses",
-							"host": ["{{base_url}}"],
-							"path": ["attendance", "statuses"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"attendance",
+								"statuses"
+							]
 						}
 					}
 				},
@@ -2388,8 +2917,14 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/attendance/courses/1",
-									"host": ["{{base_url}}"],
-									"path": ["attendance", "courses", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"attendance",
+										"courses",
+										"1"
+									]
 								}
 							}
 						},
@@ -2413,8 +2948,15 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/attendance/courses/1/batch",
-									"host": ["{{base_url}}"],
-									"path": ["attendance", "courses", "1", "batch"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"attendance",
+										"courses",
+										"1",
+										"batch"
+									]
 								}
 							}
 						},
@@ -2430,8 +2972,15 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/attendance/courses/1/generate-roster",
-									"host": ["{{base_url}}"],
-									"path": ["attendance", "courses", "1", "generate-roster"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"attendance",
+										"courses",
+										"1",
+										"generate-roster"
+									]
 								}
 							}
 						},
@@ -2447,8 +2996,15 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/attendance/courses/1/stats",
-									"host": ["{{base_url}}"],
-									"path": ["attendance", "courses", "1", "stats"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"attendance",
+										"courses",
+										"1",
+										"stats"
+									]
 								}
 							}
 						},
@@ -2472,8 +3028,16 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/attendance/courses/1/members/1",
-									"host": ["{{base_url}}"],
-									"path": ["attendance", "courses", "1", "members", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"attendance",
+										"courses",
+										"1",
+										"members",
+										"1"
+									]
 								}
 							}
 						}
@@ -2491,8 +3055,15 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/attendance/members/1/stats?start_date=2024-01-01&end_date=2024-12-31&course_info_id=1",
-							"host": ["{{base_url}}"],
-							"path": ["attendance", "members", "1", "stats"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"attendance",
+								"members",
+								"1",
+								"stats"
+							],
 							"query": [
 								{
 									"key": "start_date",
@@ -2527,8 +3098,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notifications?member_id=1&unread_only=true&type=course_reminder&limit=20",
-							"host": ["{{base_url}}"],
-							"path": ["notifications"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications"
+							],
 							"query": [
 								{
 									"key": "member_id",
@@ -2566,8 +3141,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notifications/1",
-							"host": ["{{base_url}}"],
-							"path": ["notifications", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"1"
+							]
 						}
 					}
 				},
@@ -2583,8 +3163,14 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notifications/1/read",
-							"host": ["{{base_url}}"],
-							"path": ["notifications", "1", "read"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"1",
+								"read"
+							]
 						}
 					}
 				},
@@ -2608,8 +3194,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notifications/batch/read",
-							"host": ["{{base_url}}"],
-							"path": ["notifications", "batch", "read"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"batch",
+								"read"
+							]
 						}
 					}
 				},
@@ -2633,8 +3225,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notifications/all/read",
-							"host": ["{{base_url}}"],
-							"path": ["notifications", "all", "read"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"all",
+								"read"
+							]
 						}
 					}
 				},
@@ -2650,8 +3248,13 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notifications/1",
-							"host": ["{{base_url}}"],
-							"path": ["notifications", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"1"
+							]
 						}
 					}
 				},
@@ -2667,8 +3270,14 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notifications/stats/summary?member_id=1",
-							"host": ["{{base_url}}"],
-							"path": ["notifications", "stats", "summary"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notifications",
+								"stats",
+								"summary"
+							],
 							"query": [
 								{
 									"key": "member_id",
@@ -2702,8 +3311,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/notifications/trigger/course-reminder",
-									"host": ["{{base_url}}"],
-									"path": ["notifications", "trigger", "course-reminder"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications",
+										"trigger",
+										"course-reminder"
+									]
 								}
 							}
 						},
@@ -2727,8 +3342,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/notifications/trigger/counseling-reminder",
-									"host": ["{{base_url}}"],
-									"path": ["notifications", "trigger", "counseling-reminder"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications",
+										"trigger",
+										"counseling-reminder"
+									]
 								}
 							}
 						},
@@ -2752,8 +3373,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/notifications/trigger/counseling-confirmation",
-									"host": ["{{base_url}}"],
-									"path": ["notifications", "trigger", "counseling-confirmation"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications",
+										"trigger",
+										"counseling-confirmation"
+									]
 								}
 							}
 						},
@@ -2777,8 +3404,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/notifications/trigger/counseling-status-change",
-									"host": ["{{base_url}}"],
-									"path": ["notifications", "trigger", "counseling-status-change"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications",
+										"trigger",
+										"counseling-status-change"
+									]
 								}
 							}
 						},
@@ -2802,8 +3435,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/notifications/trigger/counseling-time-change",
-									"host": ["{{base_url}}"],
-									"path": ["notifications", "trigger", "counseling-time-change"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications",
+										"trigger",
+										"counseling-time-change"
+									]
 								}
 							}
 						},
@@ -2827,8 +3466,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/notifications/trigger/counselor-new-service",
-									"host": ["{{base_url}}"],
-									"path": ["notifications", "trigger", "counselor-new-service"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"notifications",
+										"trigger",
+										"counselor-new-service"
+									]
 								}
 							}
 						}
@@ -2851,8 +3496,12 @@
 						],
 						"url": {
 							"raw": "{{base_url}}/notification-preferences?member_id=1",
-							"host": ["{{base_url}}"],
-							"path": ["notification-preferences"],
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification-preferences"
+							],
 							"query": [
 								{
 									"key": "member_id",
@@ -2883,8 +3532,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notification-preferences/1",
-							"host": ["{{base_url}}"],
-							"path": ["notification-preferences", "1"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification-preferences",
+								"1"
+							]
 						}
 					}
 				},
@@ -2908,8 +3562,14 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notification-preferences/batch/update",
-							"host": ["{{base_url}}"],
-							"path": ["notification-preferences", "batch", "update"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification-preferences",
+								"batch",
+								"update"
+							]
 						}
 					}
 				},
@@ -2933,8 +3593,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notification-preferences/quick-setting",
-							"host": ["{{base_url}}"],
-							"path": ["notification-preferences", "quick-setting"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification-preferences",
+								"quick-setting"
+							]
 						}
 					}
 				},
@@ -2958,8 +3623,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notification-preferences/reset-defaults",
-							"host": ["{{base_url}}"],
-							"path": ["notification-preferences", "reset-defaults"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification-preferences",
+								"reset-defaults"
+							]
 						}
 					}
 				},
@@ -2983,8 +3653,13 @@
 						},
 						"url": {
 							"raw": "{{base_url}}/notification-preferences/test",
-							"host": ["{{base_url}}"],
-							"path": ["notification-preferences", "test"]
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"notification-preferences",
+								"test"
+							]
 						}
 					}
 				}
@@ -3008,8 +3683,12 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/counseling-infos",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-infos"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-infos"
+									]
 								}
 							}
 						},
@@ -3033,8 +3712,12 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-infos",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-infos"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-infos"
+									]
 								}
 							}
 						},
@@ -3050,8 +3733,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/counseling-infos/1",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-infos", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-infos",
+										"1"
+									]
 								}
 							}
 						},
@@ -3075,8 +3763,13 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-infos/1",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-infos", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-infos",
+										"1"
+									]
 								}
 							}
 						},
@@ -3092,8 +3785,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/counseling-infos/1",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-infos", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-infos",
+										"1"
+									]
 								}
 							}
 						},
@@ -3117,8 +3815,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-infos/1/counselors",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-infos", "1", "counselors"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-infos",
+										"1",
+										"counselors"
+									]
 								}
 							}
 						},
@@ -3142,8 +3846,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-infos/1/counselors",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-infos", "1", "counselors"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-infos",
+										"1",
+										"counselors"
+									]
 								}
 							}
 						}
@@ -3164,8 +3874,12 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/counseling-appointments?student_id=1&status=pending",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-appointments"],
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-appointments"
+									],
 									"query": [
 										{
 											"key": "student_id",
@@ -3207,8 +3921,12 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-appointments",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-appointments"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-appointments"
+									]
 								}
 							}
 						},
@@ -3224,8 +3942,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/counseling-appointments/1",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-appointments", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-appointments",
+										"1"
+									]
 								}
 							}
 						},
@@ -3249,8 +3972,13 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-appointments/1",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-appointments", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-appointments",
+										"1"
+									]
 								}
 							}
 						},
@@ -3266,8 +3994,13 @@
 								],
 								"url": {
 									"raw": "{{base_url}}/counseling-appointments/1",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-appointments", "1"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-appointments",
+										"1"
+									]
 								}
 							}
 						},
@@ -3291,8 +4024,14 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-appointments/1/confirm",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-appointments", "1", "confirm"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-appointments",
+										"1",
+										"confirm"
+									]
 								}
 							}
 						},
@@ -3316,8 +4055,638 @@
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-appointments/1/complete",
-									"host": ["{{base_url}}"],
-									"path": ["counseling-appointments", "1", "complete"]
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-appointments",
+										"1",
+										"complete"
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Flip Course System",
+			"item": [
+				{
+					"name": "0. Setup - Create Product & FlipCourseInfo",
+					"item": [
+						{
+							"name": "Create Product",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"翻轉英文課程 - 初階\",\n  \"code\": \"FLIP-EN-BEGINNER\",\n  \"feature_img\": \"https://via.placeholder.com/1600x900\",\n  \"regular_price\": 18000,\n  \"discount_price\": 15000,\n  \"limit_enrollment\": false,\n  \"max_enrollment\": 0,\n  \"stock\": 999,\n  \"is_series\": false,\n  \"elective\": false,\n  \"is_visible_to_specific_students\": false,\n  \"status\": \"published\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/products",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"products"
+									]
+								}
+							}
+						},
+						{
+							"name": "Create FlipCourseInfo",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"product_id\": 1,\n  \"name\": \"翻轉英文課程 - 初階\",\n  \"code\": \"FLIP-EN-001\",\n  \"description\": \"專為英文初學者設計的翻轉課程\",\n  \"details\": \"本課程採用翻轉教室模式，由專業團隊協助您打造個人化學習計畫\",\n  \"feature_img\": \"https://via.placeholder.com/1600x900\",\n  \"teaching_mode\": \"hybrid\",\n  \"status\": \"published\",\n  \"lang_type_ids\": [1]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-infos",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-infos"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get All FlipCourseInfos",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-infos",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-infos"
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "1. Create Order (Auto Create Case)",
+					"item": [
+						{
+							"name": "Create Order with Flip Course",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"member_id\": 1,\n  \"code\": \"ORD-2025-001\",\n  \"total\": 15000,\n  \"currency\": \"TWD\",\n  \"status\": \"pending\",\n  \"note\": \"學生購買翻轉英文課程\",\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"product_name\": \"翻轉英文課程 - 初階\",\n      \"quantity\": 1,\n      \"price\": 15000,\n      \"options\": {\n        \"flip_course_info_id\": 1,\n        \"planner_id\": 2\n      }\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/orders",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get All Cases",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Case Detail",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1"
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "2. Planner Phase",
+					"item": [
+						{
+							"name": "Confirm Payment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"payment_method\": \"bank_transfer\",\n  \"payment_note\": \"學生已於 2025/01/15 完成匯款\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/confirm-payment",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"confirm-payment"
+									]
+								}
+							}
+						},
+						{
+							"name": "Create Line Group",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"line_group_url\": \"https://line.me/ti/g/XXXXX-XXXXX\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/create-line-group",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"create-line-group"
+									]
+								}
+							}
+						},
+						{
+							"name": "Assign Counselor",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"counselor_id\": 3\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/assign-counselor",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"assign-counselor"
+									]
+								}
+							}
+						},
+						{
+							"name": "Assign Analyst",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"analyst_id\": 4\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/assign-analyst",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"assign-analyst"
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "3. Counselor Phase",
+					"item": [
+						{
+							"name": "Schedule Counseling Meeting",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"title\": \"翻轉課程諮商（第 1 次循環）\",\n  \"preferred_datetime\": \"2025-01-20 14:00:00\",\n  \"confirmed_datetime\": \"2025-01-20 14:00:00\",\n  \"duration\": 60,\n  \"method\": \"online\",\n  \"meeting_url\": \"https://zoom.us/j/123456789\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/schedule-counseling",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"schedule-counseling"
+									]
+								}
+							}
+						},
+						{
+							"name": "Issue Prescription",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"counseling_appointment_id\": 1,\n  \"strategy_report\": \"根據諮商評估，學生目前處於初階程度，建議以聽力和口說為主要學習目標。\",\n  \"counseling_notes\": \"學生學習動機強，但缺乏練習環境\",\n  \"learning_goals\": [\n    \"提升英文聽力理解能力\",\n    \"增加日常對話練習\",\n    \"建立基礎單字量 1000 字\"\n  ],\n  \"club_courses\": [\n    {\n      \"club_course_info_id\": 1,\n      \"reason\": \"適合初階學員的會話課程\",\n      \"recommended_sessions\": 8\n    }\n  ],\n  \"learning_tasks\": [\n    {\n      \"title\": \"完成基礎單字學習\",\n      \"description\": \"使用 Quizlet 學習前 500 個常用單字\",\n      \"resources\": \"https://quizlet.com/xxxxx\",\n      \"estimated_hours\": 10,\n      \"due_date\": \"2025-02-15\"\n    },\n    {\n      \"title\": \"每日英文聽力練習\",\n      \"description\": \"每天聽 BBC Learning English 15 分鐘\",\n      \"resources\": \"https://www.bbc.co.uk/learningenglish\",\n      \"estimated_hours\": 7,\n      \"due_date\": \"2025-02-15\"\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/issue-prescription",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"issue-prescription"
+									]
+								}
+							}
+						},
+						{
+							"name": "Review Analysis",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"assessment_id\": 1,\n  \"continue_cycle\": true,\n  \"review_notes\": \"學生進步明顯，但仍需加強口說練習，建議進入下一循環\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/review-analysis",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"review-analysis"
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "4. Analyst Phase",
+					"item": [
+						{
+							"name": "Create Assessment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"prescription_id\": 1,\n  \"test_content\": \"英文聽力測驗 20 題\",\n  \"test_results\": {\n    \"listening\": 75,\n    \"speaking\": 60,\n    \"vocabulary\": 80\n  },\n  \"test_score\": 72\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/create-assessment",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"create-assessment"
+									]
+								}
+							}
+						},
+						{
+							"name": "Submit Analysis",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"assessment_id\": 1,\n  \"analysis_report\": \"學生在本次循環中表現良好，完成了 80% 的學習任務。聽力部分進步明顯，從 60 分提升至 75 分。口說部分仍需加強，建議增加口說練習的比重。\",\n  \"metrics\": {\n    \"improvement_rate\": 25,\n    \"task_completion_rate\": 80,\n    \"attendance_rate\": 100\n  },\n  \"recommendations\": [\n    \"增加口說練習時間\",\n    \"參加更多會話課程\",\n    \"建立每日口說練習習慣\"\n  ],\n  \"study_hours\": 35,\n  \"tasks_completed\": 8,\n  \"courses_attended\": 8\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/submit-analysis",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"submit-analysis"
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "5. Query APIs",
+					"item": [
+						{
+							"name": "Get Prescriptions",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/prescriptions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"prescriptions"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Assessments",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/assessments",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"assessments"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Tasks",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/tasks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"tasks"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Notes",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/notes",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"notes"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Case Statistics",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-cases/1/statistics",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-cases",
+										"1",
+										"statistics"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get FlipCourseInfo Statistics",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/flip-course-infos/1/statistics",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"flip-course-infos",
+										"1",
+										"statistics"
+									]
 								}
 							}
 						}

@@ -47,9 +47,25 @@ class FlipCourseInfo extends Model
     }
 
     /**
+     * 建立者（別名）
+     */
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    /**
      * 最後更新者
      */
     public function updater(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    /**
+     * 最後更新者（別名）
+     */
+    public function updatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
