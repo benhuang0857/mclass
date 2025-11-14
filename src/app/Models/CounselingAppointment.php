@@ -49,7 +49,7 @@ class CounselingAppointment extends Model
 
     public function orderItem()
     {
-        return $this->belongsTo(OrderIteam::class, 'order_item_id');
+        return $this->belongsTo(OrderItem::class, 'order_item_id');
     }
 
     public function counselingInfo()

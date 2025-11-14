@@ -281,6 +281,11 @@ return new class extends Migration
                   ->nullable()
                   ->change();
 
+            // 將 counseling_info_id 改為可選，因為翻轉課程可能不關聯特定諮商服務
+            $table->foreignId('counseling_info_id')
+                  ->nullable()
+                  ->change();
+
             // 新增關聯翻轉課程案例
             $table->foreignId('flip_course_case_id')
                   ->nullable()

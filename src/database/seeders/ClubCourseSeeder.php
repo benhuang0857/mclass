@@ -24,11 +24,10 @@ class ClubCourseSeeder extends Seeder
     {
         // 首先建立必要的基礎資料
         $this->createProducts();
-        $this->createMembers();
-        
+
         // 建立課程資訊
         $courseInfos = $this->createClubCourseInfos();
-        
+
         // 為每個課程資訊建立實際課程
         foreach ($courseInfos as $courseInfo) {
             $this->createClubCoursesForInfo($courseInfo);
@@ -89,46 +88,6 @@ class ClubCourseSeeder extends Seeder
             Product::firstOrCreate(
                 ['code' => $productData['code']],
                 $productData
-            );
-        }
-    }
-
-    /**
-     * 建立會員資料
-     */
-    private function createMembers(): void
-    {
-        $members = [
-            [
-                'nickname' => '王小明',
-                'account' => 'wang001',
-                'email' => 'wang@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-            [
-                'nickname' => 'John Smith',
-                'account' => 'john002',
-                'email' => 'john@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-            [
-                'nickname' => '李美華',
-                'account' => 'li003',
-                'email' => 'li@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-        ];
-
-        foreach ($members as $memberData) {
-            Member::firstOrCreate(
-                ['email' => $memberData['email']],
-                $memberData
             );
         }
     }

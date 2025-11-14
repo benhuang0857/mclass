@@ -5,9 +5,10 @@ namespace Database\Seeders;
 use App\Models\CounselingAppointment;
 use App\Models\CounselingInfo;
 use App\Models\Member;
-use App\Models\OrderIteam;
+use App\Models\OrderItem;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Role;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 
@@ -20,14 +21,13 @@ class CounselingSeeder extends Seeder
     {
         // 首先建立必要的基礎資料
         $this->createCounselingProducts();
-        $this->createMembers();
-        
+
         // 建立諮商資訊
         $counselingInfos = $this->createCounselingInfos();
-        
+
         // 建立諮商師關聯
         $this->createCounselorRelations($counselingInfos);
-        
+
         // 建立預約範例
         $this->createSampleAppointments($counselingInfos);
     }
@@ -100,73 +100,6 @@ class CounselingSeeder extends Seeder
             Product::firstOrCreate(
                 ['code' => $productData['code']],
                 $productData
-            );
-        }
-    }
-
-    /**
-     * 建立會員資料（學生和諮商師）
-     */
-    private function createMembers(): void
-    {
-        $students = [
-            [
-                'nickname' => '張學生',
-                'account' => 'student001',
-                'email' => 'student001@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-            [
-                'nickname' => '李同學',
-                'account' => 'student002',
-                'email' => 'student002@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-            [
-                'nickname' => '王大明',
-                'account' => 'student003',
-                'email' => 'student003@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-        ];
-
-        $counselors = [
-            [
-                'nickname' => '陳諮商師',
-                'account' => 'counselor001',
-                'email' => 'counselor001@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-            [
-                'nickname' => '林心理師',
-                'account' => 'counselor002',
-                'email' => 'counselor002@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-            [
-                'nickname' => '黃職涯顧問',
-                'account' => 'counselor003',
-                'email' => 'counselor003@example.com',
-                'email_valid' => true,
-                'password' => bcrypt('password'),
-                'status' => true,
-            ],
-        ];
-
-        foreach (array_merge($students, $counselors) as $memberData) {
-            Member::firstOrCreate(
-                ['email' => $memberData['email']],
-                $memberData
             );
         }
     }
@@ -254,30 +187,49 @@ class CounselingSeeder extends Seeder
      */
     private function createCounselorRelations(array $counselingInfos): void
     {
-        // 從所有會員中隨機選擇諮商師，不限制角色
-        $allMembers = Member::where('status', true)->get();
+        // 取得具有諮商師角色的會員
+        $counselorRole = Role::where('slug', 'counselor')->first();
 
-        if ($allMembers->count() === 0) {
-            $this->command->warn('警告：找不到會員資料，請確保已建立會員。');
+        if (!$counselorRole) {
+            $this->command->warn('⚠️ 找不到諮商師角色，請確保已執行 DatabaseSeeder');
+            return;
+        }
+
+        $counselors = Member::whereHas('roles', function($q) use ($counselorRole) {
+            $q->where('roles.id', $counselorRole->id);
+        })->where('status', true)->get();
+
+        if ($counselors->isEmpty()) {
+            $this->command->warn('⚠️ 找不到具有諮商師角色的會員，請確保已執行 MemberSeeder');
             return;
         }
 
         // 為每個諮商服務分配諮商師
         foreach ($counselingInfos as $counselingInfo) {
-            // 隨機選擇1-3個會員作為該服務的諮商師
-            $selectedCounselors = $allMembers->random(min(3, $allMembers->count()));
-            
+            // 隨機選擇1-3個諮商師作為該服務的諮商師
+            $count = min(3, $counselors->count());
+            $selectedCounselors = $counselors->random($count);
+
             foreach ($selectedCounselors as $index => $counselor) {
-                // 使用 DB 直接插入關聯表資料
-                \DB::table('counseling_info_counselors')->insert([
-                    'counseling_info_id' => $counselingInfo->id,
-                    'counselor_id' => $counselor->id,
-                    'is_primary' => $index === 0, // 第一個設為主要諮商師
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ]);
+                // 檢查是否已存在關聯
+                $exists = \DB::table('counseling_info_counselors')
+                    ->where('counseling_info_id', $counselingInfo->id)
+                    ->where('counselor_id', $counselor->id)
+                    ->exists();
+
+                if (!$exists) {
+                    \DB::table('counseling_info_counselors')->insert([
+                        'counseling_info_id' => $counselingInfo->id,
+                        'counselor_id' => $counselor->id,
+                        'is_primary' => $index === 0, // 第一個設為主要諮商師
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ]);
+                }
             }
         }
+
+        $this->command->info("✓ 已為 " . count($counselingInfos) . " 個諮商服務分配諮商師");
     }
 
     /**
@@ -285,19 +237,33 @@ class CounselingSeeder extends Seeder
      */
     private function createSampleAppointments(array $counselingInfos): void
     {
-        // 從所有會員中選擇，不限制身分
-        $allMembers = Member::where('status', true)->get();
-
-        if ($allMembers->isEmpty() || empty($counselingInfos)) {
-            $this->command->warn('警告：缺少必要的關聯資料，無法建立預約範例。');
+        if (empty($counselingInfos)) {
+            $this->command->warn('⚠️ 缺少諮商資訊，無法建立預約範例');
             return;
         }
 
-        // 隨機選擇一些會員作為學生
-        $students = $allMembers->random(min(3, $allMembers->count()));
-        
+        // 取得具有學生角色的會員
+        $studentRole = Role::where('slug', 'student')->first();
+
+        if (!$studentRole) {
+            $this->command->warn('⚠️ 找不到學生角色，請確保已執行 DatabaseSeeder');
+            return;
+        }
+
+        $students = Member::whereHas('roles', function($q) use ($studentRole) {
+            $q->where('roles.id', $studentRole->id);
+        })->where('status', true)->get();
+
+        if ($students->isEmpty()) {
+            $this->command->warn('⚠️ 找不到具有學生角色的會員，請確保已執行 MemberSeeder');
+            return;
+        }
+
+        // 隨機選擇一些學生
+        $selectedStudents = $students->random(min(3, $students->count()));
+
         // 先創建一些 OrderItem 作為範例（實際應該由購買流程產生）
-        $orderItems = $this->createSampleOrderItems($students, $counselingInfos);
+        $orderItems = $this->createSampleOrderItems($selectedStudents, $counselingInfos);
 
         // 為每個諮商服務創建範例預約
         foreach ($counselingInfos as $index => $counselingInfo) {
@@ -307,11 +273,11 @@ class CounselingSeeder extends Seeder
             $availableCounselors = \DB::table('counseling_info_counselors')
                 ->where('counseling_info_id', $counselingInfo->id)
                 ->pluck('counselor_id');
-            
+
             if ($availableCounselors->isEmpty()) continue;
 
             $counselorId = $availableCounselors->random();
-            $student = $students[$index % $students->count()];
+            $student = $selectedStudents[$index % $selectedStudents->count()];
 
             $appointmentData = [
                 'order_item_id' => $orderItems[$index]->id,
@@ -364,6 +330,8 @@ class CounselingSeeder extends Seeder
 
             CounselingAppointment::create($appointmentData);
         }
+
+        $this->command->info("✓ 已建立 " . count($orderItems) . " 個諮商預約範例");
     }
 
     /**
@@ -390,7 +358,7 @@ class CounselingSeeder extends Seeder
                 ]);
                 
                 // 再創建訂單項目
-                $orderItem = OrderIteam::create([
+                $orderItem = OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $counselingInfo->product_id,
                     'product_name' => $product->name,

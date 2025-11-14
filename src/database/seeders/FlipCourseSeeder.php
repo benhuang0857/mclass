@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\FlipCourseInfo;
 use App\Models\LangType;
 use App\Models\Member;
+use App\Models\Role;
 use App\Models\Order;
 use App\Models\FlipCourseCase;
 
@@ -137,13 +138,6 @@ class FlipCourseSeeder extends Seeder
      */
     private function createSampleCase(): void
     {
-        // 檢查是否有足夠的會員資料
-        $members = Member::all();
-        if ($members->count() < 4) {
-            $this->command->warn('⚠ 會員資料不足，跳過建立範例案例（至少需要4位會員：學生、規劃師、諮商師、分析師）');
-            return;
-        }
-
         // 取得第一個翻轉課程
         $flipCourseInfo = FlipCourseInfo::first();
         if (!$flipCourseInfo) {
@@ -151,11 +145,35 @@ class FlipCourseSeeder extends Seeder
             return;
         }
 
-        // 隨機選擇會員作為各角色
-        $student = $members->random();
-        $planner = $members->where('id', '!=', $student->id)->random();
-        $counselor = $members->whereNotIn('id', [$student->id, $planner->id])->random();
-        $analyst = $members->whereNotIn('id', [$student->id, $planner->id, $counselor->id])->random();
+        // 取得角色
+        $studentRole = Role::where('slug', 'student')->first();
+        $plannerRole = Role::where('slug', 'planner')->first();
+        $counselorRole = Role::where('slug', 'counselor')->first();
+        $analystRole = Role::where('slug', 'analyst')->first();
+
+        // 根據角色選擇會員
+        $student = $studentRole ? Member::whereHas('roles', function($q) use ($studentRole) {
+            $q->where('roles.id', $studentRole->id);
+        })->first() : null;
+
+        $planner = $plannerRole ? Member::whereHas('roles', function($q) use ($plannerRole) {
+            $q->where('roles.id', $plannerRole->id);
+        })->first() : null;
+
+        $counselor = $counselorRole ? Member::whereHas('roles', function($q) use ($counselorRole) {
+            $q->where('roles.id', $counselorRole->id);
+        })->first() : null;
+
+        $analyst = $analystRole ? Member::whereHas('roles', function($q) use ($analystRole) {
+            $q->where('roles.id', $analystRole->id);
+        })->first() : null;
+
+        // 檢查是否所有角色都有對應的會員
+        if (!$student || !$planner || !$counselor || !$analyst) {
+            $this->command->warn('⚠ 缺少必要角色的會員，跳過建立範例案例');
+            $this->command->warn('  需要: 學生、規劃師、諮商師、分析師');
+            return;
+        }
 
         // 建立訂單
         $order = Order::create([

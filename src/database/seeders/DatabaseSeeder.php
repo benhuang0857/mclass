@@ -32,7 +32,10 @@ class DatabaseSeeder extends Seeder
         $this->createTeachMethodTypes();
         $this->createCourseInfoTypes();
         $this->createCourseStatusTypes();
-        
+
+        // 建立會員資料（必須在課程之前）
+        $this->call(MemberSeeder::class);
+
         // 建立課程相關的假資料
         $this->call(ClubCourseSeeder::class);
         $this->call(CounselingSeeder::class);

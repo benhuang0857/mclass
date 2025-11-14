@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\CounselingAppointment;
 use App\Models\CounselingInfo;
-use App\Models\OrderIteam;
+use App\Models\OrderItem;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
@@ -55,7 +55,7 @@ class CounselingAppointmentController extends Controller
         ]);
 
         // 驗證用戶是否購買了該諮商服務
-        $orderItem = OrderIteam::with(['product', 'order'])->findOrFail($validated['order_item_id']);
+        $orderItem = OrderItem::with(['product', 'order'])->findOrFail($validated['order_item_id']);
         $counselingInfo = CounselingInfo::findOrFail($validated['counseling_info_id']);
 
         if ($orderItem->product_id !== $counselingInfo->product_id) {
