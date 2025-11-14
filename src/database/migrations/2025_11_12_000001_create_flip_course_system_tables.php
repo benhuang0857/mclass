@@ -98,11 +98,6 @@ return new class extends Migration
             $table->foreignId('counseling_appointment_id')->nullable()->constrained('counseling_appointments')->onDelete('set null')->comment('關聯的諮商會議');
             $table->integer('cycle_number')->comment('第幾次循環');
 
-            // 處方內容
-            $table->text('strategy_report')->comment('學習策略報告');
-            $table->text('counseling_notes')->nullable()->comment('諮商筆記');
-            $table->json('learning_goals')->nullable()->comment('學習目標 (JSON)');
-
             // 狀態
             $table->enum('status', ['draft', 'issued', 'completed', 'cancelled'])->default('draft')->comment('處方簽狀態');
             $table->timestamp('issued_at')->nullable()->comment('開立時間');

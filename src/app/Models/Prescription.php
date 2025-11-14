@@ -18,16 +18,12 @@ class Prescription extends Model
         'counselor_id',
         'counseling_appointment_id',
         'cycle_number',
-        'strategy_report',
-        'counseling_notes',
-        'learning_goals',
         'status',
         'issued_at',
         'completed_at',
     ];
 
     protected $casts = [
-        'learning_goals' => 'array',
         'status' => 'string',
         'cycle_number' => 'integer',
         'issued_at' => 'datetime',
@@ -82,6 +78,14 @@ class Prescription extends Model
     public function assessment(): HasOne
     {
         return $this->hasOne(Assessment::class);
+    }
+
+    /**
+     * 處方項目 (關聯的處方內容)
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(PrescriptionItem::class)->orderBy('sort_order');
     }
 
     /**
