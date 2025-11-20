@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
 		"name": "MClass Course Management System API",
-		"description": "Complete API collection for MClass - Laravel 11 課程管理系統\n\n基本資訊:\n- Base URL: http://localhost:8001/api\n- Content-Type: application/json\n- Accept: application/json",
+		"description": "Complete API collection for MClass - Laravel 11 課程管理系統\n\n基本資訊:\n- Base URL: http://localhost:8001\n- Content-Type: application/json\n- Accept: application/json",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "12345678"
 	},
@@ -4092,10 +4092,10 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"翻轉英文課程 - 初階\",\n  \"code\": \"FLIP-EN-BEGINNER\",\n  \"feature_img\": \"https://via.placeholder.com/1600x900\",\n  \"regular_price\": 18000,\n  \"discount_price\": 15000,\n  \"limit_enrollment\": false,\n  \"max_enrollment\": 0,\n  \"stock\": 999,\n  \"is_series\": false,\n  \"elective\": false,\n  \"is_visible_to_specific_students\": false,\n  \"status\": \"published\"\n}"
+									"raw": "{\n  \"name\": \"翻轉英文課程 - 初階 - 測試\",\n  \"code\": \"FLIP-EN-BEGINNER-TEST\",\n  \"feature_img\": \"https://via.placeholder.com/1600x900\",\n  \"regular_price\": 18000,\n  \"discount_price\": 15000,\n  \"limit_enrollment\": false,\n  \"max_enrollment\": 0,\n  \"stock\": 999,\n  \"is_series\": false,\n  \"elective\": false,\n  \"is_visible_to_specific_students\": false,\n  \"status\": \"published\"\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/products",
+									"raw": "{{base_url}}/products",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4125,7 +4125,7 @@
 									"raw": "{\n  \"product_id\": 1,\n  \"name\": \"翻轉英文課程 - 初階\",\n  \"code\": \"FLIP-EN-001\",\n  \"description\": \"專為英文初學者設計的翻轉課程\",\n  \"details\": \"本課程採用翻轉教室模式，由專業團隊協助您打造個人化學習計畫\",\n  \"feature_img\": \"https://via.placeholder.com/1600x900\",\n  \"teaching_mode\": \"hybrid\",\n  \"status\": \"published\",\n  \"lang_type_ids\": [1]\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-infos",
+									"raw": "{{base_url}}/flip-course-infos",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4147,7 +4147,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-infos",
+									"raw": "{{base_url}}/flip-course-infos",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4182,7 +4182,7 @@
 									"raw": "{\n  \"member_id\": 1,\n  \"code\": \"ORD-2025-001\",\n  \"total\": 15000,\n  \"currency\": \"TWD\",\n  \"status\": \"pending\",\n  \"note\": \"學生購買翻轉英文課程\",\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"product_name\": \"翻轉英文課程 - 初階\",\n      \"quantity\": 1,\n      \"price\": 15000,\n      \"options\": {\n        \"flip_course_info_id\": 1,\n        \"planner_id\": 2\n      }\n    }\n  ]\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/orders",
+									"raw": "{{base_url}}/orders",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4204,7 +4204,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases",
+									"raw": "{{base_url}}/flip-course-cases",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4226,7 +4226,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1",
+									"raw": "{{base_url}}/flip-course-cases/1",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4262,7 +4262,7 @@
 									"raw": "{\n  \"payment_method\": \"bank_transfer\",\n  \"payment_note\": \"學生已於 2025/01/15 完成匯款\"\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/confirm-payment",
+									"raw": "{{base_url}}/flip-course-cases/1/confirm-payment",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4294,7 +4294,7 @@
 									"raw": "{\n  \"line_group_url\": \"https://line.me/ti/g/XXXXX-XXXXX\"\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/create-line-group",
+									"raw": "{{base_url}}/flip-course-cases/1/create-line-group",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4326,7 +4326,7 @@
 									"raw": "{\n  \"counselor_id\": 3\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/assign-counselor",
+									"raw": "{{base_url}}/flip-course-cases/1/assign-counselor",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4358,7 +4358,7 @@
 									"raw": "{\n  \"analyst_id\": 4\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/assign-analyst",
+									"raw": "{{base_url}}/flip-course-cases/1/assign-analyst",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4395,7 +4395,7 @@
 									"raw": "{\n  \"title\": \"翻轉課程諮商（第 1 次循環）\",\n  \"preferred_datetime\": \"2025-01-20 14:00:00\",\n  \"confirmed_datetime\": \"2025-01-20 14:00:00\",\n  \"duration\": 60,\n  \"method\": \"online\",\n  \"meeting_url\": \"https://zoom.us/j/123456789\"\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/schedule-counseling",
+									"raw": "{{base_url}}/flip-course-cases/1/schedule-counseling",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4427,7 +4427,7 @@
 									"raw": "{\n  \"counseling_appointment_id\": 1,\n  \"strategy_report\": \"根據諮商評估，學生目前處於初階程度，建議以聽力和口說為主要學習目標。\",\n  \"counseling_notes\": \"學生學習動機強，但缺乏練習環境\",\n  \"learning_goals\": [\n    \"提升英文聽力理解能力\",\n    \"增加日常對話練習\",\n    \"建立基礎單字量 1000 字\"\n  ],\n  \"club_courses\": [\n    {\n      \"club_course_info_id\": 1,\n      \"reason\": \"適合初階學員的會話課程\",\n      \"recommended_sessions\": 8\n    }\n  ],\n  \"learning_tasks\": [\n    {\n      \"title\": \"完成基礎單字學習\",\n      \"description\": \"使用 Quizlet 學習前 500 個常用單字\",\n      \"resources\": \"https://quizlet.com/xxxxx\",\n      \"estimated_hours\": 10,\n      \"due_date\": \"2025-02-15\"\n    },\n    {\n      \"title\": \"每日英文聽力練習\",\n      \"description\": \"每天聽 BBC Learning English 15 分鐘\",\n      \"resources\": \"https://www.bbc.co.uk/learningenglish\",\n      \"estimated_hours\": 7,\n      \"due_date\": \"2025-02-15\"\n    }\n  ]\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/issue-prescription",
+									"raw": "{{base_url}}/flip-course-cases/1/issue-prescription",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4459,7 +4459,7 @@
 									"raw": "{\n  \"assessment_id\": 1,\n  \"continue_cycle\": true,\n  \"review_notes\": \"學生進步明顯，但仍需加強口說練習，建議進入下一循環\"\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/review-analysis",
+									"raw": "{{base_url}}/flip-course-cases/1/review-analysis",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4496,7 +4496,7 @@
 									"raw": "{\n  \"prescription_id\": 1,\n  \"test_content\": \"英文聽力測驗 20 題\",\n  \"test_results\": {\n    \"listening\": 75,\n    \"speaking\": 60,\n    \"vocabulary\": 80\n  },\n  \"test_score\": 72\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/create-assessment",
+									"raw": "{{base_url}}/flip-course-cases/1/create-assessment",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4528,7 +4528,7 @@
 									"raw": "{\n  \"assessment_id\": 1,\n  \"analysis_report\": \"學生在本次循環中表現良好，完成了 80% 的學習任務。聽力部分進步明顯，從 60 分提升至 75 分。口說部分仍需加強，建議增加口說練習的比重。\",\n  \"metrics\": {\n    \"improvement_rate\": 25,\n    \"task_completion_rate\": 80,\n    \"attendance_rate\": 100\n  },\n  \"recommendations\": [\n    \"增加口說練習時間\",\n    \"參加更多會話課程\",\n    \"建立每日口說練習習慣\"\n  ],\n  \"study_hours\": 35,\n  \"tasks_completed\": 8,\n  \"courses_attended\": 8\n}"
 								},
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/submit-analysis",
+									"raw": "{{base_url}}/flip-course-cases/1/submit-analysis",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4557,7 +4557,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/prescriptions",
+									"raw": "{{base_url}}/flip-course-cases/1/prescriptions",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4581,7 +4581,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/assessments",
+									"raw": "{{base_url}}/flip-course-cases/1/assessments",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4605,7 +4605,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/tasks",
+									"raw": "{{base_url}}/flip-course-cases/1/tasks",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4629,7 +4629,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/notes",
+									"raw": "{{base_url}}/flip-course-cases/1/notes",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4653,7 +4653,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-cases/1/statistics",
+									"raw": "{{base_url}}/flip-course-cases/1/statistics",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4677,7 +4677,7 @@
 									}
 								],
 								"url": {
-									"raw": "{{base_url}}/api/flip-course-infos/1/statistics",
+									"raw": "{{base_url}}/flip-course-infos/1/statistics",
 									"host": [
 										"{{base_url}}"
 									],
@@ -4718,7 +4718,7 @@
 	"variable": [
 		{
 			"key": "base_url",
-			"value": "http://localhost:8001/api",
+			"value": "http://localhost:8001",
 			"type": "string"
 		}
 	]

@@ -7,6 +7,7 @@ use App\Models\Prescription;
 use App\Models\Assessment;
 use App\Models\Task;
 use App\Models\Order;
+use App\Models\CounselingAppointment;
 use App\Services\FlipCourseWorkflowService;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
@@ -204,8 +205,8 @@ class FlipCourseCaseController extends Controller
 
             // Create notification for counselor
             $this->notificationService->createFlipCaseAssignedNotification(
-                $validated['counselor_id'],
                 $case->id,
+                $validated['counselor_id'],
                 'counselor'
             );
 
@@ -248,8 +249,8 @@ class FlipCourseCaseController extends Controller
 
             // Create notification for analyst
             $this->notificationService->createFlipCaseAssignedNotification(
-                $validated['analyst_id'],
                 $case->id,
+                $validated['analyst_id'],
                 'analyst'
             );
 
@@ -337,22 +338,44 @@ class FlipCourseCaseController extends Controller
         try {
             $case = FlipCourseCase::findOrFail($id);
 
-            $prescription = $this->workflowService->issuePrescription(
+            // Get counseling appointment if provided
+            $counselingAppointment = null;
+            if (isset($validated['counseling_appointment_id'])) {
+                $counselingAppointment = CounselingAppointment::findOrFail($validated['counseling_appointment_id']);
+            }
+
+            // Step 1: Create prescription (strategy)
+            $prescription = $this->workflowService->createStrategy(
                 $case,
-                $validated['counseling_appointment_id'] ?? null,
-                $validated['strategy_report'],
-                $validated['counseling_notes'] ?? null,
-                $validated['learning_goals'] ?? null,
-                $validated['club_courses'] ?? [],
+                [
+                    'strategy_report' => $validated['strategy_report'],
+                    'counseling_notes' => $validated['counseling_notes'] ?? null,
+                    'learning_goals' => $validated['learning_goals'] ?? null,
+                ],
+                $counselingAppointment
+            );
+
+            // Step 2: Issue prescription with club courses and learning tasks
+            // Transform club_courses to match expected format
+            $clubCourses = [];
+            if (!empty($validated['club_courses'])) {
+                foreach ($validated['club_courses'] as $course) {
+                    $clubCourses[] = [
+                        'id' => $course['club_course_info_id'],
+                        'reason' => $course['reason'] ?? null,
+                        'recommended_sessions' => $course['recommended_sessions'] ?? 1,
+                    ];
+                }
+            }
+
+            $this->workflowService->issuePrescription(
+                $prescription,
+                $clubCourses,
                 $validated['learning_tasks'] ?? []
             );
 
-            // Update case stage
-            $case->update(['workflow_stage' => 'analyzing']);
-
             // Notify student
             $this->notificationService->createFlipPrescriptionIssuedNotification(
-                $case->student_id,
                 $prescription->id
             );
 
@@ -360,7 +383,7 @@ class FlipCourseCaseController extends Controller
 
             return response()->json([
                 'message' => 'Prescription issued successfully',
-                'data' => $prescription->load(['learningTasks', 'clubCourses'])
+                'data' => $prescription->fresh(['learningTasks', 'clubCourses'])
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -393,9 +416,7 @@ class FlipCourseCaseController extends Controller
 
                 // Notify counselor to start new cycle
                 $this->notificationService->createFlipCycleStartedNotification(
-                    $case->counselor_id,
-                    $case->id,
-                    $case->cycle_count
+                    $case->id
                 );
 
                 $message = 'New cycle started';
@@ -408,7 +429,6 @@ class FlipCourseCaseController extends Controller
 
                 // Notify student
                 $this->notificationService->createFlipCaseCompletedNotification(
-                    $case->student_id,
                     $case->id
                 );
 
@@ -515,7 +535,6 @@ class FlipCourseCaseController extends Controller
 
             // Notify counselor
             $this->notificationService->createFlipAnalysisCompletedNotification(
-                $case->counselor_id,
                 $assessment->id
             );
 

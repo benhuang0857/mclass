@@ -54,7 +54,7 @@ class FlipCourseInfoController extends Controller
             'feature_img' => 'required|string',
             'teaching_mode' => 'required|in:online,offline,hybrid',
             'status' => 'nullable|in:draft,published,archived',
-            'created_by' => 'nullable|exists:users,id',
+            'created_by' => 'nullable|exists:members,id',
             'lang_type_ids' => 'nullable|array',
             'lang_type_ids.*' => 'exists:lang_types,id',
         ]);
@@ -106,7 +106,7 @@ class FlipCourseInfoController extends Controller
             'feature_img' => 'sometimes|string',
             'teaching_mode' => 'sometimes|in:online,offline,hybrid',
             'status' => 'sometimes|in:draft,published,archived',
-            'updated_by' => 'nullable|exists:users,id',
+            'updated_by' => 'nullable|exists:members,id',
             'lang_type_ids' => 'nullable|array',
             'lang_type_ids.*' => 'exists:lang_types,id',
         ]);
