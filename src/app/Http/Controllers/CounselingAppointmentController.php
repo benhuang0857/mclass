@@ -62,6 +62,11 @@ class CounselingAppointmentController extends Controller
             return response()->json(['error' => 'Order item does not match counseling service.'], 400);
         }
 
+        // 驗證訂單是否已支付
+        if ($orderItem->order->status !== 'completed') {
+            return response()->json(['error' => 'Order must be completed before scheduling counseling.'], 400);
+        }
+
         // 驗證諮商師是否可以提供此服務
         if (!$counselingInfo->counselors()->where('counselor_id', $validated['counselor_id'])->exists()) {
             return response()->json(['error' => 'Counselor is not available for this service.'], 400);
@@ -151,10 +156,16 @@ class CounselingAppointmentController extends Controller
         }
 
         $validated = $request->validate([
+            'counselor_id' => 'required|exists:members,id',
             'confirmed_datetime' => 'required|date|after:now',
             'meeting_url' => 'nullable|url',
             'location' => 'nullable|string|max:255',
         ]);
+
+        // 驗證是否為該預約的諮商師
+        if ($appointment->counselor_id !== $validated['counselor_id']) {
+            return response()->json(['error' => 'Only the assigned counselor can confirm this appointment.'], 403);
+        }
 
         $appointment->update(array_merge($validated, [
             'status' => 'confirmed'
@@ -165,6 +176,39 @@ class CounselingAppointmentController extends Controller
 
         // 自動創建提醒通知（1小時前）
         $this->notificationService->createCounselingReminderNotifications($appointment->id, 60);
+
+        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
+    }
+
+    public function reject(Request $request, $id)
+    {
+        $appointment = CounselingAppointment::findOrFail($id);
+
+        if ($appointment->status !== 'pending') {
+            return response()->json(['error' => 'Only pending appointments can be rejected.'], 400);
+        }
+
+        $validated = $request->validate([
+            'counselor_id' => 'required|exists:members,id',
+            'counselor_notes' => 'nullable|string',
+        ]);
+
+        // 驗證是否為該預約的諮商師
+        if ($appointment->counselor_id !== $validated['counselor_id']) {
+            return response()->json(['error' => 'Only the assigned counselor can reject this appointment.'], 403);
+        }
+
+        $appointment->update([
+            'status' => 'cancelled',
+            'counselor_notes' => $validated['counselor_notes'] ?? null,
+        ]);
+
+        // 發送拒絕通知
+        $this->notificationService->createCounselingStatusChangeNotifications(
+            $appointment->id,
+            'pending',
+            'cancelled'
+        );
 
         return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
     }

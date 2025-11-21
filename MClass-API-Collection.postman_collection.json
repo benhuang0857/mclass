@@ -3927,7 +3927,8 @@
 									"path": [
 										"counseling-appointments"
 									]
-								}
+								},
+								"description": "Create a counseling appointment. Requirements:\n1. Order must be completed (paid) - status='completed'\n2. Order item must match the counseling service product\n3. Counselor must be available for this service\n4. Appointment starts with status='pending' and requires counselor confirmation"
 							}
 						},
 						{
@@ -4020,7 +4021,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"confirmed_datetime\": \"2024-12-15T14:00:00\",\n    \"method\": \"online\",\n    \"meeting_url\": \"https://meet.google.com/abc-defg-hij\",\n    \"location\": null,\n    \"counselor_notes\": \"已確認預約時間，請準時參加\"\n}"
+									"raw": "{\n    \"counselor_id\": 2,\n    \"confirmed_datetime\": \"2024-12-15T14:00:00\",\n    \"meeting_url\": \"https://meet.google.com/abc-defg-hij\",\n    \"location\": null\n}"
 								},
 								"url": {
 									"raw": "{{base_url}}/counseling-appointments/1/confirm",
@@ -4032,7 +4033,40 @@
 										"1",
 										"confirm"
 									]
-								}
+								},
+								"description": "Counselor confirms the appointment. Only the assigned counselor can confirm. Requires order to be paid (status='completed')."
+							}
+						},
+						{
+							"name": "Reject Appointment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"counselor_id\": 2,\n    \"counselor_notes\": \"抱歉，該時段已有其他安排，請選擇其他時間重新預約\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/counseling-appointments/1/reject",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"counseling-appointments",
+										"1",
+										"reject"
+									]
+								},
+								"description": "Counselor rejects the appointment. Only the assigned counselor can reject. Status will be changed to 'cancelled'."
 							}
 						},
 						{

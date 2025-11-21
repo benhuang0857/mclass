@@ -290,6 +290,7 @@ Route::prefix('counseling-appointments')->group(function () {
     
     // 預約狀態管理
     Route::post('/{id}/confirm', [CounselingAppointmentController::class, 'confirm']);
+    Route::post('/{id}/reject', [CounselingAppointmentController::class, 'reject']);
     Route::post('/{id}/complete', [CounselingAppointmentController::class, 'complete']);
 });
 
