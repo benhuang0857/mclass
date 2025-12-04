@@ -85,7 +85,7 @@ class CounselingAppointmentController extends Controller
      */
     public function index(Request $request)
     {
-        $query = CounselingAppointment::with(['orderItem', 'counselingInfo', 'student', 'counselor']);
+        $query = CounselingAppointment::with(['orderItem', 'counselingInfo', 'student', 'counselor', 'flipCourseCase']);
 
         // 篩選條件
         if ($request->has('student_id')) {
@@ -98,6 +98,10 @@ class CounselingAppointmentController extends Controller
 
         if ($request->has('status')) {
             $query->where('status', $request->status);
+        }
+
+        if ($request->has('flip_course_case_id')) {
+            $query->where('flip_course_case_id', $request->flip_course_case_id);
         }
 
         $appointments = $query->orderBy('preferred_datetime', 'desc')->get();
@@ -142,10 +146,11 @@ class CounselingAppointmentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'order_item_id' => 'required|exists:order_items,id',
-            'counseling_info_id' => 'required|exists:counseling_infos,id',
+            'order_item_id' => 'nullable|exists:order_items,id',
+            'flip_course_case_id' => 'nullable|exists:flip_course_cases,id',
+            'counseling_info_id' => 'nullable|exists:counseling_infos,id',
             'student_id' => 'required|exists:members,id',
-            'counselor_id' => 'required|exists:members,id',
+            'counselor_id' => 'nullable|exists:members,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'type' => 'required|in:academic,career,personal,other',
@@ -153,33 +158,79 @@ class CounselingAppointmentController extends Controller
             'duration' => 'integer|min:15|max:480',
             'method' => 'required|in:online,offline',
             'location' => 'nullable|string|max:255',
+            'meeting_url' => 'nullable|url',
             'is_urgent' => 'boolean',
         ]);
 
-        // 驗證用戶是否購買了該諮商服務
-        $orderItem = OrderItem::with(['product', 'order'])->findOrFail($validated['order_item_id']);
-        $counselingInfo = CounselingInfo::findOrFail($validated['counseling_info_id']);
-
-        if ($orderItem->product_id !== $counselingInfo->product_id) {
-            return response()->json(['error' => 'Order item does not match counseling service.'], 400);
+        // 必須提供 order_item_id 或 flip_course_case_id 其中之一
+        if (!isset($validated['order_item_id']) && !isset($validated['flip_course_case_id'])) {
+            return response()->json(['error' => 'Either order_item_id or flip_course_case_id is required.'], 400);
         }
 
-        // 驗證訂單是否已支付
-        if ($orderItem->order->status !== 'completed') {
-            return response()->json(['error' => 'Order must be completed before scheduling counseling.'], 400);
-        }
+        $counselorId = $validated['counselor_id'] ?? null;
+        $counselingInfo = null;
+        $flipCourseCase = null;
 
-        // 驗證諮商師是否可以提供此服務
-        if (!$counselingInfo->counselors()->where('counselor_id', $validated['counselor_id'])->exists()) {
-            return response()->json(['error' => 'Counselor is not available for this service.'], 400);
+        // 處理翻轉課程諮商
+        if (isset($validated['flip_course_case_id']) && $validated['flip_course_case_id']) {
+            $flipCourseCase = \App\Models\FlipCourseCase::findOrFail($validated['flip_course_case_id']);
+
+            // 使用案例中已指派的諮商師
+            if (!$flipCourseCase->counselor_id) {
+                return response()->json(['error' => 'Counselor has not been assigned to this flip course case yet.'], 400);
+            }
+            $counselorId = $flipCourseCase->counselor_id;
+
+            // 翻轉課程諮商不需要 counseling_info_id（可選）
+            if (isset($validated['counseling_info_id']) && $validated['counseling_info_id']) {
+                $counselingInfo = CounselingInfo::findOrFail($validated['counseling_info_id']);
+            }
+        }
+        // 處理一般諮商
+        else {
+            // 驗證用戶是否購買了該諮商服務
+            $orderItem = OrderItem::with(['product', 'order'])->findOrFail($validated['order_item_id']);
+            $counselingInfo = CounselingInfo::findOrFail($validated['counseling_info_id']);
+
+            if ($orderItem->product_id !== $counselingInfo->product_id) {
+                return response()->json(['error' => 'Order item does not match counseling service.'], 400);
+            }
+
+            // 驗證訂單是否已支付
+            if ($orderItem->order->status !== 'completed') {
+                return response()->json(['error' => 'Order must be completed before scheduling counseling.'], 400);
+            }
+
+            // 檢查是否為翻轉課程訂單
+            $flipCourseCase = \App\Models\FlipCourseCase::where('order_id', $orderItem->order_id)->first();
+
+            if ($flipCourseCase) {
+                // 如果透過 order_item_id 但實際是翻轉課程，使用案例中的諮商師
+                if (!$flipCourseCase->counselor_id) {
+                    return response()->json(['error' => 'Counselor has not been assigned to this flip course case yet.'], 400);
+                }
+                $counselorId = $flipCourseCase->counselor_id;
+            } else {
+                // 一般諮商：必須提供 counselor_id
+                if (!$counselorId) {
+                    return response()->json(['error' => 'counselor_id is required for regular counseling appointments.'], 400);
+                }
+
+                // 驗證諮商師是否可以提供此服務
+                if (!$counselingInfo->counselors()->where('counselor_id', $counselorId)->exists()) {
+                    return response()->json(['error' => 'Counselor is not available for this service.'], 400);
+                }
+            }
         }
 
         $appointment = CounselingAppointment::create(array_merge($validated, [
+            'counselor_id' => $counselorId,
+            'flip_course_case_id' => $flipCourseCase ? $flipCourseCase->id : null,
             'status' => 'pending',
-            'duration' => $validated['duration'] ?? $counselingInfo->session_duration,
+            'duration' => $validated['duration'] ?? ($counselingInfo ? $counselingInfo->session_duration : 60),
         ]));
 
-        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']), 201);
+        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor', 'flipCourseCase']), 201);
     }
 
     /**
@@ -208,7 +259,7 @@ class CounselingAppointmentController extends Controller
      */
     public function show($id)
     {
-        $appointment = CounselingAppointment::with(['orderItem', 'counselingInfo', 'student', 'counselor'])
+        $appointment = CounselingAppointment::with(['orderItem', 'counselingInfo', 'student', 'counselor', 'flipCourseCase'])
             ->findOrFail($id);
         return response()->json($appointment);
     }
@@ -284,8 +335,8 @@ class CounselingAppointmentController extends Controller
         // 檢查狀態是否變更，發送通知
         if (isset($validated['status']) && $validated['status'] !== $oldStatus) {
             $this->notificationService->createCounselingStatusChangeNotifications(
-                $appointment->id, 
-                $oldStatus, 
+                $appointment->id,
+                $oldStatus,
                 $validated['status']
             );
         }
@@ -300,7 +351,7 @@ class CounselingAppointmentController extends Controller
             );
         }
 
-        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
+        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor', 'flipCourseCase']));
     }
 
     /**
@@ -414,7 +465,7 @@ class CounselingAppointmentController extends Controller
         // 自動創建提醒通知（1小時前）
         $this->notificationService->createCounselingReminderNotifications($appointment->id, 60);
 
-        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
+        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor', 'flipCourseCase']));
     }
 
     /**
@@ -483,7 +534,7 @@ class CounselingAppointmentController extends Controller
             'cancelled'
         );
 
-        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
+        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor', 'flipCourseCase']));
     }
 
     /**
@@ -536,6 +587,6 @@ class CounselingAppointmentController extends Controller
             'status' => 'completed'
         ]));
 
-        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
+        return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor', 'flipCourseCase']));
     }
 }
