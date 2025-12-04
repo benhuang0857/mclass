@@ -14,6 +14,67 @@ use Carbon\Carbon;
 class AttendanceController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/attendance/courses/{course}",
+     *     summary="Get course attendance list",
+     *     description="Retrieve attendance records for a specific course with automatic roster generation if needed",
+     *     operationId="getCourseAttendance",
+     *     tags={"Attendance"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="course", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Advanced Python Course"),
+     *                     @OA\Property(property="start_time", type="string", format="date-time", example="2025-12-04 10:00:00"),
+     *                     @OA\Property(property="end_time", type="string", format="date-time", example="2025-12-04 12:00:00"),
+     *                     @OA\Property(property="location", type="string", example="Room 101"),
+     *                     @OA\Property(property="trial", type="boolean", example=false)
+     *                 ),
+     *                 @OA\Property(property="attendances", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="status", type="string", example="present"),
+     *                         @OA\Property(property="status_label", type="string", example="出席"),
+     *                         @OA\Property(property="check_in_time", type="string", format="date-time", example="2025-12-04 09:55:00"),
+     *                         @OA\Property(property="late_minutes", type="integer", example=0)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="statistics", type="object",
+     *                     @OA\Property(property="total_students", type="integer", example=25),
+     *                     @OA\Property(property="present_count", type="integer", example=23),
+     *                     @OA\Property(property="absent_count", type="integer", example=2),
+     *                     @OA\Property(property="attendance_rate", type="number", format="float", example=92.0)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * 取得課程的點名清單
      */
     public function getCourseAttendance(Request $request, ClubCourse $course): JsonResponse
@@ -92,6 +153,71 @@ class AttendanceController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/attendance/courses/{course}/batch",
+     *     summary="Batch mark attendance",
+     *     description="Mark attendance for multiple students in a course at once",
+     *     operationId="batchMarkAttendance",
+     *     tags={"Attendance"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Batch attendance data",
+     *         @OA\JsonContent(
+     *             required={"attendances"},
+     *             @OA\Property(property="attendances", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="member_id", type="integer", example=5),
+     *                     @OA\Property(property="status", type="string", enum={"present", "absent", "late", "early_leave", "excused"}, example="present"),
+     *                     @OA\Property(property="check_in_time", type="string", format="date-time", example="2025-12-04 10:05:00"),
+     *                     @OA\Property(property="check_out_time", type="string", format="date-time", example="2025-12-04 12:00:00"),
+     *                     @OA\Property(property="note", type="string", example="Arrived on time")
+     *                 )
+     *             ),
+     *             @OA\Property(property="marked_by", type="integer", example=2)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Batch attendance marked successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="批量點名完成"),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="member_id", type="integer", example=5),
+     *                     @OA\Property(property="status", type="string", example="present"),
+     *                     @OA\Property(property="updated", type="boolean", example=true)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * 批量點名
      */
     public function batchMarkAttendance(Request $request, ClubCourse $course): JsonResponse
@@ -155,6 +281,74 @@ class AttendanceController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/attendance/courses/{course}/members/{member}",
+     *     summary="Update single attendance record",
+     *     description="Update attendance status for a specific student in a course",
+     *     operationId="updateAttendance",
+     *     tags={"Attendance"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="member",
+     *         in="path",
+     *         description="Member ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=5)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Attendance update data",
+     *         @OA\JsonContent(
+     *             required={"status"},
+     *             @OA\Property(property="status", type="string", enum={"present", "absent", "late", "early_leave", "excused"}, example="present"),
+     *             @OA\Property(property="check_in_time", type="string", format="date-time", example="2025-12-04 10:05:00"),
+     *             @OA\Property(property="check_out_time", type="string", format="date-time", example="2025-12-04 12:00:00"),
+     *             @OA\Property(property="note", type="string", example="Late due to traffic"),
+     *             @OA\Property(property="marked_by", type="integer", example=2)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Attendance updated successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="出席記錄更新成功"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="member_id", type="integer", example=5),
+     *                 @OA\Property(property="status", type="string", example="present"),
+     *                 @OA\Property(property="status_label", type="string", example="出席"),
+     *                 @OA\Property(property="check_in_time", type="string", format="date-time", example="2025-12-04 10:05:00"),
+     *                 @OA\Property(property="marked_at", type="string", format="date-time", example="2025-12-04 10:10:00")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course or member not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * 修改單一出席記錄
      */
     public function updateAttendance(Request $request, ClubCourse $course, Member $member): JsonResponse
@@ -204,6 +398,47 @@ class AttendanceController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/attendance/courses/{course}/generate-roster",
+     *     summary="Generate attendance roster",
+     *     description="Automatically generate attendance roster for all registered students in a course",
+     *     operationId="generateRoster",
+     *     tags={"Attendance"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Roster generated successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="message", type="string", example="成功生成 25 筆出席記錄"),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="course_id", type="integer", example=1),
+     *                 @OA\Property(property="generated_count", type="integer", example=25)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * 自動生成課程點名清單
      */
     public function generateRoster(ClubCourse $course): JsonResponse
@@ -230,6 +465,75 @@ class AttendanceController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/attendance/members/{member}/stats",
+     *     summary="Get member attendance statistics",
+     *     description="Retrieve attendance statistics for a specific member with optional filters",
+     *     operationId="getMemberAttendanceStats",
+     *     tags={"Attendance"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="member",
+     *         in="path",
+     *         description="Member ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=5)
+     *     ),
+     *     @OA\Parameter(
+     *         name="start_date",
+     *         in="query",
+     *         description="Start date for date range filter",
+     *         @OA\Schema(type="string", format="date", example="2025-01-01")
+     *     ),
+     *     @OA\Parameter(
+     *         name="end_date",
+     *         in="query",
+     *         description="End date for date range filter",
+     *         @OA\Schema(type="string", format="date", example="2025-12-31")
+     *     ),
+     *     @OA\Parameter(
+     *         name="course_info_id",
+     *         in="query",
+     *         description="Filter by specific course",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="member", type="object",
+     *                     @OA\Property(property="id", type="integer", example=5),
+     *                     @OA\Property(property="nickname", type="string", example="JohnDoe"),
+     *                     @OA\Property(property="email", type="string", example="john@example.com")
+     *                 ),
+     *                 @OA\Property(property="total_sessions", type="integer", example=40),
+     *                 @OA\Property(property="present_count", type="integer", example=36),
+     *                 @OA\Property(property="absent_count", type="integer", example=2),
+     *                 @OA\Property(property="late_count", type="integer", example=2),
+     *                 @OA\Property(property="early_leave_count", type="integer", example=0),
+     *                 @OA\Property(property="excused_count", type="integer", example=0),
+     *                 @OA\Property(property="attendance_rate", type="number", format="float", example=90.0),
+     *                 @OA\Property(property="average_late_minutes", type="number", format="float", example=5.5)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Member not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * 取得學生的出席統計
      */
     public function getMemberAttendanceStats(Request $request, Member $member): JsonResponse
@@ -283,6 +587,59 @@ class AttendanceController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/attendance/courses/{course}/stats",
+     *     summary="Get course attendance statistics",
+     *     description="Retrieve attendance statistics for a specific course",
+     *     operationId="getCourseAttendanceStats",
+     *     tags={"Attendance"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="course", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Advanced Python Course"),
+     *                     @OA\Property(property="start_time", type="string", format="date-time", example="2025-12-04 10:00:00"),
+     *                     @OA\Property(property="end_time", type="string", format="date-time", example="2025-12-04 12:00:00")
+     *                 ),
+     *                 @OA\Property(property="total_students", type="integer", example=25),
+     *                 @OA\Property(property="present_count", type="integer", example=23),
+     *                 @OA\Property(property="absent_count", type="integer", example=2),
+     *                 @OA\Property(property="late_count", type="integer", example=0),
+     *                 @OA\Property(property="early_leave_count", type="integer", example=0),
+     *                 @OA\Property(property="excused_count", type="integer", example=0),
+     *                 @OA\Property(property="attendance_rate", type="number", format="float", example=92.0),
+     *                 @OA\Property(property="absent_rate", type="number", format="float", example=8.0),
+     *                 @OA\Property(property="average_late_minutes", type="number", format="float", example=0)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * 取得課程出席統計
      */
     public function getCourseAttendanceStats(ClubCourse $course): JsonResponse
@@ -313,6 +670,33 @@ class AttendanceController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/attendance/statuses",
+     *     summary="Get available attendance statuses",
+     *     description="Retrieve list of all available attendance status options",
+     *     operationId="getAvailableStatuses",
+     *     tags={"Attendance"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="value", type="string", example="present"),
+     *                     @OA\Property(property="label", type="string", example="出席")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 獲取可用的出席狀態列表
      */
     public function getAvailableStatuses(): JsonResponse

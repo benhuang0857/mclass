@@ -6,6 +6,12 @@ use App\Services\SearchService;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
+/**
+ * @OA\Tag(
+ *     name="Search",
+ *     description="Search operations for members, products, courses, notices, and orders"
+ * )
+ */
 class SearchController extends Controller
 {
     protected $searchService;
@@ -16,8 +22,101 @@ class SearchController extends Controller
     }
 
     /**
-     * 通用搜尋 API
-     * 
+     * Universal search API
+     *
+     * @OA\Get(
+     *     path="/search",
+     *     summary="Universal search across multiple entity types",
+     *     description="Search across members, products, club_course_infos, notices, and orders with various filters",
+     *     operationId="search",
+     *     tags={"Search"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Search query string",
+     *         required=false,
+     *         @OA\Schema(type="string", maxLength=255, example="Laravel")
+     *     ),
+     *     @OA\Parameter(
+     *         name="types",
+     *         in="query",
+     *         description="Array of entity types to search",
+     *         required=false,
+     *         @OA\Schema(
+     *             type="array",
+     *             @OA\Items(type="string", enum={"members", "products", "club_course_infos", "notices", "orders"})
+     *         ),
+     *         style="form",
+     *         explode=true
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, maximum=100, example=20)
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[status]",
+     *         in="query",
+     *         description="Filter by status",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[date_from]",
+     *         in="query",
+     *         description="Filter from date",
+     *         required=false,
+     *         @OA\Schema(type="string", format="date", example="2024-01-01")
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[date_to]",
+     *         in="query",
+     *         description="Filter to date",
+     *         required=false,
+     *         @OA\Schema(type="string", format="date", example="2024-12-31")
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[teaching_mode]",
+     *         in="query",
+     *         description="Filter by teaching mode",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"online", "offline", "hybrid"})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Search results",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="members", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="products", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="club_course_infos", type="array", @OA\Items(type="object"))
+     *             ),
+     *             @OA\Property(property="query", type="string", example="Laravel"),
+     *             @OA\Property(
+     *                 property="types",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="products")
+     *             ),
+     *             @OA\Property(property="filters", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=500, description="Search failed")
+     * )
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -63,8 +162,50 @@ class SearchController extends Controller
     }
 
     /**
-     * 全域快速搜尋
-     * 
+     * Global quick search
+     *
+     * @OA\Get(
+     *     path="/search/global",
+     *     summary="Global quick search across all entities",
+     *     description="Fast global search returning limited results from each entity type",
+     *     operationId="globalSearch",
+     *     tags={"Search"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Search query string",
+     *         required=true,
+     *         @OA\Schema(type="string", maxLength=255, example="Programming")
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Maximum results per entity type",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, maximum=50, default=10, example=10)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Global search results",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(property="members", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="products", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="courses", type="array", @OA\Items(type="object"))
+     *             ),
+     *             @OA\Property(property="query", type="string", example="Programming"),
+     *             @OA\Property(property="total_types", type="integer", example=3)
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=422, description="Validation error"),
+     *     @OA\Response(response=500, description="Global search failed")
+     * )
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -97,8 +238,47 @@ class SearchController extends Controller
     }
 
     /**
-     * 搜尋建議
-     * 
+     * Search suggestions
+     *
+     * @OA\Get(
+     *     path="/search/suggestions",
+     *     summary="Get search suggestions based on query",
+     *     description="Returns autocomplete suggestions for search queries",
+     *     operationId="searchSuggestions",
+     *     tags={"Search"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Partial search query",
+     *         required=true,
+     *         @OA\Schema(type="string", maxLength=255, example="Prog")
+     *     ),
+     *     @OA\Parameter(
+     *         name="limit",
+     *         in="query",
+     *         description="Maximum number of suggestions",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, maximum=20, default=5, example=5)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Search suggestions",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="Programming Basics")
+     *             ),
+     *             @OA\Property(property="query", type="string", example="Prog")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=422, description="Validation error"),
+     *     @OA\Response(response=500, description="Failed to get suggestions")
+     * )
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -130,8 +310,42 @@ class SearchController extends Controller
     }
 
     /**
-     * 取得可用的篩選器
-     * 
+     * Get available filters
+     *
+     * @OA\Get(
+     *     path="/search/filters",
+     *     summary="Get all available search filters",
+     *     description="Returns all available filter options for search functionality",
+     *     operationId="getAvailableFilters",
+     *     tags={"Search"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Available filters",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="teaching_modes",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="online")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="statuses",
+     *                     type="array",
+     *                     @OA\Items(type="string", example="active")
+     *                 ),
+     *                 @OA\Property(property="languages", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="levels", type="array", @OA\Items(type="object"))
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=500, description="Failed to get available filters")
+     * )
+     *
      * @return JsonResponse
      */
     public function getAvailableFilters(): JsonResponse
@@ -153,8 +367,75 @@ class SearchController extends Controller
     }
 
     /**
-     * 會員搜尋
-     * 
+     * Search members
+     *
+     * @OA\Get(
+     *     path="/search/members",
+     *     summary="Search members only",
+     *     description="Search specifically for members with member-specific filters",
+     *     operationId="searchMembers",
+     *     tags={"Search"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Search query",
+     *         required=false,
+     *         @OA\Schema(type="string", maxLength=255, example="John")
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, maximum=100, example=20)
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[status]",
+     *         in="query",
+     *         description="Member status",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"active", "inactive"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[gender]",
+     *         in="query",
+     *         description="Member gender",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"male", "female", "other"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[city]",
+     *         in="query",
+     *         description="City",
+     *         required=false,
+     *         @OA\Schema(type="string", maxLength=255)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Member search results",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(type="object")
+     *             ),
+     *             @OA\Property(property="query", type="string", example="John"),
+     *             @OA\Property(property="filters", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=500, description="Member search failed")
+     * )
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -193,8 +474,75 @@ class SearchController extends Controller
     }
 
     /**
-     * 商品搜尋
-     * 
+     * Search products
+     *
+     * @OA\Get(
+     *     path="/search/products",
+     *     summary="Search products only",
+     *     description="Search specifically for products with product-specific filters",
+     *     operationId="searchProducts",
+     *     tags={"Search"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Search query",
+     *         required=false,
+     *         @OA\Schema(type="string", maxLength=255, example="Course")
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, maximum=100, example=20)
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[status]",
+     *         in="query",
+     *         description="Product status",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"published", "unpublished", "sold-out"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[price_min]",
+     *         in="query",
+     *         description="Minimum price",
+     *         required=false,
+     *         @OA\Schema(type="number", minimum=0, example=100)
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[price_max]",
+     *         in="query",
+     *         description="Maximum price",
+     *         required=false,
+     *         @OA\Schema(type="number", minimum=0, example=5000)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product search results",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(type="object")
+     *             ),
+     *             @OA\Property(property="query", type="string", example="Course"),
+     *             @OA\Property(property="filters", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=500, description="Product search failed")
+     * )
+     *
      * @param Request $request
      * @return JsonResponse
      */
@@ -231,8 +579,75 @@ class SearchController extends Controller
     }
 
     /**
-     * 課程搜尋
-     * 
+     * Search courses
+     *
+     * @OA\Get(
+     *     path="/search/courses",
+     *     summary="Search courses only",
+     *     description="Search specifically for club course infos with course-specific filters",
+     *     operationId="searchCourses",
+     *     tags={"Search"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Search query",
+     *         required=false,
+     *         @OA\Schema(type="string", maxLength=255, example="Programming")
+     *     ),
+     *     @OA\Parameter(
+     *         name="page",
+     *         in="query",
+     *         description="Page number",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Items per page",
+     *         required=false,
+     *         @OA\Schema(type="integer", minimum=1, maximum=100, example=20)
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[status]",
+     *         in="query",
+     *         description="Course status",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"published", "unpublished", "completed", "pending"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[teaching_mode]",
+     *         in="query",
+     *         description="Teaching mode",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"online", "offline", "hybrid"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="filters[is_periodic]",
+     *         in="query",
+     *         description="Is periodic course",
+     *         required=false,
+     *         @OA\Schema(type="boolean", example=true)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Course search results",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(
+     *                 property="data",
+     *                 type="array",
+     *                 @OA\Items(type="object")
+     *             ),
+     *             @OA\Property(property="query", type="string", example="Programming"),
+     *             @OA\Property(property="filters", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=500, description="Course search failed")
+     * )
+     *
      * @param Request $request
      * @return JsonResponse
      */

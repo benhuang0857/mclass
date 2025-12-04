@@ -19,7 +19,70 @@ class CommentController extends Controller
     }
 
     /**
-     * 獲取實體的評論列表
+     * @OA\Get(
+     *     path="/comments",
+     *     tags={"Comments"},
+     *     summary="Get comments for an entity",
+     *     description="Retrieve comments for a specific commentable entity",
+     *     @OA\Parameter(
+     *         name="commentable_type",
+     *         in="query",
+     *         required=true,
+     *         description="Type of entity (e.g., App\Models\Product)",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="commentable_id",
+     *         in="query",
+     *         required=true,
+     *         description="ID of the entity",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="sort",
+     *         in="query",
+     *         description="Sort order",
+     *         @OA\Schema(type="string", enum={"newest", "oldest", "popular", "rating_high", "rating_low"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="has_rating",
+     *         in="query",
+     *         description="Filter comments with ratings",
+     *         @OA\Schema(type="boolean")
+     *     ),
+     *     @OA\Parameter(
+     *         name="rating",
+     *         in="query",
+     *         description="Filter by specific rating",
+     *         @OA\Schema(type="integer", minimum=1, maximum=5)
+     *     ),
+     *     @OA\Parameter(
+     *         name="root_only",
+     *         in="query",
+     *         description="Only return root comments (no replies)",
+     *         @OA\Schema(type="boolean")
+     *     ),
+     *     @OA\Parameter(
+     *         name="pinned_first",
+     *         in="query",
+     *         description="Show pinned comments first",
+     *         @OA\Schema(type="boolean")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Items per page",
+     *         @OA\Schema(type="integer", minimum=1, maximum=100)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Commentable entity not found"
+     *     )
+     * )
      */
     public function index(Request $request): JsonResponse
     {
@@ -68,7 +131,32 @@ class CommentController extends Controller
     }
 
     /**
-     * 創建評論
+     * @OA\Post(
+     *     path="/comments",
+     *     tags={"Comments"},
+     *     summary="Create a new comment",
+     *     description="Create a comment on an entity",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"commentable_type", "commentable_id", "content"},
+     *             @OA\Property(property="commentable_type", type="string", description="Type of entity"),
+     *             @OA\Property(property="commentable_id", type="integer", description="ID of the entity"),
+     *             @OA\Property(property="content", type="string", maxLength=2000, description="Comment content"),
+     *             @OA\Property(property="rating", type="integer", minimum=1, maximum=5, description="Rating (optional)"),
+     *             @OA\Property(property="parent_id", type="integer", description="Parent comment ID for replies"),
+     *             @OA\Property(property="metadata", type="object", description="Additional metadata")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Comment created successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Commentable entity not found"
+     *     )
+     * )
      */
     public function store(Request $request): JsonResponse
     {
@@ -120,7 +208,27 @@ class CommentController extends Controller
     }
 
     /**
-     * 顯示單個評論
+     * @OA\Get(
+     *     path="/comments/{comment}",
+     *     tags={"Comments"},
+     *     summary="Get a specific comment",
+     *     description="Retrieve details of a specific comment",
+     *     @OA\Parameter(
+     *         name="comment",
+     *         in="path",
+     *         description="Comment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Comment not found"
+     *     )
+     * )
      */
     public function show(Comment $comment): JsonResponse
     {
@@ -141,7 +249,40 @@ class CommentController extends Controller
     }
 
     /**
-     * 更新評論
+     * @OA\Put(
+     *     path="/comments/{comment}",
+     *     tags={"Comments"},
+     *     summary="Update a comment",
+     *     description="Update an existing comment (author only)",
+     *     @OA\Parameter(
+     *         name="comment",
+     *         in="path",
+     *         description="Comment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"content"},
+     *             @OA\Property(property="content", type="string", maxLength=2000, description="Updated comment content"),
+     *             @OA\Property(property="rating", type="integer", minimum=1, maximum=5, description="Updated rating"),
+     *             @OA\Property(property="metadata", type="object", description="Updated metadata")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Comment updated successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized - not the comment author"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Comment not found"
+     *     )
+     * )
      */
     public function update(Request $request, Comment $comment): JsonResponse
     {
@@ -177,7 +318,31 @@ class CommentController extends Controller
     }
 
     /**
-     * 刪除評論
+     * @OA\Delete(
+     *     path="/comments/{comment}",
+     *     tags={"Comments"},
+     *     summary="Delete a comment",
+     *     description="Delete a comment (author only)",
+     *     @OA\Parameter(
+     *         name="comment",
+     *         in="path",
+     *         description="Comment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Comment deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Unauthorized - not the comment author"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Comment not found"
+     *     )
+     * )
      */
     public function destroy(Comment $comment): JsonResponse
     {
@@ -206,7 +371,27 @@ class CommentController extends Controller
     }
 
     /**
-     * 切換點讚狀態
+     * @OA\Post(
+     *     path="/comments/{comment}/like",
+     *     tags={"Comments"},
+     *     summary="Toggle like on a comment",
+     *     description="Like or unlike a comment",
+     *     @OA\Parameter(
+     *         name="comment",
+     *         in="path",
+     *         description="Comment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Like status updated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Comment not found"
+     *     )
+     * )
      */
     public function toggleLike(Comment $comment): JsonResponse
     {
@@ -237,7 +422,34 @@ class CommentController extends Controller
     }
 
     /**
-     * 添加反應
+     * @OA\Post(
+     *     path="/comments/{comment}/reaction",
+     *     tags={"Comments"},
+     *     summary="Add a reaction to a comment",
+     *     description="Add an emoji reaction to a comment",
+     *     @OA\Parameter(
+     *         name="comment",
+     *         in="path",
+     *         description="Comment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"type"},
+     *             @OA\Property(property="type", type="string", enum={"like", "love", "laugh", "angry", "sad", "wow"}, description="Reaction type")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Reaction added successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Comment not found"
+     *     )
+     * )
      */
     public function addReaction(Request $request, Comment $comment): JsonResponse
     {
@@ -271,7 +483,35 @@ class CommentController extends Controller
     }
 
     /**
-     * 檢舉評論
+     * @OA\Post(
+     *     path="/comments/{comment}/report",
+     *     tags={"Comments"},
+     *     summary="Report a comment",
+     *     description="Report a comment for inappropriate content",
+     *     @OA\Parameter(
+     *         name="comment",
+     *         in="path",
+     *         description="Comment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"reason"},
+     *             @OA\Property(property="reason", type="string", enum={"spam", "inappropriate", "harassment", "misinformation", "other"}, description="Report reason"),
+     *             @OA\Property(property="description", type="string", maxLength=500, description="Additional details")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Comment reported successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Comment not found"
+     *     )
+     * )
      */
     public function report(Request $request, Comment $comment): JsonResponse
     {
@@ -306,7 +546,34 @@ class CommentController extends Controller
     }
 
     /**
-     * 獲取評論統計
+     * @OA\Get(
+     *     path="/comments/statistics",
+     *     tags={"Comments"},
+     *     summary="Get comment statistics",
+     *     description="Get statistics for comments on an entity",
+     *     @OA\Parameter(
+     *         name="commentable_type",
+     *         in="query",
+     *         required=true,
+     *         description="Type of entity",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="commentable_id",
+     *         in="query",
+     *         required=true,
+     *         description="ID of the entity",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Commentable entity not found"
+     *     )
+     * )
      */
     public function statistics(Request $request): JsonResponse
     {
@@ -341,7 +608,58 @@ class CommentController extends Controller
     }
 
     /**
-     * 搜尋評論
+     * @OA\Get(
+     *     path="/comments/search",
+     *     tags={"Comments"},
+     *     summary="Search comments",
+     *     description="Search for comments with filters",
+     *     @OA\Parameter(
+     *         name="query",
+     *         in="query",
+     *         description="Search query string",
+     *         @OA\Schema(type="string", maxLength=255)
+     *     ),
+     *     @OA\Parameter(
+     *         name="commentable_type",
+     *         in="query",
+     *         description="Filter by entity type",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="rating",
+     *         in="query",
+     *         description="Filter by rating",
+     *         @OA\Schema(type="integer", minimum=1, maximum=5)
+     *     ),
+     *     @OA\Parameter(
+     *         name="date_from",
+     *         in="query",
+     *         description="Filter comments from this date",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="date_to",
+     *         in="query",
+     *         description="Filter comments to this date",
+     *         @OA\Schema(type="string", format="date")
+     *     ),
+     *     @OA\Parameter(
+     *         name="sort",
+     *         in="query",
+     *         description="Sort order",
+     *         @OA\Schema(type="string", enum={"newest", "oldest", "popular"})
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Items per page",
+     *         @OA\Schema(type="integer", minimum=1, maximum=100)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
      */
     public function search(Request $request): JsonResponse
     {
@@ -373,7 +691,16 @@ class CommentController extends Controller
     }
 
     /**
-     * 獲取熱門評論
+     * @OA\Get(
+     *     path="/comments/trending",
+     *     tags={"Comments"},
+     *     summary="Get trending comments",
+     *     description="Retrieve the most popular/trending comments",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     )
+     * )
      */
     public function trending(): JsonResponse
     {

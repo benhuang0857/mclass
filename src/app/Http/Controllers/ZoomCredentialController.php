@@ -18,7 +18,20 @@ class ZoomCredentialController extends Controller
     }
 
     /**
-     * 顯示所有 Zoom 憑證
+     * @OA\Get(
+     *     path="/zoom/credentials",
+     *     tags={"Zoom Credentials"},
+     *     summary="Get all Zoom credentials",
+     *     description="Retrieve list of all Zoom API credentials",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to retrieve credentials"
+     *     )
+     * )
      */
     public function index(): JsonResponse
     {
@@ -48,7 +61,34 @@ class ZoomCredentialController extends Controller
     }
 
     /**
-     * 創建新的 Zoom 憑證
+     * @OA\Post(
+     *     path="/zoom/credentials",
+     *     tags={"Zoom Credentials"},
+     *     summary="Create new Zoom credential",
+     *     description="Create a new Zoom API credential",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name", "account_id", "client_id", "client_secret"},
+     *             @OA\Property(property="name", type="string", maxLength=255, description="Credential name"),
+     *             @OA\Property(property="account_id", type="string", description="Zoom account ID"),
+     *             @OA\Property(property="client_id", type="string", description="Zoom client ID"),
+     *             @OA\Property(property="client_secret", type="string", description="Zoom client secret"),
+     *             @OA\Property(property="email", type="string", format="email", maxLength=255, description="Account email"),
+     *             @OA\Property(property="is_active", type="boolean", description="Whether credential is active"),
+     *             @OA\Property(property="max_concurrent_meetings", type="integer", minimum=1, maximum=10, description="Max concurrent meetings"),
+     *             @OA\Property(property="settings", type="object", description="Additional settings")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Credential created successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to create credential"
+     *     )
+     * )
      */
     public function store(Request $request): JsonResponse
     {
@@ -82,7 +122,27 @@ class ZoomCredentialController extends Controller
     }
 
     /**
-     * 顯示指定的 Zoom 憑證
+     * @OA\Get(
+     *     path="/zoom/credentials/{zoomCredential}",
+     *     tags={"Zoom Credentials"},
+     *     summary="Get a specific Zoom credential",
+     *     description="Retrieve details of a specific Zoom credential",
+     *     @OA\Parameter(
+     *         name="zoomCredential",
+     *         in="path",
+     *         description="Zoom Credential ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Credential not found"
+     *     )
+     * )
      */
     public function show(ZoomCredential $zoomCredential): JsonResponse
     {
@@ -105,7 +165,40 @@ class ZoomCredentialController extends Controller
     }
 
     /**
-     * 更新指定的 Zoom 憑證
+     * @OA\Put(
+     *     path="/zoom/credentials/{zoomCredential}",
+     *     tags={"Zoom Credentials"},
+     *     summary="Update a Zoom credential",
+     *     description="Update an existing Zoom credential",
+     *     @OA\Parameter(
+     *         name="zoomCredential",
+     *         in="path",
+     *         description="Zoom Credential ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", maxLength=255),
+     *             @OA\Property(property="account_id", type="string"),
+     *             @OA\Property(property="client_id", type="string"),
+     *             @OA\Property(property="client_secret", type="string"),
+     *             @OA\Property(property="email", type="string", format="email", maxLength=255),
+     *             @OA\Property(property="is_active", type="boolean"),
+     *             @OA\Property(property="max_concurrent_meetings", type="integer", minimum=1, maximum=10),
+     *             @OA\Property(property="settings", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Credential updated successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Credential not found"
+     *     )
+     * )
      */
     public function update(Request $request, ZoomCredential $zoomCredential): JsonResponse
     {
@@ -144,7 +237,31 @@ class ZoomCredentialController extends Controller
     }
 
     /**
-     * 刪除指定的 Zoom 憑證
+     * @OA\Delete(
+     *     path="/zoom/credentials/{zoomCredential}",
+     *     tags={"Zoom Credentials"},
+     *     summary="Delete a Zoom credential",
+     *     description="Delete a Zoom credential (only if no active meetings)",
+     *     @OA\Parameter(
+     *         name="zoomCredential",
+     *         in="path",
+     *         description="Zoom Credential ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Credential deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Cannot delete - active meetings exist"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Credential not found"
+     *     )
+     * )
      */
     public function destroy(ZoomCredential $zoomCredential): JsonResponse
     {
@@ -174,7 +291,27 @@ class ZoomCredentialController extends Controller
     }
 
     /**
-     * 測試 Zoom 憑證連接
+     * @OA\Post(
+     *     path="/zoom/credentials/{zoomCredential}/test",
+     *     tags={"Zoom Credentials"},
+     *     summary="Test Zoom credential connection",
+     *     description="Test if the Zoom credential can connect to Zoom API",
+     *     @OA\Parameter(
+     *         name="zoomCredential",
+     *         in="path",
+     *         description="Zoom Credential ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Connection test result"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Connection test failed"
+     *     )
+     * )
      */
     public function testConnection(ZoomCredential $zoomCredential): JsonResponse
     {
@@ -249,7 +386,27 @@ class ZoomCredentialController extends Controller
     }
 
     /**
-     * 重置會議計數
+     * @OA\Post(
+     *     path="/zoom/credentials/{zoomCredential}/reset-count",
+     *     tags={"Zoom Credentials"},
+     *     summary="Reset meeting count",
+     *     description="Reset the current meeting count for a credential",
+     *     @OA\Parameter(
+     *         name="zoomCredential",
+     *         in="path",
+     *         description="Zoom Credential ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Meeting count reset successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to reset count"
+     *     )
+     * )
      */
     public function resetMeetingCount(ZoomCredential $zoomCredential): JsonResponse
     {

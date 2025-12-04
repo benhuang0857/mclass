@@ -12,18 +12,161 @@ use DB;
 
 class OrderController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="/api/orders",
+     *     summary="Get all orders",
+     *     description="Retrieve a list of all orders with their order items",
+     *     operationId="getOrdersList",
+     *     tags={"Orders"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="member_id", type="integer", example=1),
+     *                 @OA\Property(property="code", type="string", example="ORD-20251204-001"),
+     *                 @OA\Property(property="total", type="number", format="float", example=299.99),
+     *                 @OA\Property(property="currency", type="string", example="USD"),
+     *                 @OA\Property(property="shipping_address", type="string", nullable=true, example="123 Main St"),
+     *                 @OA\Property(property="billing_address", type="string", nullable=true, example="123 Main St"),
+     *                 @OA\Property(property="note", type="string", nullable=true, example="Please deliver before 5pm"),
+     *                 @OA\Property(property="status", type="string", example="pending")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function index()
     {
         $courses = Order::with('orderItems')->get();
         return response()->json($courses);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/orders/{id}",
+     *     summary="Get a specific order",
+     *     description="Retrieve detailed information about a specific order",
+     *     operationId="getOrderById",
+     *     tags={"Orders"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Order ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="code", type="string", example="ORD-20251204-001"),
+     *             @OA\Property(property="total", type="number", format="float", example=299.99),
+     *             @OA\Property(property="currency", type="string", example="USD"),
+     *             @OA\Property(property="shipping_address", type="string", nullable=true, example="123 Main St"),
+     *             @OA\Property(property="billing_address", type="string", nullable=true, example="123 Main St"),
+     *             @OA\Property(property="note", type="string", nullable=true, example="Please deliver before 5pm"),
+     *             @OA\Property(property="status", type="string", example="pending")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $order = Order::with('orderItems')->findOrFail($id);
         return response()->json($order);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/orders",
+     *     summary="Create a new order",
+     *     description="Create a new order with order items. Automatically creates flip course cases for flip course products.",
+     *     operationId="createOrder",
+     *     tags={"Orders"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Order data",
+     *         @OA\JsonContent(
+     *             required={"member_id", "code", "total", "currency", "status", "items"},
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="code", type="string", example="ORD-20251204-001"),
+     *             @OA\Property(property="total", type="number", format="float", example=299.99),
+     *             @OA\Property(property="currency", type="string", example="USD"),
+     *             @OA\Property(property="shipping_address", type="string", nullable=true, example="123 Main St"),
+     *             @OA\Property(property="billing_address", type="string", nullable=true, example="123 Main St"),
+     *             @OA\Property(property="note", type="string", nullable=true, example="Please deliver before 5pm"),
+     *             @OA\Property(property="status", type="string", example="pending"),
+     *             @OA\Property(
+     *                 property="items",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     required={"product_id", "product_name", "quantity", "price"},
+     *                     @OA\Property(property="product_id", type="integer", example=1),
+     *                     @OA\Property(property="product_name", type="string", example="Advanced English Course"),
+     *                     @OA\Property(property="quantity", type="integer", example=1),
+     *                     @OA\Property(property="price", type="number", format="float", example=99.99),
+     *                     @OA\Property(
+     *                         property="options",
+     *                         type="object",
+     *                         nullable=true,
+     *                         @OA\Property(property="planner_id", type="integer", example=2),
+     *                         @OA\Property(property="counselor_id", type="integer", example=3),
+     *                         @OA\Property(property="analyst_id", type="integer", example=4)
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Order created successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="code", type="string", example="ORD-20251204-001"),
+     *             @OA\Property(property="total", type="number", format="float", example=299.99),
+     *             @OA\Property(property="status", type="string", example="pending")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -88,6 +231,74 @@ class OrderController extends Controller
         }
     }
 
+    /**
+     * @OA\Put(
+     *     path="/api/orders/{id}",
+     *     summary="Update an order",
+     *     description="Update an existing order and its items",
+     *     operationId="updateOrder",
+     *     tags={"Orders"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Order ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=false,
+     *         description="Order data to update",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="code", type="string", example="ORD-20251204-001"),
+     *             @OA\Property(property="total", type="number", format="float", example=299.99),
+     *             @OA\Property(property="currency", type="string", example="USD"),
+     *             @OA\Property(property="shipping_address", type="string", nullable=true, example="123 Main St"),
+     *             @OA\Property(property="billing_address", type="string", nullable=true, example="123 Main St"),
+     *             @OA\Property(property="note", type="string", nullable=true, example="Updated note"),
+     *             @OA\Property(property="status", type="string", example="confirmed"),
+     *             @OA\Property(
+     *                 property="items",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     type="object",
+     *                     @OA\Property(property="id", type="integer", nullable=true, example=1),
+     *                     @OA\Property(property="product_id", type="integer", example=1),
+     *                     @OA\Property(property="product_name", type="string", example="Advanced English Course"),
+     *                     @OA\Property(property="quantity", type="integer", example=1),
+     *                     @OA\Property(property="price", type="number", format="float", example=99.99),
+     *                     @OA\Property(property="options", type="object", nullable=true)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Order updated successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="code", type="string", example="ORD-20251204-001"),
+     *             @OA\Property(property="total", type="number", format="float", example=299.99),
+     *             @OA\Property(property="status", type="string", example="confirmed")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $order = Order::findOrFail($id);
@@ -132,6 +343,39 @@ class OrderController extends Controller
         return response()->json($order->load('orderItems'));
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/orders/{id}",
+     *     summary="Delete an order",
+     *     description="Delete a specific order and all its order items",
+     *     operationId="deleteOrder",
+     *     tags={"Orders"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Order ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Order deleted successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Order deleted")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Order not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         $order = Order::findOrFail($id);

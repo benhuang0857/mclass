@@ -109,7 +109,50 @@ class ProductController extends Controller
     }
 
     /**
-     * 創建新課程實例
+     * @OA\Post(
+     *     path="/api/products",
+     *     summary="Create a new product",
+     *     description="Create a new course product with pricing, enrollment limits, and visibility settings",
+     *     operationId="createProduct",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","code","feature_img","regular_price","status"},
+     *             @OA\Property(property="name", type="string", maxLength=255, example="Web Development Bootcamp"),
+     *             @OA\Property(property="code", type="string", maxLength=255, example="WDB2025"),
+     *             @OA\Property(property="feature_img", type="string", maxLength=255, example="https://example.com/course.jpg"),
+     *             @OA\Property(property="regular_price", type="number", format="float", minimum=0, example=199.99),
+     *             @OA\Property(property="discount_price", type="number", format="float", minimum=0, example=149.99),
+     *             @OA\Property(property="limit_enrollment", type="boolean", example=true),
+     *             @OA\Property(property="max_enrollment", type="integer", minimum=1, example=30),
+     *             @OA\Property(property="stock", type="integer", minimum=0, example=25),
+     *             @OA\Property(property="is_series", type="boolean", example=false),
+     *             @OA\Property(property="elective", type="boolean", example=true),
+     *             @OA\Property(property="is_visible_to_specific_students", type="boolean", example=false),
+     *             @OA\Property(property="status", type="string", enum={"published","unpublished","sold-out"}, example="published")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Product created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Web Development Bootcamp"),
+     *             @OA\Property(property="code", type="string", example="WDB2025"),
+     *             @OA\Property(property="regular_price", type="number", example=199.99)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -140,7 +183,59 @@ class ProductController extends Controller
     }
 
     /**
-     * 更新課程實例
+     * @OA\Put(
+     *     path="/api/products/{id}",
+     *     summary="Update product information",
+     *     description="Update an existing product. Sends notifications if price or status changes.",
+     *     operationId="updateProduct",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Product ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", maxLength=255, example="Advanced Web Development"),
+     *             @OA\Property(property="code", type="string", maxLength=255, example="AWD2025"),
+     *             @OA\Property(property="feature_img", type="string", maxLength=255, example="https://example.com/new-image.jpg"),
+     *             @OA\Property(property="regular_price", type="number", format="float", minimum=0, example=249.99),
+     *             @OA\Property(property="discount_price", type="number", format="float", minimum=0, example=199.99),
+     *             @OA\Property(property="limit_enrollment", type="boolean", example=true),
+     *             @OA\Property(property="max_enrollment", type="integer", minimum=1, example=25),
+     *             @OA\Property(property="stock", type="integer", minimum=0, example=20),
+     *             @OA\Property(property="is_series", type="boolean", example=true),
+     *             @OA\Property(property="elective", type="boolean", example=false),
+     *             @OA\Property(property="is_visible_to_specific_students", type="boolean", example=true),
+     *             @OA\Property(property="status", type="string", enum={"published","unpublished","sold-out"}, example="published")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Advanced Web Development"),
+     *             @OA\Property(property="regular_price", type="number", example=249.99)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -210,7 +305,36 @@ class ProductController extends Controller
     }
 
     /**
-     * 刪除課程實例
+     * @OA\Delete(
+     *     path="/api/products/{id}",
+     *     summary="Delete product",
+     *     description="Delete a course product",
+     *     operationId="deleteProduct",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Product ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Product deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Course instance deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Product not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function destroy($id)
     {
@@ -228,7 +352,52 @@ class ProductController extends Controller
     }
 
     /**
-     * 新增追蹤者
+     * @OA\Post(
+     *     path="/api/products/{id}/follower",
+     *     summary="Add follower to product",
+     *     description="Add a member as a follower of a course product. Prevents duplicate followers.",
+     *     operationId="addProductFollower",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Product ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"member_id"},
+     *             @OA\Property(property="member_id", type="integer", example=5)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Follower added successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="member_id", type="integer", example=5),
+     *             @OA\Property(property="product_id", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=409,
+     *         description="Member already following",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="該用戶已經追蹤,請勿重複操作")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function addFollower(Request $request, $productId)
     {
@@ -261,7 +430,43 @@ class ProductController extends Controller
     }
 
     /**
-     * 刪除追蹤者
+     * @OA\Delete(
+     *     path="/api/products/{id}/follower",
+     *     summary="Remove follower from product",
+     *     description="Remove a member from following a course product",
+     *     operationId="removeProductFollower",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Product ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"member_id"},
+     *             @OA\Property(property="member_id", type="integer", example=5)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Follower removed successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Follower removed successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function removeFollower(Request $request, $productId)
     {
@@ -284,7 +489,53 @@ class ProductController extends Controller
     }
 
     /**
-     * 新增可見學員（支援多個 member_id）
+     * @OA\Post(
+     *     path="/api/products/{id}/visibler",
+     *     summary="Add visible students to product",
+     *     description="Add one or more members to the visible students list for a product. Supports batch adding and skips duplicates.",
+     *     operationId="addProductVisibler",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Product ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"member_id"},
+     *             @OA\Property(
+     *                 property="member_id",
+     *                 type="array",
+     *                 @OA\Items(type="integer"),
+     *                 example={5, 7, 10}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Visible students added successfully",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="member_id", type="integer", example=5),
+     *                 @OA\Property(property="product_id", type="integer", example=1)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function addVisibler(Request $request, $productId)
     {
@@ -319,7 +570,48 @@ class ProductController extends Controller
     }
 
     /**
-     * 刪除可見學員（支援多個 member_id）
+     * @OA\Delete(
+     *     path="/api/products/{id}/visibler",
+     *     summary="Remove visible students from product",
+     *     description="Remove one or more members from the visible students list for a product. Supports batch removal.",
+     *     operationId="removeProductVisibler",
+     *     tags={"Products"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Product ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"member_id"},
+     *             @OA\Property(
+     *                 property="member_id",
+     *                 type="array",
+     *                 @OA\Items(type="integer"),
+     *                 example={5, 7, 10}
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Visible students removed successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Visibler(s) removed successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function removeVisibler(Request $request, $productId)
     {

@@ -9,10 +9,90 @@ use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 
+/**
+ * @OA\Tag(
+ *     name="Member Schedule",
+ *     description="Member schedule and calendar management"
+ * )
+ */
 class MemberScheduleController extends Controller
 {
     /**
-     * 取得會員的綜合時間表
+     * Get member's comprehensive schedule
+     *
+     * @OA\Get(
+     *     path="/members/{id}/schedule",
+     *     summary="Get member's comprehensive schedule",
+     *     description="Retrieve a member's schedule including courses and counseling appointments across different roles",
+     *     operationId="getMemberSchedule",
+     *     tags={"Member Schedule"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Member ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="start_date",
+     *         in="query",
+     *         description="Start date for schedule (defaults to start of current week)",
+     *         required=false,
+     *         @OA\Schema(type="string", format="date", example="2024-01-01")
+     *     ),
+     *     @OA\Parameter(
+     *         name="end_date",
+     *         in="query",
+     *         description="End date for schedule (defaults to end of current week)",
+     *         required=false,
+     *         @OA\Schema(type="string", format="date", example="2024-01-07")
+     *     ),
+     *     @OA\Parameter(
+     *         name="roles",
+     *         in="query",
+     *         description="Comma-separated list of roles to filter (student,teacher,assistant,counselor)",
+     *         required=false,
+     *         @OA\Schema(type="string", example="student,teacher")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Member schedule retrieved successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="member_name", type="string", example="John Doe"),
+     *             @OA\Property(
+     *                 property="active_roles",
+     *                 type="array",
+     *                 @OA\Items(type="string", example="student")
+     *             ),
+     *             @OA\Property(
+     *                 property="schedule",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="date", type="string", format="date", example="2024-01-01"),
+     *                     @OA\Property(
+     *                         property="events",
+     *                         type="array",
+     *                         @OA\Items(
+     *                             @OA\Property(property="id", type="string", example="course_123"),
+     *                             @OA\Property(property="type", type="string", enum={"course", "counseling"}, example="course"),
+     *                             @OA\Property(property="title", type="string", example="Programming 101"),
+     *                             @OA\Property(property="start_time", type="string", format="time", example="14:00:00"),
+     *                             @OA\Property(property="end_time", type="string", format="time", example="16:00:00"),
+     *                             @OA\Property(property="role_in_event", type="string", enum={"student", "teacher", "assistant", "counselor"}, example="student"),
+     *                             @OA\Property(property="status", type="string", example="confirmed")
+     *                         )
+     *                     )
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response=401, description="Unauthenticated"),
+     *     @OA\Response(response=404, description="Member not found"),
+     *     @OA\Response(response=422, description="Validation error"),
+     *     @OA\Response(response=500, description="Server error")
+     * )
      */
     public function getSchedule($memberId, Request $request)
     {

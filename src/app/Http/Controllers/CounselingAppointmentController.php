@@ -8,6 +8,35 @@ use App\Models\OrderItem;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
+/**
+ * @OA\Schema(
+ *     schema="CounselingAppointment",
+ *     type="object",
+ *     title="CounselingAppointment",
+ *
+ *     @OA\Property(property="id", type="integer"),
+ *     @OA\Property(property="order_item_id", type="integer", nullable=true),
+ *     @OA\Property(property="flip_course_case_id", type="integer", nullable=true),
+ *     @OA\Property(property="counseling_info_id", type="integer"),
+ *     @OA\Property(property="student_id", type="integer"),
+ *     @OA\Property(property="counselor_id", type="integer"),
+ *     @OA\Property(property="title", type="string"),
+ *     @OA\Property(property="description", type="string"),
+ *     @OA\Property(property="status", type="string"),
+ *     @OA\Property(property="type", type="string"),
+ *     @OA\Property(property="preferred_datetime", type="string", format="date-time"),
+ *     @OA\Property(property="confirmed_datetime", type="string", format="date-time", nullable=true),
+ *     @OA\Property(property="duration", type="integer"),
+ *     @OA\Property(property="method", type="string"),
+ *     @OA\Property(property="location", type="string", nullable=true),
+ *     @OA\Property(property="meeting_url", type="string", nullable=true),
+ *     @OA\Property(property="counselor_notes", type="string", nullable=true),
+ *     @OA\Property(property="student_feedback", type="string", nullable=true),
+ *     @OA\Property(property="rating", type="integer", nullable=true),
+ *     @OA\Property(property="is_urgent", type="boolean")
+ * )
+ */
+
 class CounselingAppointmentController extends Controller
 {
     protected $notificationService;
@@ -16,6 +45,44 @@ class CounselingAppointmentController extends Controller
     {
         $this->notificationService = $notificationService;
     }
+
+    /**
+     * @OA\Get(
+     *     path="/counseling-appointments",
+     *     tags={"Counseling Appointments"},
+     *     summary="Get list of counseling appointments",
+     *     description="Retrieve a list of counseling appointments with optional filters",
+     *     @OA\Parameter(
+     *         name="student_id",
+     *         in="query",
+     *         description="Filter by student ID",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="counselor_id",
+     *         in="query",
+     *         description="Filter by counselor ID",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Filter by appointment status",
+     *         required=false,
+     *         @OA\Schema(type="string", enum={"pending", "confirmed", "completed", "cancelled"})
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(ref="#/components/schemas/CounselingAppointment")
+     *         )
+     *     )
+     * )
+     */
     public function index(Request $request)
     {
         $query = CounselingAppointment::with(['orderItem', 'counselingInfo', 'student', 'counselor']);
@@ -37,6 +104,41 @@ class CounselingAppointmentController extends Controller
         return response()->json($appointments);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/counseling-appointments",
+     *     tags={"Counseling Appointments"},
+     *     summary="Create a new counseling appointment",
+     *     description="Create a new counseling appointment booking",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"order_item_id", "counseling_info_id", "student_id", "counselor_id", "title", "type", "preferred_datetime", "method"},
+     *             @OA\Property(property="order_item_id", type="integer", description="Order item ID"),
+     *             @OA\Property(property="counseling_info_id", type="integer", description="Counseling service ID"),
+     *             @OA\Property(property="student_id", type="integer", description="Student member ID"),
+     *             @OA\Property(property="counselor_id", type="integer", description="Counselor member ID"),
+     *             @OA\Property(property="title", type="string", maxLength=255, description="Appointment title"),
+     *             @OA\Property(property="description", type="string", description="Appointment description"),
+     *             @OA\Property(property="type", type="string", enum={"academic", "career", "personal", "other"}, description="Counseling type"),
+     *             @OA\Property(property="preferred_datetime", type="string", format="date-time", description="Preferred date and time"),
+     *             @OA\Property(property="duration", type="integer", minimum=15, maximum=480, description="Duration in minutes"),
+     *             @OA\Property(property="method", type="string", enum={"online", "offline"}, description="Counseling method"),
+     *             @OA\Property(property="location", type="string", maxLength=255, description="Location for offline sessions"),
+     *             @OA\Property(property="is_urgent", type="boolean", description="Whether this is urgent")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Appointment created successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/CounselingAppointment")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation error or business logic error"
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -80,6 +182,30 @@ class CounselingAppointmentController extends Controller
         return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']), 201);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/counseling-appointments/{id}",
+     *     tags={"Counseling Appointments"},
+     *     summary="Get a specific counseling appointment",
+     *     description="Retrieve details of a specific counseling appointment",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Appointment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(ref="#/components/schemas/CounselingAppointment")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Appointment not found"
+     *     )
+     * )
+     */
     public function show($id)
     {
         $appointment = CounselingAppointment::with(['orderItem', 'counselingInfo', 'student', 'counselor'])
@@ -87,6 +213,49 @@ class CounselingAppointmentController extends Controller
         return response()->json($appointment);
     }
 
+    /**
+     * @OA\Put(
+     *     path="/counseling-appointments/{id}",
+     *     tags={"Counseling Appointments"},
+     *     summary="Update a counseling appointment",
+     *     description="Update an existing counseling appointment",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Appointment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="title", type="string", maxLength=255),
+     *             @OA\Property(property="description", type="string"),
+     *             @OA\Property(property="status", type="string", enum={"pending", "confirmed", "completed", "cancelled"}),
+     *             @OA\Property(property="type", type="string", enum={"academic", "career", "personal", "other"}),
+     *             @OA\Property(property="preferred_datetime", type="string", format="date-time"),
+     *             @OA\Property(property="confirmed_datetime", type="string", format="date-time"),
+     *             @OA\Property(property="duration", type="integer", minimum=15, maximum=480),
+     *             @OA\Property(property="method", type="string", enum={"online", "offline"}),
+     *             @OA\Property(property="location", type="string", maxLength=255),
+     *             @OA\Property(property="meeting_url", type="string", format="uri"),
+     *             @OA\Property(property="counselor_notes", type="string"),
+     *             @OA\Property(property="student_feedback", type="string"),
+     *             @OA\Property(property="rating", type="integer", minimum=1, maximum=5),
+     *             @OA\Property(property="is_urgent", type="boolean")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Appointment updated successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/CounselingAppointment")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Appointment not found"
+     *     )
+     * )
+     */
     public function update(Request $request, $id)
     {
         $appointment = CounselingAppointment::findOrFail($id);
@@ -134,6 +303,36 @@ class CounselingAppointmentController extends Controller
         return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/counseling-appointments/{id}",
+     *     tags={"Counseling Appointments"},
+     *     summary="Cancel a counseling appointment",
+     *     description="Cancel a pending counseling appointment",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Appointment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Appointment cancelled successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Appointment cancelled successfully.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Only pending appointments can be cancelled"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Appointment not found"
+     *     )
+     * )
+     */
     public function destroy($id)
     {
         $appointment = CounselingAppointment::findOrFail($id);
@@ -147,6 +346,44 @@ class CounselingAppointmentController extends Controller
         return response()->json(['message' => 'Appointment cancelled successfully.']);
     }
 
+    /**
+     * @OA\Post(
+     *     path="/counseling-appointments/{id}/confirm",
+     *     tags={"Counseling Appointments"},
+     *     summary="Confirm a counseling appointment",
+     *     description="Counselor confirms a pending appointment",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Appointment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"counselor_id", "confirmed_datetime"},
+     *             @OA\Property(property="counselor_id", type="integer", description="Counselor ID"),
+     *             @OA\Property(property="confirmed_datetime", type="string", format="date-time", description="Confirmed date and time"),
+     *             @OA\Property(property="meeting_url", type="string", format="uri", description="Meeting URL for online sessions"),
+     *             @OA\Property(property="location", type="string", maxLength=255, description="Location for offline sessions")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Appointment confirmed successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/CounselingAppointment")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Only pending appointments can be confirmed"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Only the assigned counselor can confirm"
+     *     )
+     * )
+     */
     public function confirm(Request $request, $id)
     {
         $appointment = CounselingAppointment::findOrFail($id);
@@ -180,6 +417,42 @@ class CounselingAppointmentController extends Controller
         return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
     }
 
+    /**
+     * @OA\Post(
+     *     path="/counseling-appointments/{id}/reject",
+     *     tags={"Counseling Appointments"},
+     *     summary="Reject a counseling appointment",
+     *     description="Counselor rejects a pending appointment",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Appointment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"counselor_id"},
+     *             @OA\Property(property="counselor_id", type="integer", description="Counselor ID"),
+     *             @OA\Property(property="counselor_notes", type="string", description="Reason for rejection")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Appointment rejected successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/CounselingAppointment")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Only pending appointments can be rejected"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Only the assigned counselor can reject"
+     *     )
+     * )
+     */
     public function reject(Request $request, $id)
     {
         $appointment = CounselingAppointment::findOrFail($id);
@@ -213,6 +486,38 @@ class CounselingAppointmentController extends Controller
         return response()->json($appointment->load(['orderItem', 'counselingInfo', 'student', 'counselor']));
     }
 
+    /**
+     * @OA\Post(
+     *     path="/counseling-appointments/{id}/complete",
+     *     tags={"Counseling Appointments"},
+     *     summary="Mark appointment as completed",
+     *     description="Mark a confirmed appointment as completed",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Appointment ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="counselor_notes", type="string", description="Counselor notes"),
+     *             @OA\Property(property="student_feedback", type="string", description="Student feedback"),
+     *             @OA\Property(property="rating", type="integer", minimum=1, maximum=5, description="Student rating")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Appointment completed successfully",
+     *         @OA\JsonContent(ref="#/components/schemas/CounselingAppointment")
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Only confirmed appointments can be completed"
+     *     )
+     * )
+     */
     public function complete(Request $request, $id)
     {
         $appointment = CounselingAppointment::findOrFail($id);

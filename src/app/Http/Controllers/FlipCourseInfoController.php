@@ -10,6 +10,59 @@ use DB;
 class FlipCourseInfoController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/flip-course-infos",
+     *     summary="Get flip course infos list",
+     *     description="Retrieve list of flip course information templates with filtering and pagination",
+     *     operationId="getFlipCourseInfos",
+     *     tags={"Flip Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="status",
+     *         in="query",
+     *         description="Filter by status",
+     *         @OA\Schema(type="string", enum={"draft", "published", "archived"}, example="published")
+     *     ),
+     *     @OA\Parameter(
+     *         name="teaching_mode",
+     *         in="query",
+     *         description="Filter by teaching mode",
+     *         @OA\Schema(type="string", enum={"online", "offline", "hybrid"}, example="online")
+     *     ),
+     *     @OA\Parameter(
+     *         name="search",
+     *         in="query",
+     *         description="Search by name or code",
+     *         @OA\Schema(type="string", example="Python")
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Items per page",
+     *         @OA\Schema(type="integer", example=15)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="data", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="Advanced Python Flip Course"),
+     *                     @OA\Property(property="code", type="string", example="FLP-PY-001"),
+     *                     @OA\Property(property="status", type="string", example="published"),
+     *                     @OA\Property(property="teaching_mode", type="string", example="online")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * Display a listing of flip course infos.
      */
     public function index(Request $request): JsonResponse
@@ -41,6 +94,53 @@ class FlipCourseInfoController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-infos",
+     *     summary="Create flip course info",
+     *     description="Create a new flip course information template",
+     *     operationId="createFlipCourseInfo",
+     *     tags={"Flip Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Flip course info data",
+     *         @OA\JsonContent(
+     *             required={"product_id", "name", "code", "description", "details", "feature_img", "teaching_mode"},
+     *             @OA\Property(property="product_id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Advanced Python Flip Course"),
+     *             @OA\Property(property="code", type="string", example="FLP-PY-001"),
+     *             @OA\Property(property="description", type="string", example="Comprehensive Python programming flip course"),
+     *             @OA\Property(property="details", type="string", example="Detailed course curriculum and objectives"),
+     *             @OA\Property(property="feature_img", type="string", example="https://example.com/image.jpg"),
+     *             @OA\Property(property="teaching_mode", type="string", enum={"online", "offline", "hybrid"}, example="online"),
+     *             @OA\Property(property="status", type="string", enum={"draft", "published", "archived"}, example="draft"),
+     *             @OA\Property(property="created_by", type="integer", example=2),
+     *             @OA\Property(property="lang_type_ids", type="array", @OA\Items(type="integer"), example={1, 2})
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Flip course info created successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Flip course info created successfully"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Store a newly created flip course info.
      */
     public function store(Request $request): JsonResponse
@@ -80,6 +180,44 @@ class FlipCourseInfoController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/flip-course-infos/{id}",
+     *     summary="Get flip course info details",
+     *     description="Retrieve detailed information about a specific flip course template",
+     *     operationId="getFlipCourseInfo",
+     *     tags={"Flip Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course info ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="product_id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Advanced Python Flip Course"),
+     *             @OA\Property(property="code", type="string", example="FLP-PY-001"),
+     *             @OA\Property(property="description", type="string", example="Comprehensive Python programming flip course"),
+     *             @OA\Property(property="teaching_mode", type="string", example="online"),
+     *             @OA\Property(property="status", type="string", example="published")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Flip course info not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * Display the specified flip course info.
      */
     public function show(int $id): JsonResponse
@@ -91,6 +229,63 @@ class FlipCourseInfoController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/flip-course-infos/{id}",
+     *     summary="Update flip course info",
+     *     description="Update an existing flip course information template",
+     *     operationId="updateFlipCourseInfo",
+     *     tags={"Flip Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course info ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Flip course info update data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="product_id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Advanced Python Flip Course"),
+     *             @OA\Property(property="code", type="string", example="FLP-PY-001"),
+     *             @OA\Property(property="description", type="string", example="Updated course description"),
+     *             @OA\Property(property="details", type="string", example="Updated detailed curriculum"),
+     *             @OA\Property(property="feature_img", type="string", example="https://example.com/new-image.jpg"),
+     *             @OA\Property(property="teaching_mode", type="string", enum={"online", "offline", "hybrid"}, example="hybrid"),
+     *             @OA\Property(property="status", type="string", enum={"draft", "published", "archived"}, example="published"),
+     *             @OA\Property(property="updated_by", type="integer", example=2),
+     *             @OA\Property(property="lang_type_ids", type="array", @OA\Items(type="integer"), example={1, 2, 3})
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Flip course info updated successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Flip course info updated successfully"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Flip course info not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Update the specified flip course info.
      */
     public function update(Request $request, int $id): JsonResponse
@@ -132,6 +327,42 @@ class FlipCourseInfoController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *     path="/api/flip-course-infos/{id}",
+     *     summary="Delete flip course info",
+     *     description="Delete a flip course information template",
+     *     operationId="deleteFlipCourseInfo",
+     *     tags={"Flip Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course info ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Flip course info deleted successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Flip course info deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Flip course info not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Remove the specified flip course info.
      */
     public function destroy(int $id): JsonResponse
@@ -152,6 +383,47 @@ class FlipCourseInfoController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/flip-course-infos/{id}/statistics",
+     *     summary="Get flip course statistics",
+     *     description="Retrieve statistics about flip course cases for a specific flip course template",
+     *     operationId="getFlipCourseStatistics",
+     *     tags={"Flip Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course info ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="total_cases", type="integer", example=45),
+     *             @OA\Property(property="active_cases", type="integer", example=12),
+     *             @OA\Property(property="completed_cases", type="integer", example=30),
+     *             @OA\Property(property="cancelled_cases", type="integer", example=3),
+     *             @OA\Property(property="by_stage", type="object",
+     *                 @OA\Property(property="planning", type="integer", example=5),
+     *                 @OA\Property(property="counseling", type="integer", example=4),
+     *                 @OA\Property(property="cycling", type="integer", example=3),
+     *                 @OA\Property(property="completed", type="integer", example=30)
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Flip course info not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * Get statistics about flip course cases.
      */
     public function getStatistics(int $id): JsonResponse

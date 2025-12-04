@@ -9,6 +9,49 @@ use Illuminate\Http\Request;
 class NotificationPreferenceController extends Controller
 {
     /**
+     * @OA\Get(
+     *     path="/api/notification-preferences",
+     *     summary="Get notification preferences",
+     *     description="Retrieve notification preferences for a specific member with available options",
+     *     operationId="getNotificationPreferences",
+     *     tags={"Notification Preferences"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="member_id",
+     *         in="query",
+     *         description="Member ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="preferences", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="member_id", type="integer", example=1),
+     *                     @OA\Property(property="notification_type", type="string", example="course_reminder"),
+     *                     @OA\Property(property="enabled", type="boolean", example=true),
+     *                     @OA\Property(property="delivery_methods", type="array", @OA\Items(type="string"), example={"database", "email"}),
+     *                     @OA\Property(property="advance_minutes", type="integer", example=60)
+     *                 )
+     *             ),
+     *             @OA\Property(property="available_delivery_methods", type="object"),
+     *             @OA\Property(property="available_notification_types", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 獲取用戶的通知偏好設定
      */
     public function index(Request $request)
@@ -68,6 +111,58 @@ class NotificationPreferenceController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/notification-preferences/{id}",
+     *     summary="Update notification preference",
+     *     description="Update a specific notification preference setting",
+     *     operationId="updateNotificationPreference",
+     *     tags={"Notification Preferences"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Notification preference ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Preference update data",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="enabled", type="boolean", example=true),
+     *             @OA\Property(property="delivery_methods", type="array", @OA\Items(type="string", enum={"database", "email", "push", "sms"}), example={"database", "email"}),
+     *             @OA\Property(property="advance_minutes", type="integer", minimum=1, maximum=10080, example=60),
+     *             @OA\Property(property="schedule_settings", type="object",
+     *                 @OA\Property(property="quiet_hours", type="object",
+     *                     @OA\Property(property="start", type="string", format="time", example="22:00"),
+     *                     @OA\Property(property="end", type="string", format="time", example="07:00")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Notification preference updated successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Notification preference updated successfully"),
+     *             @OA\Property(property="preference", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Preference not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 更新單一通知偏好設定
      */
     public function update(Request $request, $id)
@@ -94,6 +189,49 @@ class NotificationPreferenceController extends Controller
     }
 
     /**
+     * @OA\Put(
+     *     path="/api/notification-preferences/batch/update",
+     *     summary="Batch update notification preferences",
+     *     description="Update multiple notification preferences at once",
+     *     operationId="batchUpdateNotificationPreferences",
+     *     tags={"Notification Preferences"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Batch preference update data",
+     *         @OA\JsonContent(
+     *             required={"member_id", "preferences"},
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="preferences", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="notification_type", type="string", example="course_reminder"),
+     *                     @OA\Property(property="enabled", type="boolean", example=true),
+     *                     @OA\Property(property="delivery_methods", type="array", @OA\Items(type="string"), example={"database", "email"}),
+     *                     @OA\Property(property="advance_minutes", type="integer", example=60)
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Preferences updated successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Successfully updated 5 preferences"),
+     *             @OA\Property(property="updated_count", type="integer", example=5),
+     *             @OA\Property(property="errors", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 批量更新通知偏好設定
      */
     public function batchUpdate(Request $request)
@@ -146,6 +284,40 @@ class NotificationPreferenceController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/notification-preferences/reset-defaults",
+     *     summary="Reset preferences to defaults",
+     *     description="Reset all notification preferences to default settings for a member",
+     *     operationId="resetNotificationPreferencesToDefaults",
+     *     tags={"Notification Preferences"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Member ID",
+     *         @OA\JsonContent(
+     *             required={"member_id"},
+     *             @OA\Property(property="member_id", type="integer", example=1)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Preferences reset successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Notification preferences reset to defaults"),
+     *             @OA\Property(property="preferences", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 重設為預設偏好設定
      */
     public function resetToDefaults(Request $request)
@@ -171,6 +343,41 @@ class NotificationPreferenceController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/notification-preferences/quick-setting",
+     *     summary="Quick preference settings",
+     *     description="Quickly enable all, disable all, or enable only important notifications",
+     *     operationId="quickNotificationSettings",
+     *     tags={"Notification Preferences"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Quick setting action",
+     *         @OA\JsonContent(
+     *             required={"member_id", "action"},
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="action", type="string", enum={"enable_all", "disable_all", "enable_important_only"}, example="enable_important_only")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Quick setting applied successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Only important notifications enabled"),
+     *             @OA\Property(property="preferences", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 快速設定（全部啟用/停用）
      */
     public function quickSetting(Request $request)
@@ -232,6 +439,44 @@ class NotificationPreferenceController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/notification-preferences/test",
+     *     summary="Test notification settings",
+     *     description="Test notification settings by sending a test notification",
+     *     operationId="testNotificationSettings",
+     *     tags={"Notification Preferences"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="Test notification data",
+     *         @OA\JsonContent(
+     *             required={"member_id", "notification_type"},
+     *             @OA\Property(property="member_id", type="integer", example=1),
+     *             @OA\Property(property="notification_type", type="string", example="course_reminder")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Test notification sent successfully",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="message", type="string", example="Test notification sent successfully"),
+     *             @OA\Property(property="would_send", type="boolean", example=true),
+     *             @OA\Property(property="delivery_methods", type="array", @OA\Items(type="string"), example={"database", "email"}),
+     *             @OA\Property(property="is_quiet_hours", type="boolean", example=false),
+     *             @OA\Property(property="test_notification", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * 測試通知設定
      */
     public function testNotification(Request $request)

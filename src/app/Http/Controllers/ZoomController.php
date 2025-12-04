@@ -18,7 +18,20 @@ class ZoomController extends Controller
     }
 
     /**
-     * 檢查 Zoom API 連接狀態
+     * @OA\Get(
+     *     path="/zoom/check",
+     *     tags={"Zoom"},
+     *     summary="Check Zoom API connection",
+     *     description="Check the status of Zoom API connection",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Connection check result"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Connection check failed"
+     *     )
+     * )
      */
     public function checkConnection(): JsonResponse
     {
@@ -37,7 +50,43 @@ class ZoomController extends Controller
     }
 
     /**
-     * 為單一課程創建 Zoom 會議
+     * @OA\Post(
+     *     path="/zoom/courses/{course}/meeting",
+     *     tags={"Zoom"},
+     *     summary="Create Zoom meeting for a course",
+     *     description="Create a Zoom meeting for a specific course",
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="topic", type="string", maxLength=255, description="Meeting topic"),
+     *             @OA\Property(property="agenda", type="string", maxLength=1000, description="Meeting agenda"),
+     *             @OA\Property(property="password", type="string", minLength=4, maxLength=10, description="Meeting password"),
+     *             @OA\Property(property="settings", type="object", description="Meeting settings",
+     *                 @OA\Property(property="host_video", type="boolean"),
+     *                 @OA\Property(property="participant_video", type="boolean"),
+     *                 @OA\Property(property="join_before_host", type="boolean"),
+     *                 @OA\Property(property="mute_upon_entry", type="boolean"),
+     *                 @OA\Property(property="waiting_room", type="boolean"),
+     *                 @OA\Property(property="auto_recording", type="string", enum={"local", "cloud", "none"})
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Meeting created successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Failed to create meeting"
+     *     )
+     * )
      */
     public function createMeetingForCourse(Request $request, ClubCourse $course): JsonResponse
     {
@@ -73,7 +122,27 @@ class ZoomController extends Controller
     }
 
     /**
-     * 獲取課程的 Zoom 會議資訊
+     * @OA\Get(
+     *     path="/zoom/courses/{course}/meeting",
+     *     tags={"Zoom"},
+     *     summary="Get course Zoom meeting info",
+     *     description="Retrieve Zoom meeting information for a course",
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course has no Zoom meeting"
+     *     )
+     * )
      */
     public function getCourseZoomInfo(ClubCourse $course): JsonResponse
     {
@@ -121,7 +190,27 @@ class ZoomController extends Controller
     }
 
     /**
-     * 刪除 Zoom 會議
+     * @OA\Delete(
+     *     path="/zoom/courses/{course}/meeting",
+     *     tags={"Zoom"},
+     *     summary="Delete Zoom meeting",
+     *     description="Delete the Zoom meeting for a course",
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Meeting deleted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Failed to delete meeting"
+     *     )
+     * )
      */
     public function deleteMeeting(ClubCourse $course): JsonResponse
     {
@@ -140,7 +229,27 @@ class ZoomController extends Controller
     }
 
     /**
-     * 獲取課程的 Zoom 會議 URL（供學生使用）
+     * @OA\Get(
+     *     path="/zoom/courses/{course}/join",
+     *     tags={"Zoom"},
+     *     summary="Get student join URL",
+     *     description="Get the Zoom meeting join URL for students",
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course has no Zoom meeting"
+     *     )
+     * )
      */
     public function getCourseJoinUrl(ClubCourse $course): JsonResponse
     {
@@ -185,7 +294,27 @@ class ZoomController extends Controller
     }
 
     /**
-     * 獲取主持人開始連結（供老師使用）
+     * @OA\Get(
+     *     path="/zoom/courses/{course}/start",
+     *     tags={"Zoom"},
+     *     summary="Get host start URL",
+     *     description="Get the Zoom meeting start URL for the host/teacher",
+     *     @OA\Parameter(
+     *         name="course",
+     *         in="path",
+     *         description="Course ID",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Course has no Zoom meeting"
+     *     )
+     * )
      */
     public function getHostStartUrl(ClubCourse $course): JsonResponse
     {

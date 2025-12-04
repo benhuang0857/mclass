@@ -12,7 +12,40 @@ use Carbon\Carbon;
 class ClubCourseInfoController extends Controller
 {
     /**
-     * 顯示所有課程資訊
+     * @OA\Get(
+     *     path="/club-course-info",
+     *     summary="Get all club course information",
+     *     description="Retrieve a list of all club course information with schedules and related club courses",
+     *     operationId="getClubCourseInfos",
+     *     tags={"Club Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="product_id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Introduction to Programming"),
+     *                 @OA\Property(property="code", type="string", example="CS101"),
+     *                 @OA\Property(property="description", type="string", example="Learn the basics of programming"),
+     *                 @OA\Property(property="details", type="string", example="This course covers variables, loops, and functions"),
+     *                 @OA\Property(property="feature_img", type="string", example="https://example.com/image.jpg"),
+     *                 @OA\Property(property="teaching_mode", type="string", enum={"online","offline","hybrid"}, example="online"),
+     *                 @OA\Property(property="schedule_display", type="string", example="Every Monday 9:00-11:00"),
+     *                 @OA\Property(property="is_periodic", type="boolean", example=true),
+     *                 @OA\Property(property="total_sessions", type="integer", example=12),
+     *                 @OA\Property(property="allow_replay", type="boolean", example=true),
+     *                 @OA\Property(property="status", type="string", enum={"published","unpublished","completed","pending"}, example="published"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time"),
+     *                 @OA\Property(property="schedules", type="array", @OA\Items(type="object")),
+     *                 @OA\Property(property="clubCourses", type="array", @OA\Items(type="object"))
+     *             )
+     *         )
+     *     )
+     * )
      */
     public function index()
     {
@@ -21,7 +54,55 @@ class ClubCourseInfoController extends Controller
     }
 
     /**
-     * 顯示單一課程資訊
+     * @OA\Get(
+     *     path="/club-course-info/{id}",
+     *     summary="Get specific club course information",
+     *     description="Retrieve detailed information about a specific club course including schedules and club courses",
+     *     operationId="getClubCourseInfo",
+     *     tags={"Club Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Club course info ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="product_id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Introduction to Programming"),
+     *             @OA\Property(property="code", type="string", example="CS101"),
+     *             @OA\Property(property="description", type="string", example="Learn the basics of programming"),
+     *             @OA\Property(property="details", type="string", example="This course covers variables, loops, and functions"),
+     *             @OA\Property(property="feature_img", type="string", example="https://example.com/image.jpg"),
+     *             @OA\Property(property="teaching_mode", type="string", enum={"online","offline","hybrid"}, example="online"),
+     *             @OA\Property(property="schedule_display", type="string", example="Every Monday 9:00-11:00"),
+     *             @OA\Property(property="is_periodic", type="boolean", example=true),
+     *             @OA\Property(property="total_sessions", type="integer", example=12),
+     *             @OA\Property(property="allow_replay", type="boolean", example=true),
+     *             @OA\Property(property="status", type="string", enum={"published","unpublished","completed","pending"}, example="published"),
+     *             @OA\Property(property="created_at", type="string", format="date-time"),
+     *             @OA\Property(property="updated_at", type="string", format="date-time"),
+     *             @OA\Property(property="schedules", type="array", @OA\Items(
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="start_date", type="string", format="date", example="2025-01-01"),
+     *                 @OA\Property(property="end_date", type="string", format="date", example="2025-03-31"),
+     *                 @OA\Property(property="day_of_week", type="string", example="monday"),
+     *                 @OA\Property(property="start_time", type="string", format="time", example="09:00"),
+     *                 @OA\Property(property="end_time", type="string", format="time", example="11:00")
+     *             )),
+     *             @OA\Property(property="clubCourses", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Club course info not found"
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -30,7 +111,64 @@ class ClubCourseInfoController extends Controller
     }
 
     /**
-     * 創建新課程資訊
+     * @OA\Post(
+     *     path="/club-course-info",
+     *     summary="Create new club course information",
+     *     description="Create a new club course info entry with optional periodic schedules. Automatically generates club courses based on schedules or total sessions.",
+     *     operationId="createClubCourseInfo",
+     *     tags={"Club Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"product_id","name","code","description","details","feature_img","teaching_mode","schedule_display","total_sessions","status"},
+     *             @OA\Property(property="product_id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", maxLength=255, example="Introduction to Programming"),
+     *             @OA\Property(property="code", type="string", example="CS101"),
+     *             @OA\Property(property="description", type="string", example="Learn the basics of programming"),
+     *             @OA\Property(property="details", type="string", example="This course covers variables, loops, and functions"),
+     *             @OA\Property(property="feature_img", type="string", example="https://example.com/image.jpg"),
+     *             @OA\Property(property="teaching_mode", type="string", enum={"online","offline","hybrid"}, example="online"),
+     *             @OA\Property(property="schedule_display", type="string", example="Every Monday 9:00-11:00"),
+     *             @OA\Property(property="is_periodic", type="boolean", example=true),
+     *             @OA\Property(property="total_sessions", type="integer", minimum=1, example=12),
+     *             @OA\Property(property="allow_replay", type="boolean", example=true),
+     *             @OA\Property(property="status", type="string", enum={"published","unpublished","completed","pending"}, example="published"),
+     *             @OA\Property(
+     *                 property="schedules",
+     *                 type="array",
+     *                 description="Required if is_periodic is true",
+     *                 @OA\Items(
+     *                     @OA\Property(property="start_date", type="string", format="date", example="2025-01-01"),
+     *                     @OA\Property(property="end_date", type="string", format="date", example="2025-03-31"),
+     *                     @OA\Property(property="day_of_week", type="string", enum={"monday","tuesday","wednesday","thursday","friday","saturday","sunday"}, example="monday"),
+     *                     @OA\Property(property="start_time", type="string", format="time", example="09:00"),
+     *                     @OA\Property(property="end_time", type="string", format="time", example="11:00")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Club course info created successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="product_id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Introduction to Programming"),
+     *             @OA\Property(property="code", type="string", example="CS101"),
+     *             @OA\Property(property="schedules", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="clubCourses", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -80,7 +218,71 @@ class ClubCourseInfoController extends Controller
     }
 
     /**
-     * 更新課程資訊
+     * @OA\Put(
+     *     path="/club-course-info/{id}",
+     *     summary="Update club course information",
+     *     description="Update an existing club course info. Regenerates club courses if schedules or total_sessions are modified.",
+     *     operationId="updateClubCourseInfo",
+     *     tags={"Club Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Club course info ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="product_id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", maxLength=255, example="Advanced Programming"),
+     *             @OA\Property(property="code", type="string", example="CS102"),
+     *             @OA\Property(property="description", type="string", example="Advanced programming concepts"),
+     *             @OA\Property(property="details", type="string", example="Covers OOP, design patterns"),
+     *             @OA\Property(property="feature_img", type="string", example="https://example.com/image2.jpg"),
+     *             @OA\Property(property="teaching_mode", type="string", enum={"online","offline","hybrid"}, example="hybrid"),
+     *             @OA\Property(property="schedule_display", type="string", example="Every Tuesday 14:00-16:00"),
+     *             @OA\Property(property="is_periodic", type="boolean", example=true),
+     *             @OA\Property(property="total_sessions", type="integer", minimum=1, example=15),
+     *             @OA\Property(property="allow_replay", type="boolean", example=false),
+     *             @OA\Property(property="status", type="string", enum={"published","unpublished","completed","pending"}, example="published"),
+     *             @OA\Property(
+     *                 property="schedules",
+     *                 type="array",
+     *                 @OA\Items(
+     *                     @OA\Property(property="start_date", type="string", format="date", example="2025-02-01"),
+     *                     @OA\Property(property="end_date", type="string", format="date", example="2025-04-30"),
+     *                     @OA\Property(property="day_of_week", type="string", example="tuesday"),
+     *                     @OA\Property(property="start_time", type="string", format="time", example="14:00"),
+     *                     @OA\Property(property="end_time", type="string", format="time", example="16:00")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Club course info updated successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="id", type="integer", example=1),
+     *             @OA\Property(property="name", type="string", example="Advanced Programming"),
+     *             @OA\Property(property="schedules", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="clubCourses", type="array", @OA\Items(type="object"))
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Club course info not found"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -147,7 +349,36 @@ class ClubCourseInfoController extends Controller
     }
 
     /**
-     * 刪除課程資訊
+     * @OA\Delete(
+     *     path="/club-course-info/{id}",
+     *     summary="Delete club course information",
+     *     description="Delete a club course info entry and all related schedules and club courses (cascade delete)",
+     *     operationId="deleteClubCourseInfo",
+     *     tags={"Club Course Info"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Club course info ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Club course info deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Course deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Club course info not found"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
      */
     public function destroy($id)
     {

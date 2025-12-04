@@ -28,6 +28,65 @@ class FlipCourseCaseController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/flip-course-cases",
+     *     summary="Get flip course cases list",
+     *     description="Retrieve list of flip course cases with filtering and pagination",
+     *     operationId="getFlipCourseCases",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="workflow_stage",
+     *         in="query",
+     *         description="Filter by workflow stage",
+     *         @OA\Schema(type="string", enum={"planning", "counseling", "cycling", "completed", "cancelled"}, example="counseling")
+     *     ),
+     *     @OA\Parameter(
+     *         name="payment_status",
+     *         in="query",
+     *         description="Filter by payment status",
+     *         @OA\Schema(type="string", example="confirmed")
+     *     ),
+     *     @OA\Parameter(
+     *         name="student_id",
+     *         in="query",
+     *         description="Filter by student ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Parameter(
+     *         name="planner_id",
+     *         in="query",
+     *         description="Filter by planner ID",
+     *         @OA\Schema(type="integer", example=2)
+     *     ),
+     *     @OA\Parameter(
+     *         name="counselor_id",
+     *         in="query",
+     *         description="Filter by counselor ID",
+     *         @OA\Schema(type="integer", example=3)
+     *     ),
+     *     @OA\Parameter(
+     *         name="analyst_id",
+     *         in="query",
+     *         description="Filter by analyst ID",
+     *         @OA\Schema(type="integer", example=4)
+     *     ),
+     *     @OA\Parameter(
+     *         name="per_page",
+     *         in="query",
+     *         description="Items per page",
+     *         @OA\Schema(type="integer", example=15)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * Display a listing of flip course cases.
      */
     public function index(Request $request): JsonResponse
@@ -77,6 +136,34 @@ class FlipCourseCaseController extends Controller
     }
 
     /**
+     * @OA\Get(
+     *     path="/api/flip-course-cases/{id}",
+     *     summary="Get flip course case details",
+     *     description="Retrieve detailed information about a specific flip course case",
+     *     operationId="getFlipCourseCase",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     )
+     * )
+     *
      * Display the specified flip course case.
      */
     public function show(int $id): JsonResponse
@@ -106,6 +193,50 @@ class FlipCourseCaseController extends Controller
      */
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/confirm-payment",
+     *     summary="Confirm payment (Planner)",
+     *     description="Planner confirms payment and moves case to planning stage",
+     *     operationId="confirmFlipCasePayment",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"payment_method"},
+     *             @OA\Property(property="payment_method", type="string", example="credit_card"),
+     *             @OA\Property(property="payment_note", type="string", example="Paid via Stripe")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Payment confirmed successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Confirm payment for a flip course case.
      */
     public function confirmPayment(Request $request, int $id): JsonResponse
@@ -151,6 +282,49 @@ class FlipCourseCaseController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/create-line-group",
+     *     summary="Create Line group (Planner)",
+     *     description="Planner creates Line group for case communication",
+     *     operationId="createFlipCaseLineGroup",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"line_group_url"},
+     *             @OA\Property(property="line_group_url", type="string", format="uri", example="https://line.me/ti/g/ABC123")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Line group created successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Create Line group for the case.
      */
     public function createLineGroup(Request $request, int $id): JsonResponse
@@ -187,6 +361,49 @@ class FlipCourseCaseController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/assign-counselor",
+     *     summary="Assign counselor (Planner)",
+     *     description="Planner assigns counselor to the case",
+     *     operationId="assignFlipCaseCounselor",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"counselor_id"},
+     *             @OA\Property(property="counselor_id", type="integer", example=3)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Counselor assigned successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Assign counselor to the case.
      */
     public function assignCounselor(Request $request, int $id): JsonResponse
@@ -230,6 +447,49 @@ class FlipCourseCaseController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/assign-analyst",
+     *     summary="Assign analyst (Planner)",
+     *     description="Planner assigns analyst and moves case to counseling stage",
+     *     operationId="assignFlipCaseAnalyst",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"analyst_id"},
+     *             @OA\Property(property="analyst_id", type="integer", example=4)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Analyst assigned successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Assign analyst to the case.
      */
     public function assignAnalyst(Request $request, int $id): JsonResponse
@@ -280,6 +540,55 @@ class FlipCourseCaseController extends Controller
      */
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/schedule-counseling",
+     *     summary="Schedule counseling meeting (Counselor)",
+     *     description="Counselor schedules a counseling session for the case",
+     *     operationId="scheduleFlipCaseCounseling",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"preferred_datetime"},
+     *             @OA\Property(property="counseling_info_id", type="integer", example=1),
+     *             @OA\Property(property="title", type="string", example="Initial Consultation"),
+     *             @OA\Property(property="preferred_datetime", type="string", format="date-time", example="2025-12-10 14:00:00"),
+     *             @OA\Property(property="confirmed_datetime", type="string", format="date-time", example="2025-12-10 14:00:00"),
+     *             @OA\Property(property="duration", type="integer", example=60),
+     *             @OA\Property(property="method", type="string", enum={"online", "offline", "phone"}, example="online"),
+     *             @OA\Property(property="meeting_url", type="string", format="uri", example="https://zoom.us/j/123456789")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Counseling meeting scheduled successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Schedule counseling meeting.
      */
     public function scheduleCounseling(Request $request, int $id): JsonResponse
@@ -313,6 +622,68 @@ class FlipCourseCaseController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/issue-prescription",
+     *     summary="Issue prescription (Counselor)",
+     *     description="Counselor issues learning prescription with courses and tasks",
+     *     operationId="issueFlipCasePrescription",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"strategy_report"},
+     *             @OA\Property(property="counseling_appointment_id", type="integer", example=1),
+     *             @OA\Property(property="strategy_report", type="string", example="Comprehensive learning strategy report"),
+     *             @OA\Property(property="counseling_notes", type="string", example="Session notes and observations"),
+     *             @OA\Property(property="learning_goals", type="array", @OA\Items(type="string"), example={"Master Python basics", "Build portfolio projects"}),
+     *             @OA\Property(property="club_courses", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="club_course_info_id", type="integer", example=1),
+     *                     @OA\Property(property="reason", type="string", example="Strengthen foundational knowledge"),
+     *                     @OA\Property(property="recommended_sessions", type="integer", example=8)
+     *                 )
+     *             ),
+     *             @OA\Property(property="learning_tasks", type="array",
+     *                 @OA\Items(type="object",
+     *                     @OA\Property(property="title", type="string", example="Complete Python Tutorial"),
+     *                     @OA\Property(property="description", type="string", example="Work through chapters 1-5"),
+     *                     @OA\Property(property="resources", type="string", example="https://docs.python.org"),
+     *                     @OA\Property(property="estimated_hours", type="integer", example=10),
+     *                     @OA\Property(property="due_date", type="string", format="date", example="2025-12-20")
+     *                 )
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Prescription issued successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Issue prescription (create learning strategy).
      */
     public function issuePrescription(Request $request, int $id): JsonResponse
@@ -392,6 +763,51 @@ class FlipCourseCaseController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/review-analysis",
+     *     summary="Review analysis (Counselor)",
+     *     description="Counselor reviews analysis and decides to continue cycle or complete case",
+     *     operationId="reviewFlipCaseAnalysis",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"assessment_id", "continue_cycle"},
+     *             @OA\Property(property="assessment_id", type="integer", example=1),
+     *             @OA\Property(property="continue_cycle", type="boolean", example=true),
+     *             @OA\Property(property="review_notes", type="string", example="Good progress, continue with next cycle")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Analysis reviewed successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Review analysis and decide next action.
      */
     public function reviewAnalysis(Request $request, int $id): JsonResponse
@@ -461,6 +877,52 @@ class FlipCourseCaseController extends Controller
      */
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/create-assessment",
+     *     summary="Create assessment (Analyst)",
+     *     description="Analyst creates an assessment for a prescription",
+     *     operationId="createFlipCaseAssessment",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"prescription_id"},
+     *             @OA\Property(property="prescription_id", type="integer", example=1),
+     *             @OA\Property(property="test_content", type="string", example="Assessment questions and materials"),
+     *             @OA\Property(property="test_results", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="test_score", type="integer", example=85)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Assessment created successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Create assessment for a prescription.
      */
     public function createAssessment(Request $request, int $id): JsonResponse
@@ -499,6 +961,55 @@ class FlipCourseCaseController extends Controller
     }
 
     /**
+     * @OA\Post(
+     *     path="/api/flip-course-cases/{id}/submit-analysis",
+     *     summary="Submit analysis report (Analyst)",
+     *     description="Analyst submits completed analysis report and moves case to cycling stage",
+     *     operationId="submitFlipCaseAnalysis",
+     *     tags={"Flip Course Cases"},
+     *     security={{"sanctum":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="Flip course case ID",
+     *         required=true,
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"assessment_id", "analysis_report"},
+     *             @OA\Property(property="assessment_id", type="integer", example=1),
+     *             @OA\Property(property="analysis_report", type="string", example="Comprehensive learning analysis and recommendations"),
+     *             @OA\Property(property="metrics", type="array", @OA\Items(type="object")),
+     *             @OA\Property(property="recommendations", type="array", @OA\Items(type="string")),
+     *             @OA\Property(property="study_hours", type="integer", example=25),
+     *             @OA\Property(property="tasks_completed", type="integer", example=8),
+     *             @OA\Property(property="courses_attended", type="integer", example=6)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Analysis submitted successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=422,
+     *         description="Validation error"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Case not found"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error"
+     *     )
+     * )
+     *
      * Submit analysis report.
      */
     public function submitAnalysis(Request $request, int $id): JsonResponse
