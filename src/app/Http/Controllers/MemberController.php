@@ -122,36 +122,44 @@ class MemberController extends Controller
             'profile.birthday' => 'required|date',
             'profile.job' => 'required|string|max:255',
 
-            'contact.city' => 'required|string|max:255',
-            'contact.region' => 'required|string|max:255',
-            'contact.address' => 'required|string|max:255',
-            'contact.mobile' => 'required|string|max:20|unique:contacts,mobile',
-            'contact.mobile_valid' => 'required|boolean',
+            'contact.city' => 'sometimes|required|string|max:255',
+            'contact.region' => 'sometimes|required|string|max:255',
+            'contact.address' => 'sometimes|required|string|max:255',
+            'contact.mobile' => 'sometimes|required|string|max:20|unique:contacts,mobile',
+            'contact.mobile_valid' => 'sometimes|required|boolean',
 
-            'background.goals' => 'required|array',
-            'background.purposes' => 'required|array',
-            'background.highest_education' => 'required|string|max:255',
-            'background.schools' => 'nullable|array',
-            'background.departments' => 'nullable|array',
-            'background.certificates' => 'required|array',
+            'background.goals' => 'sometimes|required|array',
+            'background.purposes' => 'sometimes|required|array',
+            'background.highest_education' => 'sometimes|required|string|max:255',
+            'background.schools' => 'sometimes|nullable|array',
+            'background.departments' => 'sometimes|nullable|array',
+            'background.certificates' => 'sometimes|required|array',
 
             // relate with background
-            'background.languages' => 'required|array',
+            'background.languages' => 'sometimes|required|array',
             'background.languages.*' => 'exists:lang_types,id',
-            'background.levels' => 'required|array',
+            'background.levels' => 'sometimes|required|array',
             'background.levels.*' => 'exists:level_types,id',
         ]);
 
         $member = Member::create($validated['member']);
         $member->profile()->create($validated['profile']);
-        $member->contact()->create($validated['contact']);
-        $member->background()->create($validated['background']);
 
-        // do sync relation
-        $background = $member->background;
-        if ($background) {
-            $background->languages()->sync($validated['background']['languages']);
-            $background->levels()->sync($validated['background']['levels']);
+        if (isset($validated['contact'])) {
+            $member->contact()->create($validated['contact']);
+        }
+
+        if (isset($validated['background'])) {
+            $member->background()->create($validated['background']);
+
+            // do sync relation
+            $background = $member->background;
+            if ($background && isset($validated['background']['languages'])) {
+                $background->languages()->sync($validated['background']['languages']);
+            }
+            if ($background && isset($validated['background']['levels'])) {
+                $background->levels()->sync($validated['background']['levels']);
+            }
         }
 
         return response()->json($member->load(['profile', 'contact', 'background']), 201);
