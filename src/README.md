@@ -38,3 +38,4 @@ return Application::configure(basePath: dirname(__DIR__))
 - `php artisan db:wipe`：清除整個DB
 - `php artisan db:init-combo`：提供用戶快速生成需要的tables與測試資料
 - `php artisan db:init-necessary`：當有修改`init_necessary.sql`時，可以執行此指令來快速修改tables
+- `php artisan l5-swagger:generate`：生成swagger文件
