@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://123.45.67.89/api",
+            "url": "http://143.198.93.171/api",
             "description": "MClass API Server"
         }
     ],
