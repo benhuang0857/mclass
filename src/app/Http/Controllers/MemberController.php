@@ -7,6 +7,7 @@ use App\Models\Profile;
 use App\Models\Contact;
 use App\Models\Background;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class MemberController extends Controller
 {
@@ -141,6 +142,11 @@ class MemberController extends Controller
             'background.levels' => 'sometimes|required|array',
             'background.levels.*' => 'exists:level_types,id',
         ]);
+
+        // Hash the password before creating the member
+        if (isset($validated['member']['password'])) {
+            $validated['member']['password'] = Hash::make($validated['member']['password']);
+        }
 
         $member = Member::create($validated['member']);
         $member->profile()->create($validated['profile']);
@@ -343,6 +349,11 @@ class MemberController extends Controller
             'background.levels' => 'sometimes|array',
             'background.levels.*' => 'exists:level_types,id',
         ]);
+
+        // Hash the password before updating if password is provided
+        if (isset($validated['member']['password'])) {
+            $validated['member']['password'] = Hash::make($validated['member']['password']);
+        }
 
         $member->update($validated['member'] ?? []);
 
