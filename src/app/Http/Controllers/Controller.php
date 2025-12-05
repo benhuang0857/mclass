@@ -24,6 +24,14 @@ namespace App\Http\Controllers;
  *     name="Authorization",
  *     description="Enter token in format: Bearer {token}"
  * )
+ *
+ * @OA\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer",
+ *     bearerFormat="JWT",
+ *     description="Enter JWT token"
+ * )
  */
 abstract class Controller
 {

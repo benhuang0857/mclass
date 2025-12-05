@@ -28,6 +28,19 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationPreferenceController;
 use App\Http\Controllers\FlipCourseInfoController;
 use App\Http\Controllers\FlipCourseCaseController;
+use App\Http\Controllers\AuthController;
+
+########## Auth API ##########
+
+Route::prefix('auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
+    Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
+});
+
+########## Resources API ##########
 
 Route::prefix('invitation-codes')->group(function () {
     Route::get('/', [InvitationCodeController::class, 'index']);
