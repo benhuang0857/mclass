@@ -17,6 +17,16 @@ namespace App\Http\Controllers;
  *     description="MClass API Server"
  * )
  *
+ * @OA\Server(
+ *     url="http://143.198.93.171/api",
+ *     description="Production Server"
+ * )
+ *
+ * @OA\Server(
+ *     url="http://localhost:8001/api",
+ *     description="Local Development Server"
+ * )
+ *
  * @OA\SecurityScheme(
  *     securityScheme="sanctum",
  *     type="apiKey",
