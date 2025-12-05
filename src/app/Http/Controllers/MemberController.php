@@ -303,36 +303,36 @@ class MemberController extends Controller
         $member = Member::findOrFail($id);
     
         $validated = $request->validate([
-            'member.nickname' => 'string|max:255',
-            'member.account' => 'string|max:255|unique:members,account,' . $id,
-            'member.email' => 'email|max:255|unique:members,email,' . $id,
-            'member.email_valid' => 'boolean',
-            'member.password' => 'string|min:8',
-            'member.status' => 'boolean',
-    
-            'profile.lastname' => 'string|max:255',
-            'profile.firstname' => 'string|max:255',
-            'profile.gender' => 'string',
-            'profile.birthday' => 'date',
-            'profile.job' => 'string|max:255',
-    
-            'contact.city' => 'string|max:255',
-            'contact.region' => 'string|max:255',
-            'contact.address' => 'string|max:255',
-            'contact.mobile' => 'string|max:20|unique:contacts,mobile,' . ($member->contact->id ?? 'NULL'),
-            'contact.mobile_valid' => 'boolean',
-    
-            'background.goals' => 'required|array',
-            'background.purposes' => 'required|array',
-            'background.highest_education' => 'required|string|max:255',
-            'background.schools' => 'nullable|array',
-            'background.departments' => 'nullable|array',
-            'background.certificates' => 'required|array',
+            'member.nickname' => 'sometimes|string|max:255',
+            'member.account' => 'sometimes|string|max:255|unique:members,account,' . $id,
+            'member.email' => 'sometimes|email|max:255|unique:members,email,' . $id,
+            'member.email_valid' => 'sometimes|boolean',
+            'member.password' => 'sometimes|string|min:8',
+            'member.status' => 'sometimes|boolean',
+
+            'profile.lastname' => 'sometimes|string|max:255',
+            'profile.firstname' => 'sometimes|string|max:255',
+            'profile.gender' => 'sometimes|string',
+            'profile.birthday' => 'sometimes|date',
+            'profile.job' => 'sometimes|string|max:255',
+
+            'contact.city' => 'sometimes|string|max:255',
+            'contact.region' => 'sometimes|string|max:255',
+            'contact.address' => 'sometimes|string|max:255',
+            'contact.mobile' => 'sometimes|string|max:20|unique:contacts,mobile,' . ($member->contact->id ?? 'NULL'),
+            'contact.mobile_valid' => 'sometimes|boolean',
+
+            'background.goals' => 'sometimes|array',
+            'background.purposes' => 'sometimes|array',
+            'background.highest_education' => 'sometimes|string|max:255',
+            'background.schools' => 'sometimes|nullable|array',
+            'background.departments' => 'sometimes|nullable|array',
+            'background.certificates' => 'sometimes|array',
 
             // relate with background
-            'background.languages' => 'required|array',
+            'background.languages' => 'sometimes|array',
             'background.languages.*' => 'exists:lang_types,id',
-            'background.levels' => 'required|array',
+            'background.levels' => 'sometimes|array',
             'background.levels.*' => 'exists:level_types,id',
         ]);
 
