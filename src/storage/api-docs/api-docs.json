@@ -12,6 +12,14 @@
         {
             "url": "http://143.198.93.171",
             "description": "MClass API Server"
+        },
+        {
+            "url": "http://143.198.93.171/api",
+            "description": "Production Server"
+        },
+        {
+            "url": "http://localhost:8001/api",
+            "description": "Local Development Server"
         }
     ],
     "paths": {
