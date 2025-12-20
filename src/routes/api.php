@@ -31,6 +31,7 @@ use App\Http\Controllers\FlipCourseCaseController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SlideshowController;
 use App\Http\Controllers\SlideshowTypeController;
+use App\Http\Controllers\MenuController;
 
 ########## Auth API ##########
 
@@ -182,6 +183,27 @@ Route::prefix('slideshow-types')->group(function () {
     Route::get('/{id}', [SlideshowTypeController::class, 'show']);
     Route::put('/{id}', [SlideshowTypeController::class, 'update']);
     Route::delete('/{id}', [SlideshowTypeController::class, 'destroy']);
+});
+
+########## Menus ##########
+
+Route::prefix('menus')->group(function () {
+    // Special routes (BEFORE {id})
+    Route::get('/active', [MenuController::class, 'getActiveMenus']);
+    Route::get('/tree/all', [MenuController::class, 'getTree']);
+    Route::get('/tree/role/{roleId}', [MenuController::class, 'getTreeForRole']);
+    Route::put('/reorder', [MenuController::class, 'reorder']);
+
+    // Standard CRUD
+    Route::get('/', [MenuController::class, 'index']);
+    Route::post('/', [MenuController::class, 'store']);
+    Route::get('/{id}', [MenuController::class, 'show']);
+    Route::put('/{id}', [MenuController::class, 'update']);
+    Route::delete('/{id}', [MenuController::class, 'destroy']);
+
+    // Role management
+    Route::post('/{id}/roles', [MenuController::class, 'assignRoles']);
+    Route::delete('/{id}/roles', [MenuController::class, 'removeRoles']);
 });
 
 ########## Search API ##########

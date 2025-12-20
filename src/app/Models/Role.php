@@ -28,4 +28,9 @@ class Role extends Model
     {
         return $this->belongsToMany(Member::class, 'member_role');
     }
+    public function menus()
+    {
+        return $this->belongsToMany(Menu::class, 'menu_role');
+    }
+
 }
