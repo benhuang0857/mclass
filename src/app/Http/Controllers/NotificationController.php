@@ -17,7 +17,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/notifications",
+     *     path="/notifications",
      *     summary="Get user notifications",
      *     description="Retrieve notifications for a specific member with filtering and pagination",
      *     operationId="getNotifications",
@@ -131,7 +131,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/notifications/{id}",
+     *     path="/notifications/{id}",
      *     summary="Get notification details",
      *     description="Retrieve details of a specific notification",
      *     operationId="getNotification",
@@ -178,7 +178,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/notifications/{id}/read",
+     *     path="/notifications/{id}/read",
      *     summary="Mark notification as read",
      *     description="Mark a specific notification as read",
      *     operationId="markNotificationAsRead",
@@ -228,7 +228,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/notifications/batch/read",
+     *     path="/notifications/batch/read",
      *     summary="Mark multiple notifications as read",
      *     description="Mark multiple notifications as read in one request",
      *     operationId="markMultipleNotificationsAsRead",
@@ -284,7 +284,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/notifications/all/read",
+     *     path="/notifications/all/read",
      *     summary="Mark all notifications as read",
      *     description="Mark all notifications for a member as read",
      *     operationId="markAllNotificationsAsRead",
@@ -337,7 +337,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/notifications/{id}",
+     *     path="/notifications/{id}",
      *     summary="Delete notification",
      *     description="Delete a specific notification",
      *     operationId="deleteNotification",
@@ -382,7 +382,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notifications/trigger/course-reminder",
+     *     path="/notifications/trigger/course-reminder",
      *     summary="Trigger course reminder notification (Test)",
      *     description="Manually trigger course reminder notifications for testing purposes",
      *     operationId="triggerCourseReminder",
@@ -442,7 +442,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notifications/trigger/counseling-reminder",
+     *     path="/notifications/trigger/counseling-reminder",
      *     summary="Trigger counseling reminder notification (Test)",
      *     description="Manually trigger counseling reminder notifications for testing purposes",
      *     operationId="triggerCounselingReminder",
@@ -502,7 +502,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/notifications/stats/summary",
+     *     path="/notifications/stats/summary",
      *     summary="Get notification statistics",
      *     description="Retrieve notification statistics for a specific member",
      *     operationId="getNotificationStats",
@@ -575,7 +575,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notifications/trigger/counseling-confirmation",
+     *     path="/notifications/trigger/counseling-confirmation",
      *     summary="Trigger counseling confirmation notification (Test)",
      *     description="Manually trigger counseling confirmation notifications for testing purposes",
      *     operationId="triggerCounselingConfirmation",
@@ -628,7 +628,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notifications/trigger/counseling-status-change",
+     *     path="/notifications/trigger/counseling-status-change",
      *     summary="Trigger counseling status change notification (Test)",
      *     description="Manually trigger counseling status change notifications for testing purposes",
      *     operationId="triggerCounselingStatusChange",
@@ -689,7 +689,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notifications/trigger/counseling-time-change",
+     *     path="/notifications/trigger/counseling-time-change",
      *     summary="Trigger counseling time change notification (Test)",
      *     description="Manually trigger counseling time change notifications for testing purposes",
      *     operationId="triggerCounselingTimeChange",
@@ -750,7 +750,7 @@ class NotificationController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notifications/trigger/counselor-new-service",
+     *     path="/notifications/trigger/counselor-new-service",
      *     summary="Trigger counselor new service notification (Test)",
      *     description="Manually trigger counselor new service notifications for testing purposes",
      *     operationId="triggerCounselorNewService",

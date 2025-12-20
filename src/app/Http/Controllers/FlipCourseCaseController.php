@@ -29,7 +29,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/flip-course-cases",
+     *     path="/flip-course-cases",
      *     summary="Get flip course cases list",
      *     description="Retrieve list of flip course cases with filtering and pagination",
      *     operationId="getFlipCourseCases",
@@ -137,7 +137,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/flip-course-cases/{id}",
+     *     path="/flip-course-cases/{id}",
      *     summary="Get flip course case details",
      *     description="Retrieve detailed information about a specific flip course case",
      *     operationId="getFlipCourseCase",
@@ -194,7 +194,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/confirm-payment",
+     *     path="/flip-course-cases/{id}/confirm-payment",
      *     summary="Confirm payment (Planner)",
      *     description="Planner confirms payment and moves case to planning stage",
      *     operationId="confirmFlipCasePayment",
@@ -283,7 +283,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/create-line-group",
+     *     path="/flip-course-cases/{id}/create-line-group",
      *     summary="Create Line group (Planner)",
      *     description="Planner creates Line group for case communication",
      *     operationId="createFlipCaseLineGroup",
@@ -362,7 +362,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/assign-counselor",
+     *     path="/flip-course-cases/{id}/assign-counselor",
      *     summary="Assign counselor (Planner)",
      *     description="Planner assigns counselor to the case",
      *     operationId="assignFlipCaseCounselor",
@@ -448,7 +448,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/assign-analyst",
+     *     path="/flip-course-cases/{id}/assign-analyst",
      *     summary="Assign analyst (Planner)",
      *     description="Planner assigns analyst and moves case to counseling stage",
      *     operationId="assignFlipCaseAnalyst",
@@ -541,7 +541,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/schedule-counseling",
+     *     path="/flip-course-cases/{id}/schedule-counseling",
      *     summary="Schedule counseling meeting (Counselor)",
      *     description="Counselor schedules a counseling session for the case",
      *     operationId="scheduleFlipCaseCounseling",
@@ -623,7 +623,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/issue-prescription",
+     *     path="/flip-course-cases/{id}/issue-prescription",
      *     summary="Issue prescription (Counselor)",
      *     description="Counselor issues learning prescription with courses and tasks",
      *     operationId="issueFlipCasePrescription",
@@ -764,7 +764,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/review-analysis",
+     *     path="/flip-course-cases/{id}/review-analysis",
      *     summary="Review analysis (Counselor)",
      *     description="Counselor reviews analysis and decides to continue cycle or complete case",
      *     operationId="reviewFlipCaseAnalysis",
@@ -878,7 +878,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/create-assessment",
+     *     path="/flip-course-cases/{id}/create-assessment",
      *     summary="Create assessment (Analyst)",
      *     description="Analyst creates an assessment for a prescription",
      *     operationId="createFlipCaseAssessment",
@@ -962,7 +962,7 @@ class FlipCourseCaseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-cases/{id}/submit-analysis",
+     *     path="/flip-course-cases/{id}/submit-analysis",
      *     summary="Submit analysis report (Analyst)",
      *     description="Analyst submits completed analysis report and moves case to cycling stage",
      *     operationId="submitFlipCaseAnalysis",

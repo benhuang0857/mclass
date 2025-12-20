@@ -15,7 +15,7 @@ class AttendanceController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/attendance/courses/{course}",
+     *     path="/attendance/courses/{course}",
      *     summary="Get course attendance list",
      *     description="Retrieve attendance records for a specific course with automatic roster generation if needed",
      *     operationId="getCourseAttendance",
@@ -154,7 +154,7 @@ class AttendanceController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/attendance/courses/{course}/batch",
+     *     path="/attendance/courses/{course}/batch",
      *     summary="Batch mark attendance",
      *     description="Mark attendance for multiple students in a course at once",
      *     operationId="batchMarkAttendance",
@@ -282,7 +282,7 @@ class AttendanceController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/attendance/courses/{course}/members/{member}",
+     *     path="/attendance/courses/{course}/members/{member}",
      *     summary="Update single attendance record",
      *     description="Update attendance status for a specific student in a course",
      *     operationId="updateAttendance",
@@ -399,7 +399,7 @@ class AttendanceController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/attendance/courses/{course}/generate-roster",
+     *     path="/attendance/courses/{course}/generate-roster",
      *     summary="Generate attendance roster",
      *     description="Automatically generate attendance roster for all registered students in a course",
      *     operationId="generateRoster",
@@ -466,7 +466,7 @@ class AttendanceController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/attendance/members/{member}/stats",
+     *     path="/attendance/members/{member}/stats",
      *     summary="Get member attendance statistics",
      *     description="Retrieve attendance statistics for a specific member with optional filters",
      *     operationId="getMemberAttendanceStats",
@@ -588,7 +588,7 @@ class AttendanceController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/attendance/courses/{course}/stats",
+     *     path="/attendance/courses/{course}/stats",
      *     summary="Get course attendance statistics",
      *     description="Retrieve attendance statistics for a specific course",
      *     operationId="getCourseAttendanceStats",
@@ -671,7 +671,7 @@ class AttendanceController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/attendance/statuses",
+     *     path="/attendance/statuses",
      *     summary="Get available attendance statuses",
      *     description="Retrieve list of all available attendance status options",
      *     operationId="getAvailableStatuses",

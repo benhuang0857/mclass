@@ -11,7 +11,7 @@ class FlipCourseInfoController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/flip-course-infos",
+     *     path="/flip-course-infos",
      *     summary="Get flip course infos list",
      *     description="Retrieve list of flip course information templates with filtering and pagination",
      *     operationId="getFlipCourseInfos",
@@ -95,7 +95,7 @@ class FlipCourseInfoController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/flip-course-infos",
+     *     path="/flip-course-infos",
      *     summary="Create flip course info",
      *     description="Create a new flip course information template",
      *     operationId="createFlipCourseInfo",
@@ -181,7 +181,7 @@ class FlipCourseInfoController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/flip-course-infos/{id}",
+     *     path="/flip-course-infos/{id}",
      *     summary="Get flip course info details",
      *     description="Retrieve detailed information about a specific flip course template",
      *     operationId="getFlipCourseInfo",
@@ -230,7 +230,7 @@ class FlipCourseInfoController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/flip-course-infos/{id}",
+     *     path="/flip-course-infos/{id}",
      *     summary="Update flip course info",
      *     description="Update an existing flip course information template",
      *     operationId="updateFlipCourseInfo",
@@ -328,7 +328,7 @@ class FlipCourseInfoController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/flip-course-infos/{id}",
+     *     path="/flip-course-infos/{id}",
      *     summary="Delete flip course info",
      *     description="Delete a flip course information template",
      *     operationId="deleteFlipCourseInfo",
@@ -384,7 +384,7 @@ class FlipCourseInfoController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/flip-course-infos/{id}/statistics",
+     *     path="/flip-course-infos/{id}/statistics",
      *     summary="Get flip course statistics",
      *     description="Retrieve statistics about flip course cases for a specific flip course template",
      *     operationId="getFlipCourseStatistics",

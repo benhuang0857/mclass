@@ -10,7 +10,7 @@ class NotificationPreferenceController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/notification-preferences",
+     *     path="/notification-preferences",
      *     summary="Get notification preferences",
      *     description="Retrieve notification preferences for a specific member with available options",
      *     operationId="getNotificationPreferences",
@@ -112,7 +112,7 @@ class NotificationPreferenceController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/notification-preferences/{id}",
+     *     path="/notification-preferences/{id}",
      *     summary="Update notification preference",
      *     description="Update a specific notification preference setting",
      *     operationId="updateNotificationPreference",
@@ -190,7 +190,7 @@ class NotificationPreferenceController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/notification-preferences/batch/update",
+     *     path="/notification-preferences/batch/update",
      *     summary="Batch update notification preferences",
      *     description="Update multiple notification preferences at once",
      *     operationId="batchUpdateNotificationPreferences",
@@ -285,7 +285,7 @@ class NotificationPreferenceController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notification-preferences/reset-defaults",
+     *     path="/notification-preferences/reset-defaults",
      *     summary="Reset preferences to defaults",
      *     description="Reset all notification preferences to default settings for a member",
      *     operationId="resetNotificationPreferencesToDefaults",
@@ -344,7 +344,7 @@ class NotificationPreferenceController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notification-preferences/quick-setting",
+     *     path="/notification-preferences/quick-setting",
      *     summary="Quick preference settings",
      *     description="Quickly enable all, disable all, or enable only important notifications",
      *     operationId="quickNotificationSettings",
@@ -440,7 +440,7 @@ class NotificationPreferenceController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notification-preferences/test",
+     *     path="/notification-preferences/test",
      *     summary="Test notification settings",
      *     description="Test notification settings by sending a test notification",
      *     operationId="testNotificationSettings",

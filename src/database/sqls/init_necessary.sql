@@ -81,3 +81,15 @@ CREATE TABLE IF NOT EXISTS level_types (
     created_at TIMESTAMP NULL DEFAULT NULL,
     updated_at TIMESTAMP NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='等級種類';
+
+-- 輪播圖種類
+CREATE TABLE IF NOT EXISTS slideshow_types (
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE COMMENT 'Unique name for each type',
+    slug VARCHAR(255) NOT NULL UNIQUE COMMENT 'Unique URL slug',
+    note TEXT COMMENT 'Additional notes or description',
+    sort INT DEFAULT 0 COMMENT 'Sort order',
+    status BOOLEAN DEFAULT TRUE COMMENT 'Status: active or inactive',
+    created_at TIMESTAMP NULL DEFAULT NULL,
+    updated_at TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='輪播圖種類';

@@ -10,7 +10,7 @@
     },
     "servers": [
         {
-            "url": "http://143.198.93.171",
+            "url": "http://localhost:8888/api",
             "description": "MClass API Server"
         },
         {
@@ -18,12 +18,12 @@
             "description": "Production Server"
         },
         {
-            "url": "http://localhost:8001/api",
+            "url": "http://localhost:8888/api",
             "description": "Local Development Server"
         }
     ],
     "paths": {
-        "/api/attendance/courses/{course}": {
+        "/attendance/courses/{course}": {
             "get": {
                 "tags": [
                     "Attendance"
@@ -164,7 +164,7 @@
                 ]
             }
         },
-        "/api/attendance/courses/{course}/batch": {
+        "/attendance/courses/{course}/batch": {
             "post": {
                 "tags": [
                     "Attendance"
@@ -302,7 +302,7 @@
                 ]
             }
         },
-        "/api/attendance/courses/{course}/members/{member}": {
+        "/attendance/courses/{course}/members/{member}": {
             "put": {
                 "tags": [
                     "Attendance"
@@ -449,7 +449,7 @@
                 ]
             }
         },
-        "/api/attendance/courses/{course}/generate-roster": {
+        "/attendance/courses/{course}/generate-roster": {
             "post": {
                 "tags": [
                     "Attendance"
@@ -520,7 +520,7 @@
                 ]
             }
         },
-        "/api/attendance/members/{member}/stats": {
+        "/attendance/members/{member}/stats": {
             "get": {
                 "tags": [
                     "Attendance"
@@ -659,7 +659,7 @@
                 ]
             }
         },
-        "/api/attendance/courses/{course}/stats": {
+        "/attendance/courses/{course}/stats": {
             "get": {
                 "tags": [
                     "Attendance"
@@ -780,7 +780,7 @@
                 ]
             }
         },
-        "/api/attendance/statuses": {
+        "/attendance/statuses": {
             "get": {
                 "tags": [
                     "Attendance"
@@ -1084,7 +1084,7 @@
                 ]
             }
         },
-        "/api/club-course": {
+        "/club-course": {
             "get": {
                 "tags": [
                     "Club Courses"
@@ -1265,7 +1265,7 @@
                 ]
             }
         },
-        "/api/club-course/{id}": {
+        "/club-course/{id}": {
             "get": {
                 "tags": [
                     "Club Courses"
@@ -4449,7 +4449,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases": {
+        "/flip-course-cases": {
             "get": {
                 "tags": [
                     "Flip Course Cases"
@@ -4544,7 +4544,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}": {
+        "/flip-course-cases/{id}": {
             "get": {
                 "tags": [
                     "Flip Course Cases"
@@ -4582,7 +4582,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/confirm-payment": {
+        "/flip-course-cases/{id}/confirm-payment": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -4649,7 +4649,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/create-line-group": {
+        "/flip-course-cases/{id}/create-line-group": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -4713,7 +4713,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/assign-counselor": {
+        "/flip-course-cases/{id}/assign-counselor": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -4776,7 +4776,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/assign-analyst": {
+        "/flip-course-cases/{id}/assign-analyst": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -4839,7 +4839,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/schedule-counseling": {
+        "/flip-course-cases/{id}/schedule-counseling": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -4934,7 +4934,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/issue-prescription": {
+        "/flip-course-cases/{id}/issue-prescription": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -5064,7 +5064,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/review-analysis": {
+        "/flip-course-cases/{id}/review-analysis": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -5136,7 +5136,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/create-assessment": {
+        "/flip-course-cases/{id}/create-assessment": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -5213,7 +5213,7 @@
                 ]
             }
         },
-        "/api/flip-course-cases/{id}/submit-analysis": {
+        "/flip-course-cases/{id}/submit-analysis": {
             "post": {
                 "tags": [
                     "Flip Course Cases"
@@ -5305,7 +5305,7 @@
                 ]
             }
         },
-        "/api/flip-course-infos": {
+        "/flip-course-infos": {
             "get": {
                 "tags": [
                     "Flip Course Info"
@@ -5534,7 +5534,7 @@
                 ]
             }
         },
-        "/api/flip-course-infos/{id}": {
+        "/flip-course-infos/{id}": {
             "get": {
                 "tags": [
                     "Flip Course Info"
@@ -5789,7 +5789,7 @@
                 ]
             }
         },
-        "/api/flip-course-infos/{id}/statistics": {
+        "/flip-course-infos/{id}/statistics": {
             "get": {
                 "tags": [
                     "Flip Course Info"
@@ -5873,7 +5873,7 @@
                 ]
             }
         },
-        "/api/invitation-codes": {
+        "/invitation-codes": {
             "get": {
                 "tags": [
                     "Invitation Codes"
@@ -6067,7 +6067,7 @@
                 ]
             }
         },
-        "/api/invitation-codes/{id}": {
+        "/invitation-codes/{id}": {
             "get": {
                 "tags": [
                     "Invitation Codes"
@@ -6866,7 +6866,7 @@
                 ]
             }
         },
-        "/api/members": {
+        "/members": {
             "get": {
                 "tags": [
                     "Members"
@@ -7051,7 +7051,7 @@
                 ]
             }
         },
-        "/api/members/{id}": {
+        "/members/{id}": {
             "get": {
                 "tags": [
                     "Members"
@@ -7574,7 +7574,7 @@
                 ]
             }
         },
-        "/api/notices": {
+        "/notices": {
             "get": {
                 "tags": [
                     "Notices"
@@ -7731,7 +7731,7 @@
                 ]
             }
         },
-        "/api/notices/{id}": {
+        "/notices/{id}": {
             "get": {
                 "tags": [
                     "Notices"
@@ -8229,7 +8229,7 @@
                 ]
             }
         },
-        "/api/notifications": {
+        "/notifications": {
             "get": {
                 "tags": [
                     "Notifications"
@@ -8392,7 +8392,7 @@
                 ]
             }
         },
-        "/api/notifications/{id}": {
+        "/notifications/{id}": {
             "get": {
                 "tags": [
                     "Notifications"
@@ -8517,7 +8517,7 @@
                 ]
             }
         },
-        "/api/notifications/{id}/read": {
+        "/notifications/{id}/read": {
             "put": {
                 "tags": [
                     "Notifications"
@@ -8581,7 +8581,7 @@
                 ]
             }
         },
-        "/api/notifications/batch/read": {
+        "/notifications/batch/read": {
             "put": {
                 "tags": [
                     "Notifications"
@@ -8657,7 +8657,7 @@
                 ]
             }
         },
-        "/api/notifications/all/read": {
+        "/notifications/all/read": {
             "put": {
                 "tags": [
                     "Notifications"
@@ -8720,7 +8720,7 @@
                 ]
             }
         },
-        "/api/notifications/trigger/course-reminder": {
+        "/notifications/trigger/course-reminder": {
             "post": {
                 "tags": [
                     "Notifications"
@@ -8793,7 +8793,7 @@
                 ]
             }
         },
-        "/api/notifications/trigger/counseling-reminder": {
+        "/notifications/trigger/counseling-reminder": {
             "post": {
                 "tags": [
                     "Notifications"
@@ -8866,7 +8866,7 @@
                 ]
             }
         },
-        "/api/notifications/stats/summary": {
+        "/notifications/stats/summary": {
             "get": {
                 "tags": [
                     "Notifications"
@@ -8963,7 +8963,7 @@
                 ]
             }
         },
-        "/api/notifications/trigger/counseling-confirmation": {
+        "/notifications/trigger/counseling-confirmation": {
             "post": {
                 "tags": [
                     "Notifications"
@@ -9026,7 +9026,7 @@
                 ]
             }
         },
-        "/api/notifications/trigger/counseling-status-change": {
+        "/notifications/trigger/counseling-status-change": {
             "post": {
                 "tags": [
                     "Notifications"
@@ -9103,7 +9103,7 @@
                 ]
             }
         },
-        "/api/notifications/trigger/counseling-time-change": {
+        "/notifications/trigger/counseling-time-change": {
             "post": {
                 "tags": [
                     "Notifications"
@@ -9182,7 +9182,7 @@
                 ]
             }
         },
-        "/api/notifications/trigger/counselor-new-service": {
+        "/notifications/trigger/counselor-new-service": {
             "post": {
                 "tags": [
                     "Notifications"
@@ -9254,7 +9254,7 @@
                 ]
             }
         },
-        "/api/notification-preferences": {
+        "/notification-preferences": {
             "get": {
                 "tags": [
                     "Notification Preferences"
@@ -9345,7 +9345,7 @@
                 ]
             }
         },
-        "/api/notification-preferences/{id}": {
+        "/notification-preferences/{id}": {
             "put": {
                 "tags": [
                     "Notification Preferences"
@@ -9461,7 +9461,7 @@
                 ]
             }
         },
-        "/api/notification-preferences/batch/update": {
+        "/notification-preferences/batch/update": {
             "put": {
                 "tags": [
                     "Notification Preferences"
@@ -9561,7 +9561,7 @@
                 ]
             }
         },
-        "/api/notification-preferences/reset-defaults": {
+        "/notification-preferences/reset-defaults": {
             "post": {
                 "tags": [
                     "Notification Preferences"
@@ -9626,7 +9626,7 @@
                 ]
             }
         },
-        "/api/notification-preferences/quick-setting": {
+        "/notification-preferences/quick-setting": {
             "post": {
                 "tags": [
                     "Notification Preferences"
@@ -9701,7 +9701,7 @@
                 ]
             }
         },
-        "/api/notification-preferences/test": {
+        "/notification-preferences/test": {
             "post": {
                 "tags": [
                     "Notification Preferences"
@@ -9786,7 +9786,7 @@
                 ]
             }
         },
-        "/api/orders": {
+        "/orders": {
             "get": {
                 "tags": [
                     "Orders"
@@ -10024,7 +10024,7 @@
                 ]
             }
         },
-        "/api/orders/{id}": {
+        "/orders/{id}": {
             "get": {
                 "tags": [
                     "Orders"
@@ -10312,7 +10312,7 @@
                 ]
             }
         },
-        "/api/products": {
+        "/products": {
             "get": {
                 "tags": [
                     "Products"
@@ -10494,7 +10494,7 @@
                 ]
             }
         },
-        "/api/products/{id}": {
+        "/products/{id}": {
             "get": {
                 "tags": [
                     "Products"
@@ -10741,7 +10741,7 @@
                 ]
             }
         },
-        "/api/products/{id}/follower": {
+        "/products/{id}/follower": {
             "post": {
                 "tags": [
                     "Products"
@@ -10903,7 +10903,7 @@
                 ]
             }
         },
-        "/api/products/{id}/visibler": {
+        "/products/{id}/visibler": {
             "post": {
                 "tags": [
                     "Products"
@@ -12221,6 +12221,768 @@
                 ]
             }
         },
+        "/slideshows": {
+            "get": {
+                "tags": [
+                    "Slideshows"
+                ],
+                "summary": "Get all slideshows",
+                "description": "Retrieve a list of all slideshows with optional filtering",
+                "operationId": "getSlideshowsList",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filter by status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "published",
+                                "unpublished",
+                                "draft"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "device",
+                        "in": "query",
+                        "description": "Filter by device",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "all",
+                                "mobile",
+                                "desktop",
+                                "tablet"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "active_only",
+                        "in": "query",
+                        "description": "Show only active slideshows",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "slideshow_type_id",
+                        "in": "query",
+                        "description": "Filter by slideshow type",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Welcome Banner"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Welcome to our platform"
+                                            },
+                                            "image_url": {
+                                                "type": "string",
+                                                "example": "https://example.com/banner.jpg"
+                                            },
+                                            "link_url": {
+                                                "type": "string",
+                                                "example": "https://example.com/welcome"
+                                            },
+                                            "slideshow_type_id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "start_date": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-01-01T00:00:00Z"
+                                            },
+                                            "end_date": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-12-31T23:59:59Z"
+                                            },
+                                            "device": {
+                                                "type": "string",
+                                                "example": "all"
+                                            },
+                                            "display_order": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "status": {
+                                                "type": "string",
+                                                "example": "published"
+                                            },
+                                            "created_by": {
+                                                "type": "integer",
+                                                "example": 1
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Slideshows"
+                ],
+                "summary": "Create a new slideshow",
+                "description": "Create a new slideshow banner",
+                "operationId": "createSlideshow",
+                "requestBody": {
+                    "description": "Slideshow data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "title",
+                                    "image_url",
+                                    "device",
+                                    "status"
+                                ],
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Welcome Banner"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Welcome to our platform"
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "example": "https://example.com/banner.jpg"
+                                    },
+                                    "link_url": {
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "example": "https://example.com/welcome"
+                                    },
+                                    "slideshow_type_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-01-01T00:00:00Z"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-12-31T23:59:59Z"
+                                    },
+                                    "device": {
+                                        "type": "string",
+                                        "enum": [
+                                            "all",
+                                            "mobile",
+                                            "desktop",
+                                            "tablet"
+                                        ],
+                                        "example": "all"
+                                    },
+                                    "display_order": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "published",
+                                            "unpublished",
+                                            "draft"
+                                        ],
+                                        "example": "draft"
+                                    },
+                                    "created_by": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Slideshow created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/slideshows/active": {
+            "get": {
+                "tags": [
+                    "Slideshows"
+                ],
+                "summary": "Get active slideshows",
+                "description": "Retrieve currently active slideshows for display on homepage",
+                "operationId": "getActiveSlideshows",
+                "parameters": [
+                    {
+                        "name": "device",
+                        "in": "query",
+                        "description": "Filter by device type",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "mobile",
+                                "desktop",
+                                "tablet"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "title": {
+                                                "type": "string",
+                                                "example": "Welcome Banner"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "Welcome to our platform"
+                                            },
+                                            "image_url": {
+                                                "type": "string",
+                                                "example": "https://example.com/banner.jpg"
+                                            },
+                                            "link_url": {
+                                                "type": "string",
+                                                "example": "https://example.com/welcome"
+                                            },
+                                            "device": {
+                                                "type": "string",
+                                                "example": "all"
+                                            },
+                                            "display_order": {
+                                                "type": "integer",
+                                                "example": 1
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/slideshows/{id}": {
+            "get": {
+                "tags": [
+                    "Slideshows"
+                ],
+                "summary": "Get a specific slideshow",
+                "description": "Retrieve detailed information about a specific slideshow",
+                "operationId": "getSlideshowById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Slideshow ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Slideshow not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Slideshows"
+                ],
+                "summary": "Update a slideshow",
+                "description": "Update an existing slideshow's information",
+                "operationId": "updateSlideshow",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Slideshow ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Slideshow data to update",
+                    "required": false,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "title": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Updated Banner"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Updated description"
+                                    },
+                                    "image_url": {
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "example": "https://example.com/new-banner.jpg"
+                                    },
+                                    "link_url": {
+                                        "type": "string",
+                                        "maxLength": 500,
+                                        "example": "https://example.com/new-link"
+                                    },
+                                    "slideshow_type_id": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "start_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-02-01T00:00:00Z"
+                                    },
+                                    "end_date": {
+                                        "type": "string",
+                                        "format": "date-time",
+                                        "example": "2025-11-30T23:59:59Z"
+                                    },
+                                    "device": {
+                                        "type": "string",
+                                        "enum": [
+                                            "all",
+                                            "mobile",
+                                            "desktop",
+                                            "tablet"
+                                        ],
+                                        "example": "mobile"
+                                    },
+                                    "display_order": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "published",
+                                            "unpublished",
+                                            "draft"
+                                        ],
+                                        "example": "published"
+                                    },
+                                    "created_by": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Slideshow updated successfully"
+                    },
+                    "404": {
+                        "description": "Slideshow not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Slideshows"
+                ],
+                "summary": "Delete a slideshow",
+                "description": "Delete a specific slideshow from the system",
+                "operationId": "deleteSlideshow",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Slideshow ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Slideshow deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Slideshow deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slideshow not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/slideshow-types": {
+            "get": {
+                "tags": [
+                    "Types - Slideshow Types"
+                ],
+                "summary": "Get all slideshow types",
+                "description": "Retrieve a list of all slideshow types",
+                "operationId": "getSlideshowTypes",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Hero Banner"
+                                            },
+                                            "slug": {
+                                                "type": "string",
+                                                "example": "hero-banner"
+                                            },
+                                            "note": {
+                                                "type": "string",
+                                                "example": "Main homepage hero banners"
+                                            },
+                                            "sort": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "status": {
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Types - Slideshow Types"
+                ],
+                "summary": "Create a new slideshow type",
+                "description": "Create a new slideshow type",
+                "operationId": "createSlideshowType",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "slug"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Promotional Banner"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "promotional-banner"
+                                    },
+                                    "note": {
+                                        "type": "string",
+                                        "example": "Promotional and marketing banners"
+                                    },
+                                    "sort": {
+                                        "type": "integer",
+                                        "example": 2
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Slideshow type created successfully"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
+        "/slideshow-types/{id}": {
+            "get": {
+                "tags": [
+                    "Types - Slideshow Types"
+                ],
+                "summary": "Get specific slideshow type",
+                "description": "Retrieve detailed information about a specific slideshow type",
+                "operationId": "getSlideshowType",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Slideshow type ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Slideshow type not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Types - Slideshow Types"
+                ],
+                "summary": "Update slideshow type",
+                "description": "Update an existing slideshow type",
+                "operationId": "updateSlideshowType",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Slideshow type ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "slug"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "Event Banner"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "maxLength": 255,
+                                        "example": "event-banner"
+                                    },
+                                    "note": {
+                                        "type": "string",
+                                        "example": "Special event banners"
+                                    },
+                                    "sort": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "status": {
+                                        "type": "boolean",
+                                        "example": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Slideshow type updated successfully"
+                    },
+                    "404": {
+                        "description": "Slideshow type not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Types - Slideshow Types"
+                ],
+                "summary": "Delete slideshow type",
+                "description": "Delete a slideshow type",
+                "operationId": "deleteSlideshowType",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Slideshow type ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Slideshow type deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Slideshow Type deleted successfully."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Slideshow type not found"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        },
         "/tech-method-types": {
             "get": {
                 "tags": [
@@ -13172,6 +13934,14 @@
         {
             "name": "Types - Roles",
             "description": "Types - Roles"
+        },
+        {
+            "name": "Slideshows",
+            "description": "Slideshows"
+        },
+        {
+            "name": "Types - Slideshow Types",
+            "description": "Types - Slideshow Types"
         },
         {
             "name": "Types - Teaching Method Types",

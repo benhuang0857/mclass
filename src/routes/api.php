@@ -29,6 +29,8 @@ use App\Http\Controllers\NotificationPreferenceController;
 use App\Http\Controllers\FlipCourseInfoController;
 use App\Http\Controllers\FlipCourseCaseController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SlideshowController;
+use App\Http\Controllers\SlideshowTypeController;
 
 ########## Auth API ##########
 
@@ -123,6 +125,15 @@ Route::prefix('club-course')->group(function () {
     Route::delete('/{id}', [ClubCourseController::class, 'destroy']);
 });
 
+Route::prefix('slideshows')->group(function () {
+    Route::get('/active', [SlideshowController::class, 'getActive']);
+    Route::get('/', [SlideshowController::class, 'index']);
+    Route::post('/', [SlideshowController::class, 'store']);
+    Route::get('/{id}', [SlideshowController::class, 'show']);
+    Route::put('/{id}', [SlideshowController::class, 'update']);
+    Route::delete('/{id}', [SlideshowController::class, 'destroy']);
+});
+
 ########## Types ##########
 
 Route::prefix('roles')->group(function () {
@@ -163,6 +174,14 @@ Route::prefix('tech-method-types')->group(function () {
     Route::get('/{id}', [TechMethodTypeController::class, 'show']);
     Route::put('/{id}', [TechMethodTypeController::class, 'update']);
     Route::delete('/{id}', [TechMethodTypeController::class, 'destroy']);
+});
+
+Route::prefix('slideshow-types')->group(function () {
+    Route::get('/', [SlideshowTypeController::class, 'index']);
+    Route::post('/', [SlideshowTypeController::class, 'store']);
+    Route::get('/{id}', [SlideshowTypeController::class, 'show']);
+    Route::put('/{id}', [SlideshowTypeController::class, 'update']);
+    Route::delete('/{id}', [SlideshowTypeController::class, 'destroy']);
 });
 
 ########## Search API ##########

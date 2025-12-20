@@ -13,7 +13,7 @@ class MemberController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/members",
+     *     path="/members",
      *     summary="Get all members",
      *     description="Retrieve a list of all members with their profiles, contacts, and backgrounds",
      *     operationId="getMembersList",
@@ -54,7 +54,7 @@ class MemberController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/members",
+     *     path="/members",
      *     summary="Create a new member",
      *     description="Create a new member with profile, contact, and background information",
      *     operationId="createMember",
@@ -173,7 +173,7 @@ class MemberController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/members/{id}",
+     *     path="/members/{id}",
      *     summary="Get specific member",
      *     description="Retrieve detailed information about a specific member including profile, contact, and background",
      *     operationId="getMember",
@@ -229,7 +229,7 @@ class MemberController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/members/{id}",
+     *     path="/members/{id}",
      *     summary="Update member information",
      *     description="Update an existing member's information including profile, contact, and background data",
      *     operationId="updateMember",
@@ -393,7 +393,7 @@ class MemberController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/members/{id}",
+     *     path="/members/{id}",
      *     summary="Delete member",
      *     description="Delete a member and all associated profile, contact, and background information",
      *     operationId="deleteMember",

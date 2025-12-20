@@ -21,7 +21,7 @@ class ClubCourseController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/club-course",
+     *     path="/club-course",
      *     summary="Get all club courses",
      *     description="Retrieve a list of all club course instances with their course info",
      *     operationId="getClubCoursesList",
@@ -59,7 +59,7 @@ class ClubCourseController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/club-course/{id}",
+     *     path="/club-course/{id}",
      *     summary="Get a specific club course",
      *     description="Retrieve detailed information about a specific club course instance",
      *     operationId="getClubCourseById",
@@ -105,7 +105,7 @@ class ClubCourseController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/club-course",
+     *     path="/club-course",
      *     summary="Create a new club course instance",
      *     description="Create a new club course session with schedule details. Automatically sends notifications to course followers.",
      *     operationId="createClubCourse",
@@ -183,7 +183,7 @@ class ClubCourseController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/club-course/{id}",
+     *     path="/club-course/{id}",
      *     summary="Update a club course instance",
      *     description="Update an existing club course session. Sends notifications if time or location changes.",
      *     operationId="updateClubCourse",
@@ -289,7 +289,7 @@ class ClubCourseController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/club-course/{id}",
+     *     path="/club-course/{id}",
      *     summary="Delete a club course instance",
      *     description="Delete a specific club course session from the system",
      *     operationId="deleteClubCourse",

@@ -14,7 +14,7 @@ class OrderController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/orders",
+     *     path="/orders",
      *     summary="Get all orders",
      *     description="Retrieve a list of all orders with their order items",
      *     operationId="getOrdersList",
@@ -53,7 +53,7 @@ class OrderController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/orders/{id}",
+     *     path="/orders/{id}",
      *     summary="Get a specific order",
      *     description="Retrieve detailed information about a specific order",
      *     operationId="getOrderById",
@@ -100,7 +100,7 @@ class OrderController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/orders",
+     *     path="/orders",
      *     summary="Create a new order",
      *     description="Create a new order with order items. Automatically creates flip course cases for flip course products.",
      *     operationId="createOrder",
@@ -233,7 +233,7 @@ class OrderController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/orders/{id}",
+     *     path="/orders/{id}",
      *     summary="Update an order",
      *     description="Update an existing order and its items",
      *     operationId="updateOrder",
@@ -345,7 +345,7 @@ class OrderController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/orders/{id}",
+     *     path="/orders/{id}",
      *     summary="Delete an order",
      *     description="Delete a specific order and all its order items",
      *     operationId="deleteOrder",

@@ -97,6 +97,14 @@ class Member extends Authenticatable implements JWTSubject
     }
 
     /**
+     * 關聯到建立的輪播圖
+     */
+    public function createdSlideshows()
+    {
+        return $this->hasMany(Slideshow::class, 'created_by');
+    }
+
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed

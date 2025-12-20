@@ -9,7 +9,7 @@ class NoticeController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/notices",
+     *     path="/notices",
      *     summary="Get all notices",
      *     description="Retrieve a list of all notices with their types",
      *     operationId="getNoticesList",
@@ -45,7 +45,7 @@ class NoticeController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/notices",
+     *     path="/notices",
      *     summary="Create a new notice",
      *     description="Create a new notice with title, type, and content",
      *     operationId="createNotice",
@@ -102,7 +102,7 @@ class NoticeController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/notices/{id}",
+     *     path="/notices/{id}",
      *     summary="Get a specific notice",
      *     description="Retrieve detailed information about a specific notice",
      *     operationId="getNoticeById",
@@ -146,7 +146,7 @@ class NoticeController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/notices/{id}",
+     *     path="/notices/{id}",
      *     summary="Update a notice",
      *     description="Update an existing notice's information",
      *     operationId="updateNotice",
@@ -215,7 +215,7 @@ class NoticeController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/notices/{id}",
+     *     path="/notices/{id}",
      *     summary="Delete a notice",
      *     description="Delete a specific notice from the system",
      *     operationId="deleteNotice",

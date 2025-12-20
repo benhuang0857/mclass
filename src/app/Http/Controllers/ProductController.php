@@ -19,7 +19,7 @@ class ProductController extends Controller
     }
     /**
      * @OA\Get(
-     *     path="/api/products",
+     *     path="/products",
      *     summary="Get all products (courses)",
      *     description="Retrieve a list of all course products with their information, followers, and visible students",
      *     operationId="getProductsList",
@@ -60,7 +60,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/products/{id}",
+     *     path="/products/{id}",
      *     summary="Get a specific product",
      *     description="Retrieve detailed information about a specific course product",
      *     operationId="getProductById",
@@ -110,7 +110,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/products",
+     *     path="/products",
      *     summary="Create a new product",
      *     description="Create a new course product with pricing, enrollment limits, and visibility settings",
      *     operationId="createProduct",
@@ -184,7 +184,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/products/{id}",
+     *     path="/products/{id}",
      *     summary="Update product information",
      *     description="Update an existing product. Sends notifications if price or status changes.",
      *     operationId="updateProduct",
@@ -306,7 +306,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/products/{id}",
+     *     path="/products/{id}",
      *     summary="Delete product",
      *     description="Delete a course product",
      *     operationId="deleteProduct",
@@ -353,7 +353,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/products/{id}/follower",
+     *     path="/products/{id}/follower",
      *     summary="Add follower to product",
      *     description="Add a member as a follower of a course product. Prevents duplicate followers.",
      *     operationId="addProductFollower",
@@ -431,7 +431,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/products/{id}/follower",
+     *     path="/products/{id}/follower",
      *     summary="Remove follower from product",
      *     description="Remove a member from following a course product",
      *     operationId="removeProductFollower",
@@ -490,7 +490,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/products/{id}/visibler",
+     *     path="/products/{id}/visibler",
      *     summary="Add visible students to product",
      *     description="Add one or more members to the visible students list for a product. Supports batch adding and skips duplicates.",
      *     operationId="addProductVisibler",
@@ -571,7 +571,7 @@ class ProductController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/products/{id}/visibler",
+     *     path="/products/{id}/visibler",
      *     summary="Remove visible students from product",
      *     description="Remove one or more members from the visible students list for a product. Supports batch removal.",
      *     operationId="removeProductVisibler",

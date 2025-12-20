@@ -9,7 +9,7 @@ class InvitationCodeController extends Controller
 {
     /**
      * @OA\Get(
-     *     path="/api/invitation-codes",
+     *     path="/invitation-codes",
      *     summary="Get all invitation codes",
      *     description="Retrieve a list of all invitation codes with their associated members",
      *     operationId="getInvitationCodesList",
@@ -47,7 +47,7 @@ class InvitationCodeController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/invitation-codes",
+     *     path="/invitation-codes",
      *     summary="Create a new invitation code",
      *     description="Create a new invitation code with optional member and email associations",
      *     operationId="createInvitationCode",
@@ -111,7 +111,7 @@ class InvitationCodeController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/invitation-codes/{id}",
+     *     path="/invitation-codes/{id}",
      *     summary="Get a specific invitation code",
      *     description="Retrieve detailed information about a specific invitation code",
      *     operationId="getInvitationCodeById",
@@ -158,7 +158,7 @@ class InvitationCodeController extends Controller
 
     /**
      * @OA\Put(
-     *     path="/api/invitation-codes/{id}",
+     *     path="/invitation-codes/{id}",
      *     summary="Update an invitation code",
      *     description="Update an existing invitation code's information",
      *     operationId="updateInvitationCode",
@@ -234,7 +234,7 @@ class InvitationCodeController extends Controller
 
     /**
      * @OA\Delete(
-     *     path="/api/invitation-codes/{id}",
+     *     path="/invitation-codes/{id}",
      *     summary="Delete an invitation code",
      *     description="Delete a specific invitation code from the system",
      *     operationId="deleteInvitationCode",
