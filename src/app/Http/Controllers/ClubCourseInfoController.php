@@ -49,8 +49,19 @@ class ClubCourseInfoController extends Controller
      */
     public function index()
     {
-        $courses = ClubCourseInfo::with(['schedules', 'clubCourses'])->get();
-        return response()->json($courses);
+        try {
+            $courses = ClubCourseInfo::with(['schedules', 'clubCourses', 'languages'])->get();
+            return response()->json([
+                'success' => true,
+                'data' => $courses
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve club course info',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -106,8 +117,19 @@ class ClubCourseInfoController extends Controller
      */
     public function show($id)
     {
-        $course = ClubCourseInfo::with(['schedules', 'clubCourses'])->findOrFail($id);
-        return response()->json($course);
+        try {
+            $course = ClubCourseInfo::with(['schedules', 'clubCourses', 'languages'])->findOrFail($id);
+            return response()->json([
+                'success' => true,
+                'data' => $course
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Club course info not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
     }
 
     /**
@@ -210,10 +232,17 @@ class ClubCourseInfoController extends Controller
             }
 
             DB::commit();
-            return response()->json($courseInfo->load(['schedules', 'clubCourses']), 201);
+            return response()->json([
+                'success' => true,
+                'data' => $courseInfo->load(['schedules', 'clubCourses', 'languages'])
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create club course info',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -341,10 +370,17 @@ class ClubCourseInfoController extends Controller
             }
 
             DB::commit();
-            return response()->json($courseInfo->load(['schedules', 'clubCourses']));
+            return response()->json([
+                'success' => true,
+                'data' => $courseInfo->load(['schedules', 'clubCourses', 'languages'])
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update club course info',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -388,10 +424,17 @@ class ClubCourseInfoController extends Controller
             // 刪除相關數據（由於遷移中設置了 onDelete('cascade')，相關表會自動清理）
             $courseInfo->delete();
             DB::commit();
-            return response()->json(['message' => 'Course deleted successfully']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Course deleted successfully'
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete club course info',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 

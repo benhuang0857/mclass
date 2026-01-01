@@ -64,40 +64,51 @@ class MenuController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Menu::with(['parent', 'roles']);
+        try {
+            $query = Menu::with(['parent', 'roles']);
 
-        // Filter by status
-        if ($request->has('status')) {
-            $query->where('status', $request->boolean('status'));
-        }
-
-        // Filter by parent_id (including null for root menus)
-        if ($request->has('parent_id')) {
-            if ($request->parent_id === 'null' || $request->parent_id === null) {
-                $query->whereNull('parent_id');
-            } else {
-                $query->where('parent_id', $request->parent_id);
+            // Filter by status
+            if ($request->has('status')) {
+                $query->where('status', $request->boolean('status'));
             }
+
+            // Filter by parent_id (including null for root menus)
+            if ($request->has('parent_id')) {
+                if ($request->parent_id === 'null' || $request->parent_id === null) {
+                    $query->whereNull('parent_id');
+                } else {
+                    $query->where('parent_id', $request->parent_id);
+                }
+            }
+
+            // Filter by role
+            $roleId = $request->input('role_id');
+            if ($roleId) {
+                $query->forRole($roleId);
+            }
+
+            $menus = $query->ordered()->get();
+
+            // Add is_locked state if role_id is provided
+            if ($roleId) {
+                $menus = $menus->map(function ($menu) use ($roleId) {
+                    $accessState = $menu->getAccessStateForRole($roleId);
+                    $menu->setAttribute('is_locked', $accessState['is_locked']);
+                    return $menu;
+                });
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $menus
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve menus',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        // Filter by role
-        $roleId = $request->input('role_id');
-        if ($roleId) {
-            $query->forRole($roleId);
-        }
-
-        $menus = $query->ordered()->get();
-
-        // Add is_locked state if role_id is provided
-        if ($roleId) {
-            $menus = $menus->map(function ($menu) use ($roleId) {
-                $accessState = $menu->getAccessStateForRole($roleId);
-                $menu->setAttribute('is_locked', $accessState['is_locked']);
-                return $menu;
-            });
-        }
-
-        return response()->json($menus);
     }
 
     /**
@@ -170,10 +181,17 @@ class MenuController extends Controller
             $menu->load(['parent', 'roles']);
             DB::commit();
 
-            return response()->json($menu, 201);
+            return response()->json([
+                'success' => true,
+                'data' => $menu
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create menu',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -204,8 +222,19 @@ class MenuController extends Controller
      */
     public function show($id)
     {
-        $menu = Menu::with(['parent', 'children', 'roles'])->findOrFail($id);
-        return response()->json($menu);
+        try {
+            $menu = Menu::with(['parent', 'children', 'roles'])->findOrFail($id);
+            return response()->json([
+                'success' => true,
+                'data' => $menu
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Menu not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
     }
 
     /**
@@ -304,10 +333,17 @@ class MenuController extends Controller
             $menu->load(['parent', 'roles']);
             DB::commit();
 
-            return response()->json($menu);
+            return response()->json([
+                'success' => true,
+                'data' => $menu
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update menu',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
@@ -342,9 +378,20 @@ class MenuController extends Controller
      */
     public function destroy($id)
     {
-        $menu = Menu::findOrFail($id);
-        $menu->delete();
-        return response()->json(['message' => 'Menu deleted successfully.']);
+        try {
+            $menu = Menu::findOrFail($id);
+            $menu->delete();
+            return response()->json([
+                'success' => true,
+                'message' => 'Menu deleted successfully.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete menu',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -373,8 +420,19 @@ class MenuController extends Controller
      */
     public function getActiveMenus()
     {
-        $menus = Menu::active()->ordered()->with(['parent', 'roles'])->get();
-        return response()->json($menus);
+        try {
+            $menus = Menu::active()->ordered()->with(['parent', 'roles'])->get();
+            return response()->json([
+                'success' => true,
+                'data' => $menus
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve active menus',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -417,21 +475,32 @@ class MenuController extends Controller
      */
     public function getTree(Request $request)
     {
-        $query = Menu::with(['children.roles', 'roles'])->rootMenus();
+        try {
+            $query = Menu::with(['children.roles', 'roles'])->rootMenus();
 
-        if ($request->boolean('active_only')) {
-            $query->active();
+            if ($request->boolean('active_only')) {
+                $query->active();
+            }
+
+            $menus = $query->ordered()->get();
+
+            // Add is_locked state if role_id is provided
+            $roleId = $request->input('role_id');
+            if ($roleId) {
+                $menus = $this->addIsLockedToTree($menus, $roleId);
+            }
+
+            return response()->json([
+                'success' => true,
+                'data' => $menus
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve menu tree',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        $menus = $query->ordered()->get();
-
-        // Add is_locked state if role_id is provided
-        $roleId = $request->input('role_id');
-        if ($roleId) {
-            $menus = $this->addIsLockedToTree($menus, $roleId);
-        }
-
-        return response()->json($menus);
     }
 
     /**
@@ -478,21 +547,32 @@ class MenuController extends Controller
      */
     public function getTreeForRole(Request $request, $roleId)
     {
-        // Verify role exists
-        Role::findOrFail($roleId);
+        try {
+            // Verify role exists
+            Role::findOrFail($roleId);
 
-        $query = Menu::with(['children.roles', 'roles'])->rootMenus();
+            $query = Menu::with(['children.roles', 'roles'])->rootMenus();
 
-        if ($request->boolean('active_only', true)) {
-            $query->active();
+            if ($request->boolean('active_only', true)) {
+                $query->active();
+            }
+
+            $menus = $query->ordered()->get();
+
+            // Filter menus by role
+            $filteredMenus = $this->filterMenuTreeByRole($menus, $roleId);
+
+            return response()->json([
+                'success' => true,
+                'data' => $filteredMenus
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve menu tree for role',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        $menus = $query->ordered()->get();
-
-        // Filter menus by role
-        $filteredMenus = $this->filterMenuTreeByRole($menus, $roleId);
-
-        return response()->json($filteredMenus);
     }
 
     /**
@@ -539,17 +619,28 @@ class MenuController extends Controller
      */
     public function assignRoles(Request $request, $id)
     {
-        $menu = Menu::findOrFail($id);
+        try {
+            $menu = Menu::findOrFail($id);
 
-        $validated = $request->validate([
-            'role_ids' => 'required|array',
-            'role_ids.*' => 'exists:roles,id',
-        ]);
+            $validated = $request->validate([
+                'role_ids' => 'required|array',
+                'role_ids.*' => 'exists:roles,id',
+            ]);
 
-        $menu->roles()->sync($validated['role_ids']);
-        $menu->load('roles');
+            $menu->roles()->sync($validated['role_ids']);
+            $menu->load('roles');
 
-        return response()->json($menu);
+            return response()->json([
+                'success' => true,
+                'data' => $menu
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to assign roles to menu',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -600,20 +691,29 @@ class MenuController extends Controller
      */
     public function removeRoles(Request $request, $id)
     {
-        $menu = Menu::findOrFail($id);
+        try {
+            $menu = Menu::findOrFail($id);
 
-        $validated = $request->validate([
-            'role_ids' => 'required|array',
-            'role_ids.*' => 'exists:roles,id',
-        ]);
+            $validated = $request->validate([
+                'role_ids' => 'required|array',
+                'role_ids.*' => 'exists:roles,id',
+            ]);
 
-        $menu->roles()->detach($validated['role_ids']);
-        $menu->load('roles');
+            $menu->roles()->detach($validated['role_ids']);
+            $menu->load('roles');
 
-        return response()->json([
-            'message' => 'Roles removed successfully',
-            'menu' => $menu
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Roles removed successfully',
+                'data' => $menu
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to remove roles from menu',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -676,10 +776,17 @@ class MenuController extends Controller
             }
 
             DB::commit();
-            return response()->json(['message' => 'Menus reordered successfully']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Menus reordered successfully'
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
-            return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to reorder menus',
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
 
