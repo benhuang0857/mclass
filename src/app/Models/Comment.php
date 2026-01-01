@@ -19,6 +19,7 @@ class Comment extends Model
         'commentable_type',
         'commentable_id',
         'parent_id',
+        'title',
         'content',
         'rating',
         'status',
@@ -105,6 +106,15 @@ class Comment extends Model
     public function reactions(): HasMany
     {
         return $this->hasMany(CommentReaction::class);
+    }
+
+    /**
+     * 語言類型（多對多）
+     */
+    public function languages(): BelongsToMany
+    {
+        return $this->belongsToMany(LangType::class, 'comment_lang_type', 'comment_id', 'lang_type_id')
+                    ->withTimestamps();
     }
 
     /**

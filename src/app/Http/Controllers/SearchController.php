@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * @OA\Tag(
  *     name="Search",
- *     description="Search operations for members, products, courses, notices, and orders"
+ *     description="Search operations for courses and discussions"
  * )
  */
 class SearchController extends Controller
@@ -26,8 +26,8 @@ class SearchController extends Controller
      *
      * @OA\Get(
      *     path="/search",
-     *     summary="Universal search across multiple entity types",
-     *     description="Search across members, products, club_course_infos, notices, and orders with various filters",
+     *     summary="Search courses and discussions",
+     *     description="Simple search across club courses and discussions. Returns results with tag indicating source (e.g., '日文俱樂部', '日文討論區')",
      *     operationId="search",
      *     tags={"Search"},
      *     security={{"sanctum":{}}},
@@ -36,79 +36,46 @@ class SearchController extends Controller
      *         in="query",
      *         description="Search query string",
      *         required=false,
-     *         @OA\Schema(type="string", maxLength=255, example="Laravel")
-     *     ),
-     *     @OA\Parameter(
-     *         name="types",
-     *         in="query",
-     *         description="Array of entity types to search",
-     *         required=false,
-     *         @OA\Schema(
-     *             type="array",
-     *             @OA\Items(type="string", enum={"members", "products", "club_course_infos", "notices", "orders"})
-     *         ),
-     *         style="form",
-     *         explode=true
-     *     ),
-     *     @OA\Parameter(
-     *         name="page",
-     *         in="query",
-     *         description="Page number",
-     *         required=false,
-     *         @OA\Schema(type="integer", minimum=1, example=1)
-     *     ),
-     *     @OA\Parameter(
-     *         name="per_page",
-     *         in="query",
-     *         description="Items per page",
-     *         required=false,
-     *         @OA\Schema(type="integer", minimum=1, maximum=100, example=20)
-     *     ),
-     *     @OA\Parameter(
-     *         name="filters[status]",
-     *         in="query",
-     *         description="Filter by status",
-     *         required=false,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Parameter(
-     *         name="filters[date_from]",
-     *         in="query",
-     *         description="Filter from date",
-     *         required=false,
-     *         @OA\Schema(type="string", format="date", example="2024-01-01")
-     *     ),
-     *     @OA\Parameter(
-     *         name="filters[date_to]",
-     *         in="query",
-     *         description="Filter to date",
-     *         required=false,
-     *         @OA\Schema(type="string", format="date", example="2024-12-31")
-     *     ),
-     *     @OA\Parameter(
-     *         name="filters[teaching_mode]",
-     *         in="query",
-     *         description="Filter by teaching mode",
-     *         required=false,
-     *         @OA\Schema(type="string", enum={"online", "offline", "hybrid"})
+     *         @OA\Schema(type="string", maxLength=255, example="日文")
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Search results",
+     *         description="Search results with tags",
      *         @OA\JsonContent(
      *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(
      *                 property="data",
      *                 type="object",
-     *                 @OA\Property(property="members", type="array", @OA\Items(type="object")),
-     *                 @OA\Property(property="products", type="array", @OA\Items(type="object")),
-     *                 @OA\Property(property="club_course_infos", type="array", @OA\Items(type="object"))
+     *                 @OA\Property(
+     *                     property="courses",
+     *                     type="object",
+     *                     @OA\Property(property="data", type="array", @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="name", type="string"),
+     *                         @OA\Property(property="type", type="string", example="courses"),
+     *                         @OA\Property(property="tag", type="string", example="日文俱樂部")
+     *                     )),
+     *                     @OA\Property(property="pagination", type="object")
+     *                 ),
+     *                 @OA\Property(
+     *                     property="discussions",
+     *                     type="object",
+     *                     @OA\Property(property="data", type="array", @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer"),
+     *                         @OA\Property(property="title", type="string"),
+     *                         @OA\Property(property="type", type="string", example="discussions"),
+     *                         @OA\Property(property="tag", type="string", example="日文討論區")
+     *                     )),
+     *                     @OA\Property(property="pagination", type="object")
+     *                 )
      *             ),
-     *             @OA\Property(property="query", type="string", example="Laravel"),
+     *             @OA\Property(property="query", type="string", example="日文"),
      *             @OA\Property(
      *                 property="types",
      *                 type="array",
-     *                 @OA\Items(type="string", example="products")
+     *                 @OA\Items(type="string", example="courses")
      *             ),
      *             @OA\Property(property="filters", type="object")
      *         )
@@ -125,21 +92,16 @@ class SearchController extends Controller
         $validated = $request->validate([
             'query' => 'nullable|string|max:255',
             'types' => 'nullable|array',
-            'types.*' => 'string|in:members,products,club_course_infos,notices,orders',
+            'types.*' => 'string|in:courses,discussions',
             'page' => 'nullable|integer|min:1',
             'per_page' => 'nullable|integer|min:1|max:100',
             'filters' => 'nullable|array',
             'filters.status' => 'nullable|string',
             'filters.date_from' => 'nullable|date',
             'filters.date_to' => 'nullable|date|after_or_equal:filters.date_from',
-            'filters.price_min' => 'nullable|numeric|min:0',
-            'filters.price_max' => 'nullable|numeric|min:0',
             'filters.teaching_mode' => 'nullable|string|in:online,offline,hybrid',
             'filters.is_periodic' => 'nullable|boolean',
-            'filters.gender' => 'nullable|string|in:male,female,other',
-            'filters.city' => 'nullable|string|max:255',
             'filters.language_id' => 'nullable|integer|exists:lang_types,id',
-            'filters.level_id' => 'nullable|integer|exists:level_types,id',
         ]);
 
         try {

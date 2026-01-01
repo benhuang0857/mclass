@@ -12229,8 +12229,8 @@
                 "tags": [
                     "Search"
                 ],
-                "summary": "Universal search across multiple entity types",
-                "description": "Search across members, products, club_course_infos, notices, and orders with various filters",
+                "summary": "Search courses and discussions",
+                "description": "Simple search across club courses and discussions. Returns results with tag indicating source (e.g., '日文俱樂部', '日文討論區')",
                 "operationId": "search",
                 "parameters": [
                     {
@@ -12241,102 +12241,13 @@
                         "schema": {
                             "type": "string",
                             "maxLength": 255,
-                            "example": "Laravel"
-                        }
-                    },
-                    {
-                        "name": "types",
-                        "in": "query",
-                        "description": "Array of entity types to search",
-                        "required": false,
-                        "style": "form",
-                        "explode": true,
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "enum": [
-                                    "members",
-                                    "products",
-                                    "club_course_infos",
-                                    "notices",
-                                    "orders"
-                                ]
-                            }
-                        }
-                    },
-                    {
-                        "name": "page",
-                        "in": "query",
-                        "description": "Page number",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "example": 1
-                        }
-                    },
-                    {
-                        "name": "per_page",
-                        "in": "query",
-                        "description": "Items per page",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "maximum": 100,
-                            "minimum": 1,
-                            "example": 20
-                        }
-                    },
-                    {
-                        "name": "filters[status]",
-                        "in": "query",
-                        "description": "Filter by status",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "name": "filters[date_from]",
-                        "in": "query",
-                        "description": "Filter from date",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2024-01-01"
-                        }
-                    },
-                    {
-                        "name": "filters[date_to]",
-                        "in": "query",
-                        "description": "Filter to date",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "format": "date",
-                            "example": "2024-12-31"
-                        }
-                    },
-                    {
-                        "name": "filters[teaching_mode]",
-                        "in": "query",
-                        "description": "Filter by teaching mode",
-                        "required": false,
-                        "schema": {
-                            "type": "string",
-                            "enum": [
-                                "online",
-                                "offline",
-                                "hybrid"
-                            ]
+                            "example": "日文"
                         }
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "Search results",
+                        "description": "Search results with tags",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -12347,36 +12258,78 @@
                                         },
                                         "data": {
                                             "properties": {
-                                                "members": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object"
-                                                    }
+                                                "courses": {
+                                                    "properties": {
+                                                        "data": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "name": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "example": "courses"
+                                                                    },
+                                                                    "tag": {
+                                                                        "type": "string",
+                                                                        "example": "日文俱樂部"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "pagination": {
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 },
-                                                "products": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object"
-                                                    }
-                                                },
-                                                "club_course_infos": {
-                                                    "type": "array",
-                                                    "items": {
-                                                        "type": "object"
-                                                    }
+                                                "discussions": {
+                                                    "properties": {
+                                                        "data": {
+                                                            "type": "array",
+                                                            "items": {
+                                                                "properties": {
+                                                                    "id": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "title": {
+                                                                        "type": "string"
+                                                                    },
+                                                                    "type": {
+                                                                        "type": "string",
+                                                                        "example": "discussions"
+                                                                    },
+                                                                    "tag": {
+                                                                        "type": "string",
+                                                                        "example": "日文討論區"
+                                                                    }
+                                                                },
+                                                                "type": "object"
+                                                            }
+                                                        },
+                                                        "pagination": {
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "type": "object"
                                                 }
                                             },
                                             "type": "object"
                                         },
                                         "query": {
                                             "type": "string",
-                                            "example": "Laravel"
+                                            "example": "日文"
                                         },
                                         "types": {
                                             "type": "array",
                                             "items": {
                                                 "type": "string",
-                                                "example": "products"
+                                                "example": "courses"
                                             }
                                         },
                                         "filters": {
@@ -14658,7 +14611,7 @@
         },
         {
             "name": "Search",
-            "description": "Search operations for members, products, courses, notices, and orders"
+            "description": "Search operations for courses and discussions"
         },
         {
             "name": "Attendance",

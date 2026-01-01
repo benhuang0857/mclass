@@ -2,11 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Member;
-use App\Models\Product;
 use App\Models\ClubCourseInfo;
-use App\Models\Notice;
-use App\Models\Order;
+use App\Models\Comment;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,44 +11,22 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class SearchService
 {
     protected $searchableModels = [
-        'members' => Member::class,
-        'products' => Product::class,
-        'club_course_infos' => ClubCourseInfo::class,
-        'notices' => Notice::class,
-        'orders' => Order::class,
+        'courses' => ClubCourseInfo::class,
+        'discussions' => Comment::class,
     ];
 
     protected $searchableFields = [
-        'members' => ['nickname', 'account', 'email'],
-        'products' => ['name', 'code'],
-        'club_course_infos' => ['name', 'code', 'description', 'details'],
-        'notices' => ['title', 'body'],
-        'orders' => ['code', 'note'],
+        'courses' => ['name'],
+        'discussions' => ['title'],
     ];
 
     protected $relationships = [
-        'members' => ['profile', 'contact', 'background'],
-        'products' => ['clubCourseInfo'],
-        'club_course_infos' => ['schedules'],
-        'notices' => ['noticeType'],
-        'orders' => ['member'],
+        'courses' => ['languages'],
+        'discussions' => ['languages', 'author'],
     ];
 
     protected $nestedSearchFields = [
-        'members' => [
-            'profile' => ['lastname', 'firstname', 'job'],
-            'contact' => ['city', 'region', 'address', 'mobile'],
-            'background' => ['highest_education'],
-        ],
-        'products' => [
-            'clubCourseInfo' => ['name', 'description', 'details'],
-        ],
-        'notices' => [
-            'noticeType' => ['name'],
-        ],
-        'orders' => [
-            'member' => ['nickname', 'account'],
-        ],
+        // 暫時不需要嵌套搜索
     ];
 
     public function search(array $params): array
@@ -88,6 +63,11 @@ class SearchService
                 });
             }
 
+            // 討論區只搜索根評論（主題帖），不搜索回覆
+            if ($type === 'discussions') {
+                $queryBuilder->whereNull('parent_id');
+            }
+
             // Apply filters
             if (!empty($filters)) {
                 $this->applyFilters($queryBuilder, $filters, $type);
@@ -95,9 +75,16 @@ class SearchService
 
             // Get results
             $typeResults = $queryBuilder->paginate($perPage, ['*'], $type . '_page', $page);
-            
+
+            // 添加 tag 和 type 標識
+            $items = collect($typeResults->items())->map(function ($item) use ($type) {
+                $item->type = $type;
+                $item->tag = $this->getTagForType($type, $item);
+                return $item;
+            });
+
             $results[$type] = [
-                'data' => $typeResults->items(),
+                'data' => $items,
                 'pagination' => [
                     'current_page' => $typeResults->currentPage(),
                     'per_page' => $typeResults->perPage(),
@@ -127,10 +114,21 @@ class SearchService
                 $this->applySearchQuery($q, $query, $type);
             });
 
+            // 討論區只搜索根評論（主題帖），不搜索回覆
+            if ($type === 'discussions') {
+                $queryBuilder->whereNull('parent_id');
+            }
+
             $typeResults = $queryBuilder->limit($limit)->get();
-            
+
             if ($typeResults->isNotEmpty()) {
-                $results[$type] = $typeResults->toArray();
+                // 添加 tag 和 type 標識
+                $items = $typeResults->map(function ($item) use ($type) {
+                    $item->type = $type;
+                    $item->tag = $this->getTagForType($type, $item);
+                    return $item;
+                });
+                $results[$type] = $items->toArray();
             }
         }
 
@@ -160,81 +158,41 @@ class SearchService
     protected function applyFilters(Builder $query, array $filters, string $type): void
     {
         foreach ($filters as $filter => $value) {
-            if (empty($value)) {
+            if (empty($value) && $value !== 0 && $value !== false) {
                 continue;
             }
 
             switch ($filter) {
                 case 'status':
-                    if (in_array($type, ['products', 'club_course_infos', 'notices'])) {
+                    if (in_array($type, ['courses', 'discussions'])) {
                         $query->where('status', $value);
-                    } elseif ($type === 'members') {
-                        $query->where('status', $value === 'active' ? 1 : 0);
                     }
                     break;
-                    
+
                 case 'date_from':
                     $query->where('created_at', '>=', $value);
                     break;
-                    
+
                 case 'date_to':
                     $query->where('created_at', '<=', $value);
                     break;
-                    
-                case 'price_min':
-                    if ($type === 'products') {
-                        $query->where('regular_price', '>=', $value);
-                    }
-                    break;
-                    
-                case 'price_max':
-                    if ($type === 'products') {
-                        $query->where('regular_price', '<=', $value);
-                    }
-                    break;
-                    
+
                 case 'teaching_mode':
-                    if ($type === 'club_course_infos') {
+                    if ($type === 'courses') {
                         $query->where('teaching_mode', $value);
                     }
                     break;
-                    
+
                 case 'is_periodic':
-                    if ($type === 'club_course_infos') {
+                    if ($type === 'courses') {
                         $query->where('is_periodic', $value);
                     }
                     break;
-                    
-                case 'gender':
-                    if ($type === 'members') {
-                        $query->whereHas('profile', function (Builder $q) use ($value) {
-                            $q->where('gender', $value);
-                        });
-                    }
-                    break;
-                    
-                case 'city':
-                    if ($type === 'members') {
-                        $query->whereHas('contact', function (Builder $q) use ($value) {
-                            $q->where('city', $value);
-                        });
-                    }
-                    break;
-                    
+
                 case 'language_id':
-                    if ($type === 'members') {
-                        $query->whereHas('background.languages', function (Builder $q) use ($value) {
-                            $q->where('lang_types.id', $value);
-                        });
-                    }
-                    break;
-                    
-                case 'level_id':
-                    if ($type === 'members') {
-                        $query->whereHas('background.levels', function (Builder $q) use ($value) {
-                            $q->where('level_types.id', $value);
-                        });
-                    }
+                    $query->whereHas('languages', function (Builder $q) use ($value) {
+                        $q->where('lang_types.id', $value);
+                    });
                     break;
             }
         }
@@ -267,10 +225,35 @@ class SearchService
     public function getAvailableFilters(): array
     {
         return [
-            'common' => ['status', 'date_from', 'date_to'],
-            'products' => ['price_min', 'price_max'],
-            'club_course_infos' => ['teaching_mode', 'is_periodic'],
-            'members' => ['gender', 'city', 'language_id', 'level_id'],
+            'common' => ['status', 'date_from', 'date_to', 'language_id'],
+            'courses' => ['teaching_mode', 'is_periodic'],
+            'discussions' => [],
         ];
+    }
+
+    /**
+     * 根據類型和項目生成 tag
+     *
+     * @param string $type
+     * @param mixed $item
+     * @return string
+     */
+    protected function getTagForType(string $type, $item): string
+    {
+        // 獲取語言名稱
+        $languageName = '';
+        if ($item->languages && $item->languages->isNotEmpty()) {
+            $languageName = $item->languages->first()->name;
+        }
+
+        // 根據類型返回不同的 tag
+        switch ($type) {
+            case 'courses':
+                return $languageName ? "{$languageName}俱樂部" : '俱樂部';
+            case 'discussions':
+                return $languageName ? "{$languageName}討論區" : '討論區';
+            default:
+                return '';
+        }
     }
 }
