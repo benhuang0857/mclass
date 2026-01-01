@@ -7580,7 +7580,7 @@
                     "Menus"
                 ],
                 "summary": "Get all menus",
-                "description": "Retrieve a list of all menus with optional filtering",
+                "description": "Retrieve a list of all menus with optional filtering. If role_id is provided, is_locked will be set based on permissions.",
                 "operationId": "getMenusList",
                 "parameters": [
                     {
@@ -7605,7 +7605,7 @@
                     {
                         "name": "role_id",
                         "in": "query",
-                        "description": "Filter by role ID",
+                        "description": "Filter by role ID and set is_locked state",
                         "required": false,
                         "schema": {
                             "type": "integer"
@@ -7653,6 +7653,15 @@
                                             "status": {
                                                 "type": "boolean",
                                                 "example": true
+                                            },
+                                            "visible_to_all": {
+                                                "type": "boolean",
+                                                "example": false
+                                            },
+                                            "is_locked": {
+                                                "description": "False by default, or based on role if role_id provided",
+                                                "type": "boolean",
+                                                "example": false
                                             },
                                             "note": {
                                                 "type": "string",
@@ -7725,6 +7734,11 @@
                                     "status": {
                                         "type": "boolean",
                                         "example": true
+                                    },
+                                    "visible_to_all": {
+                                        "description": "Show menu to all users (locked if no permission)",
+                                        "type": "boolean",
+                                        "example": false
                                     },
                                     "note": {
                                         "type": "string",
@@ -7856,6 +7870,11 @@
                                     "status": {
                                         "type": "boolean",
                                         "example": false
+                                    },
+                                    "visible_to_all": {
+                                        "description": "Show menu to all users (locked if no permission)",
+                                        "type": "boolean",
+                                        "example": true
                                     },
                                     "note": {
                                         "type": "string",
@@ -7995,7 +8014,7 @@
                     "Menus"
                 ],
                 "summary": "Get full menu tree",
-                "description": "Retrieve hierarchical menu tree structure",
+                "description": "Retrieve hierarchical menu tree structure. If role_id is provided, is_locked will be set based on permissions.",
                 "operationId": "getMenuTree",
                 "parameters": [
                     {
@@ -8007,6 +8026,15 @@
                             "type": "boolean",
                             "default": false
                         }
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "description": "Role ID to determine is_locked state",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
                     }
                 ],
                 "responses": {
@@ -8017,6 +8045,24 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "is_locked": {
+                                                "description": "False by default, or based on role if role_id provided",
+                                                "type": "boolean"
+                                            },
+                                            "children": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        },
                                         "type": "object"
                                     }
                                 }
@@ -8037,7 +8083,7 @@
                     "Menus"
                 ],
                 "summary": "Get menu tree for specific role",
-                "description": "Retrieve hierarchical menu tree filtered by role access",
+                "description": "Retrieve hierarchical menu tree filtered by role access. Menus with 'visible_to_all' set to true will be shown to all users but marked as 'is_locked' if the user doesn't have permission.",
                 "operationId": "getMenuTreeForRole",
                 "parameters": [
                     {
@@ -8063,7 +8109,38 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successful operation"
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "name": {
+                                                "type": "string",
+                                                "example": "Dashboard"
+                                            },
+                                            "is_locked": {
+                                                "description": "True if menu is visible but user doesn't have permission",
+                                                "type": "boolean",
+                                                "example": false
+                                            },
+                                            "children": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object"
+                                                }
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Role not found"

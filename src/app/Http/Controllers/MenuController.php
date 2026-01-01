@@ -14,7 +14,7 @@ class MenuController extends Controller
      * @OA\Get(
      *     path="/menus",
      *     summary="Get all menus",
-     *     description="Retrieve a list of all menus with optional filtering",
+     *     description="Retrieve a list of all menus with optional filtering. If role_id is provided, is_locked will be set based on permissions.",
      *     operationId="getMenusList",
      *     tags={"Menus"},
      *     security={{"sanctum":{}}},
@@ -35,7 +35,7 @@ class MenuController extends Controller
      *     @OA\Parameter(
      *         name="role_id",
      *         in="query",
-     *         description="Filter by role ID",
+     *         description="Filter by role ID and set is_locked state",
      *         required=false,
      *         @OA\Schema(type="integer")
      *     ),
@@ -54,6 +54,8 @@ class MenuController extends Controller
      *                 @OA\Property(property="parent_id", type="integer", nullable=true, example=null),
      *                 @OA\Property(property="display_order", type="integer", example=1),
      *                 @OA\Property(property="status", type="boolean", example=true),
+     *                 @OA\Property(property="visible_to_all", type="boolean", example=false),
+     *                 @OA\Property(property="is_locked", type="boolean", example=false, description="False by default, or based on role if role_id provided"),
      *                 @OA\Property(property="note", type="string", nullable=true, example="Main dashboard menu")
      *             )
      *         )
@@ -79,11 +81,21 @@ class MenuController extends Controller
         }
 
         // Filter by role
-        if ($request->has('role_id')) {
-            $query->forRole($request->role_id);
+        $roleId = $request->input('role_id');
+        if ($roleId) {
+            $query->forRole($roleId);
         }
 
         $menus = $query->ordered()->get();
+
+        // Add is_locked state if role_id is provided
+        if ($roleId) {
+            $menus = $menus->map(function ($menu) use ($roleId) {
+                $accessState = $menu->getAccessStateForRole($roleId);
+                $menu->setAttribute('is_locked', $accessState['is_locked']);
+                return $menu;
+            });
+        }
 
         return response()->json($menus);
     }
@@ -108,6 +120,7 @@ class MenuController extends Controller
      *             @OA\Property(property="parent_id", type="integer", nullable=true, example=null),
      *             @OA\Property(property="display_order", type="integer", example=1),
      *             @OA\Property(property="status", type="boolean", example=true),
+     *             @OA\Property(property="visible_to_all", type="boolean", example=false, description="Show menu to all users (locked if no permission)"),
      *             @OA\Property(property="note", type="string", example="Main dashboard menu"),
      *             @OA\Property(
      *                 property="role_ids",
@@ -137,6 +150,7 @@ class MenuController extends Controller
             'parent_id' => 'nullable|exists:menus,id',
             'display_order' => 'integer|min:0',
             'status' => 'boolean',
+            'visible_to_all' => 'boolean',
             'note' => 'nullable|string',
             'role_ids' => 'nullable|array',
             'role_ids.*' => 'exists:roles,id',
@@ -220,6 +234,7 @@ class MenuController extends Controller
      *             @OA\Property(property="parent_id", type="integer", nullable=true, example=2),
      *             @OA\Property(property="display_order", type="integer", example=2),
      *             @OA\Property(property="status", type="boolean", example=false),
+     *             @OA\Property(property="visible_to_all", type="boolean", example=true, description="Show menu to all users (locked if no permission)"),
      *             @OA\Property(property="note", type="string", example="Updated note"),
      *             @OA\Property(
      *                 property="role_ids",
@@ -255,6 +270,7 @@ class MenuController extends Controller
             'parent_id' => 'nullable|exists:menus,id',
             'display_order' => 'integer|min:0',
             'status' => 'boolean',
+            'visible_to_all' => 'boolean',
             'note' => 'nullable|string',
             'role_ids' => 'nullable|array',
             'role_ids.*' => 'exists:roles,id',
@@ -365,7 +381,7 @@ class MenuController extends Controller
      * @OA\Get(
      *     path="/menus/tree/all",
      *     summary="Get full menu tree",
-     *     description="Retrieve hierarchical menu tree structure",
+     *     description="Retrieve hierarchical menu tree structure. If role_id is provided, is_locked will be set based on permissions.",
      *     operationId="getMenuTree",
      *     tags={"Menus"},
      *     security={{"sanctum":{}}},
@@ -376,12 +392,25 @@ class MenuController extends Controller
      *         required=false,
      *         @OA\Schema(type="boolean", default=false)
      *     ),
+     *     @OA\Parameter(
+     *         name="role_id",
+     *         in="query",
+     *         description="Role ID to determine is_locked state",
+     *         required=false,
+     *         @OA\Schema(type="integer")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             type="array",
-     *             @OA\Items(type="object")
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer"),
+     *                 @OA\Property(property="name", type="string"),
+     *                 @OA\Property(property="is_locked", type="boolean", description="False by default, or based on role if role_id provided"),
+     *                 @OA\Property(property="children", type="array", @OA\Items(type="object"))
+     *             )
      *         )
      *     )
      * )
@@ -396,6 +425,12 @@ class MenuController extends Controller
 
         $menus = $query->ordered()->get();
 
+        // Add is_locked state if role_id is provided
+        $roleId = $request->input('role_id');
+        if ($roleId) {
+            $menus = $this->addIsLockedToTree($menus, $roleId);
+        }
+
         return response()->json($menus);
     }
 
@@ -403,7 +438,7 @@ class MenuController extends Controller
      * @OA\Get(
      *     path="/menus/tree/role/{roleId}",
      *     summary="Get menu tree for specific role",
-     *     description="Retrieve hierarchical menu tree filtered by role access",
+     *     description="Retrieve hierarchical menu tree filtered by role access. Menus with 'visible_to_all' set to true will be shown to all users but marked as 'is_locked' if the user doesn't have permission.",
      *     operationId="getMenuTreeForRole",
      *     tags={"Menus"},
      *     security={{"sanctum":{}}},
@@ -423,7 +458,17 @@ class MenuController extends Controller
      *     ),
      *     @OA\Response(
      *         response=200,
-     *         description="Successful operation"
+     *         description="Successful operation",
+     *         @OA\JsonContent(
+     *             type="array",
+     *             @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="Dashboard"),
+     *                 @OA\Property(property="is_locked", type="boolean", example=false, description="True if menu is visible but user doesn't have permission"),
+     *                 @OA\Property(property="children", type="array", @OA\Items(type="object"))
+     *             )
+     *         )
      *     ),
      *     @OA\Response(
      *         response=404,
@@ -639,7 +684,7 @@ class MenuController extends Controller
     }
 
     /**
-     * Recursively filter menu tree by role access
+     * Recursively filter menu tree by role access and add locked state
      *
      * @param \Illuminate\Support\Collection $menus
      * @param int $roleId
@@ -647,18 +692,50 @@ class MenuController extends Controller
      */
     private function filterMenuTreeByRole($menus, $roleId)
     {
-        return $menus->filter(function ($menu) use ($roleId) {
-            // Check if menu is accessible by role
-            if (!$menu->isAccessibleByRole($roleId)) {
-                return false;
+        return $menus->map(function ($menu) use ($roleId) {
+            // Get access state for this role
+            $accessState = $menu->getAccessStateForRole($roleId);
+
+            // Skip if not visible
+            if (!$accessState['visible']) {
+                return null;
             }
+
+            // Add is_locked attribute to menu
+            $menu->setAttribute('is_locked', $accessState['is_locked']);
 
             // Recursively filter children
             if ($menu->children && $menu->children->count() > 0) {
-                $menu->setRelation('children', $this->filterMenuTreeByRole($menu->children, $roleId));
+                $filteredChildren = $this->filterMenuTreeByRole($menu->children, $roleId);
+                $menu->setRelation('children', $filteredChildren);
             }
 
-            return true;
-        })->values();
+            return $menu;
+        })->filter()->values();
+    }
+
+    /**
+     * Recursively add is_locked state to menu tree without filtering
+     *
+     * @param \Illuminate\Support\Collection $menus
+     * @param int $roleId
+     * @return \Illuminate\Support\Collection
+     */
+    private function addIsLockedToTree($menus, $roleId)
+    {
+        return $menus->map(function ($menu) use ($roleId) {
+            // Get access state for this role
+            $accessState = $menu->getAccessStateForRole($roleId);
+
+            // Add is_locked attribute to menu
+            $menu->setAttribute('is_locked', $accessState['is_locked']);
+
+            // Recursively process children
+            if ($menu->children && $menu->children->count() > 0) {
+                $menu->setRelation('children', $this->addIsLockedToTree($menu->children, $roleId));
+            }
+
+            return $menu;
+        });
     }
 }

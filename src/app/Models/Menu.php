@@ -20,6 +20,7 @@ class Menu extends Model
         'parent_id',
         'display_order',
         'status',
+        'visible_to_all',
         'note',
     ];
 
@@ -27,6 +28,11 @@ class Menu extends Model
         'parent_id' => 'integer',
         'display_order' => 'integer',
         'status' => 'boolean',
+        'visible_to_all' => 'boolean',
+    ];
+
+    protected $appends = [
+        'is_locked',
     ];
 
     /**
@@ -168,6 +174,21 @@ class Menu extends Model
     }
 
     /**
+     * Get is_locked attribute
+     * Returns the dynamically set value or false by default
+     */
+    public function getIsLockedAttribute(): bool
+    {
+        // Check if value was dynamically set (via setAttribute)
+        if (array_key_exists('is_locked', $this->attributes)) {
+            return (bool) $this->attributes['is_locked'];
+        }
+
+        // Default to false when no role context
+        return false;
+    }
+
+    /**
      * Check if menu is accessible by a specific role
      * If no roles are assigned, menu is public (accessible to all)
      */
@@ -179,6 +200,46 @@ class Menu extends Model
         }
 
         return $this->roles()->where('role_id', $roleId)->exists();
+    }
+
+    /**
+     * Get access state for a specific role
+     * Returns array with 'visible' and 'is_locked' status
+     *
+     * @param int $roleId
+     * @return array ['visible' => bool, 'is_locked' => bool]
+     */
+    public function getAccessStateForRole($roleId): array
+    {
+        $hasRoles = $this->roles()->count() > 0;
+        $hasPermission = $hasRoles ? $this->roles()->where('role_id', $roleId)->exists() : true;
+
+        // If visible_to_all is true, always show the menu
+        if ($this->visible_to_all) {
+            return [
+                'visible' => true,
+                'is_locked' => $hasRoles && !$hasPermission, // Locked if has roles but user doesn't have permission
+            ];
+        }
+
+        // If not visible_to_all, only show if user has permission
+        return [
+            'visible' => $hasPermission,
+            'is_locked' => false, // Never locked if not visible
+        ];
+    }
+
+    /**
+     * Check if menu should be visible to a specific role
+     * Considers both visible_to_all and role permissions
+     *
+     * @param int $roleId
+     * @return bool
+     */
+    public function isVisibleToRole($roleId): bool
+    {
+        $state = $this->getAccessStateForRole($roleId);
+        return $state['visible'];
     }
 
     /**
