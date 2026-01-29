@@ -37,6 +37,12 @@ class DatabaseSeeder extends Seeder
             SlideshowTypeSeeder::class,
         ]);
 
+        // 建立菜單資料（需要角色資料）
+        $this->call(MenuSeeder::class);
+
+        // 建立通知資料（需要通知類型資料）
+        $this->call(NoticeSeeder::class);
+
         // 建立會員資料（必須在課程之前）
         $this->call(MemberSeeder::class);
 
