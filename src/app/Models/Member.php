@@ -30,14 +30,89 @@ class Member extends Authenticatable implements JWTSubject
         return $this->hasOne(Contact::class);
     }
 
-    public function background()
-    {
-        return $this->hasOne(Background::class);
-    }
-
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'member_role');
+    }
+
+    /**
+     * 關聯到目前熟悉語言
+     */
+    public function knownLangs()
+    {
+        return $this->hasMany(KnownLang::class);
+    }
+
+    /**
+     * 關聯到欲學習語言
+     */
+    public function learningLangs()
+    {
+        return $this->hasMany(LearningLang::class);
+    }
+
+    /**
+     * 關聯到等級
+     */
+    public function levels()
+    {
+        return $this->hasMany(Level::class);
+    }
+
+    /**
+     * 關聯到來源
+     */
+    public function referralSources()
+    {
+        return $this->hasMany(ReferralSource::class);
+    }
+
+    /**
+     * 關聯到目標
+     */
+    public function goals()
+    {
+        return $this->hasMany(Goal::class);
+    }
+
+    /**
+     * 關聯到目的
+     */
+    public function purposes()
+    {
+        return $this->hasMany(Purpose::class);
+    }
+
+    /**
+     * 關聯到最高學歷
+     */
+    public function highestEducations()
+    {
+        return $this->hasMany(HighestEducation::class);
+    }
+
+    /**
+     * 關聯到學校
+     */
+    public function schools()
+    {
+        return $this->hasMany(School::class);
+    }
+
+    /**
+     * 關聯到科系
+     */
+    public function departments()
+    {
+        return $this->hasMany(Department::class);
+    }
+
+    /**
+     * 關聯到證照
+     */
+    public function certificates()
+    {
+        return $this->hasMany(Certificate::class);
     }
 
     /**

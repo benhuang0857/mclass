@@ -6872,7 +6872,7 @@
                     "Members"
                 ],
                 "summary": "Get all members",
-                "description": "Retrieve a list of all members with their profiles, contacts, and backgrounds",
+                "description": "Retrieve a list of all members with their profiles, contacts, backgrounds, and related language/level types",
                 "operationId": "getMembersList",
                 "responses": {
                     "200": {
@@ -6899,9 +6899,178 @@
                                                 "type": "string",
                                                 "example": "john@example.com"
                                             },
+                                            "email_valid": {
+                                                "type": "boolean",
+                                                "example": true
+                                            },
                                             "status": {
                                                 "type": "boolean",
                                                 "example": true
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-01-11T10:30:00Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2025-01-11T10:30:00Z"
+                                            },
+                                            "profile": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "member_id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "lastname": {
+                                                        "type": "string",
+                                                        "example": "Doe"
+                                                    },
+                                                    "firstname": {
+                                                        "type": "string",
+                                                        "example": "John"
+                                                    },
+                                                    "gender": {
+                                                        "type": "string",
+                                                        "example": "male"
+                                                    },
+                                                    "birthday": {
+                                                        "type": "string",
+                                                        "format": "date",
+                                                        "example": "1990-01-01"
+                                                    },
+                                                    "job": {
+                                                        "type": "string",
+                                                        "example": "Software Engineer"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            },
+                                            "contact": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "city": {
+                                                        "type": "string",
+                                                        "example": "Taipei"
+                                                    },
+                                                    "region": {
+                                                        "type": "string",
+                                                        "example": "Xinyi"
+                                                    },
+                                                    "address": {
+                                                        "type": "string",
+                                                        "example": "No. 123, Section 1, Xinyi Road"
+                                                    },
+                                                    "mobile": {
+                                                        "type": "string",
+                                                        "example": "0912345678"
+                                                    },
+                                                    "mobile_valid": {
+                                                        "type": "boolean",
+                                                        "example": true
+                                                    }
+                                                },
+                                                "type": "object",
+                                                "nullable": true
+                                            },
+                                            "background": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "integer",
+                                                        "example": 1
+                                                    },
+                                                    "goals": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "example": [
+                                                            "Career advancement"
+                                                        ]
+                                                    },
+                                                    "purposes": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "example": [
+                                                            "Professional certification"
+                                                        ]
+                                                    },
+                                                    "highest_education": {
+                                                        "type": "string",
+                                                        "example": "Master's Degree"
+                                                    },
+                                                    "schools": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "example": [
+                                                            "National Taiwan University"
+                                                        ]
+                                                    },
+                                                    "departments": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "example": [
+                                                            "Computer Science"
+                                                        ]
+                                                    },
+                                                    "certificates": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "type": "string"
+                                                        },
+                                                        "example": [
+                                                            "AWS Certified"
+                                                        ]
+                                                    },
+                                                    "languages": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "English"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
+                                                    "levels": {
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "Beginner"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    }
+                                                },
+                                                "type": "object",
+                                                "nullable": true
                                             }
                                         },
                                         "type": "object"
@@ -6925,46 +7094,62 @@
                     "Members"
                 ],
                 "summary": "Create a new member",
-                "description": "Create a new member with profile, contact, and background information",
+                "description": "Create a new member with profile, contact, and background information. Contact and background fields are optional.",
                 "operationId": "createMember",
                 "requestBody": {
-                    "description": "Member data",
+                    "description": "Member data including required member and profile objects, and optional contact and background objects",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
                                     "member",
-                                    "profile",
-                                    "contact",
-                                    "background"
+                                    "profile"
                                 ],
                                 "properties": {
                                     "member": {
+                                        "required": [
+                                            "nickname",
+                                            "account",
+                                            "email",
+                                            "email_valid",
+                                            "password",
+                                            "status"
+                                        ],
                                         "properties": {
                                             "nickname": {
+                                                "description": "Member's display name",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "JohnDoe"
                                             },
                                             "account": {
+                                                "description": "Unique account identifier",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "john.doe"
                                             },
                                             "email": {
+                                                "description": "Unique email address",
                                                 "type": "string",
                                                 "format": "email",
+                                                "maxLength": 255,
                                                 "example": "john@example.com"
                                             },
                                             "email_valid": {
+                                                "description": "Email verification status",
                                                 "type": "boolean",
                                                 "example": true
                                             },
                                             "password": {
+                                                "description": "Account password (min 8 characters)",
                                                 "type": "string",
                                                 "format": "password",
+                                                "minLength": 8,
                                                 "example": "password123"
                                             },
                                             "status": {
+                                                "description": "Account active status",
                                                 "type": "boolean",
                                                 "example": true
                                             }
@@ -6972,16 +7157,28 @@
                                         "type": "object"
                                     },
                                     "profile": {
+                                        "required": [
+                                            "lastname",
+                                            "firstname",
+                                            "gender",
+                                            "birthday",
+                                            "job"
+                                        ],
                                         "properties": {
                                             "lastname": {
+                                                "description": "Last name",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "Doe"
                                             },
                                             "firstname": {
+                                                "description": "First name",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "John"
                                             },
                                             "gender": {
+                                                "description": "Gender",
                                                 "type": "string",
                                                 "enum": [
                                                     "male",
@@ -6991,13 +7188,141 @@
                                                 "example": "male"
                                             },
                                             "birthday": {
+                                                "description": "Date of birth (YYYY-MM-DD)",
                                                 "type": "string",
                                                 "format": "date",
                                                 "example": "1990-01-01"
                                             },
                                             "job": {
+                                                "description": "Current occupation",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "Software Engineer"
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "contact": {
+                                        "description": "Contact information (optional)",
+                                        "properties": {
+                                            "city": {
+                                                "description": "City",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Taipei"
+                                            },
+                                            "region": {
+                                                "description": "Region or district",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Xinyi"
+                                            },
+                                            "address": {
+                                                "description": "Detailed address",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "No. 123, Section 1, Xinyi Road"
+                                            },
+                                            "mobile": {
+                                                "description": "Mobile phone number (unique)",
+                                                "type": "string",
+                                                "maxLength": 20,
+                                                "example": "0912345678"
+                                            },
+                                            "mobile_valid": {
+                                                "description": "Mobile verification status",
+                                                "type": "boolean",
+                                                "example": true
+                                            }
+                                        },
+                                        "type": "object"
+                                    },
+                                    "background": {
+                                        "description": "Educational and professional background (optional)",
+                                        "properties": {
+                                            "goals": {
+                                                "description": "Learning goals",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": [
+                                                    "Career advancement",
+                                                    "Skill development"
+                                                ]
+                                            },
+                                            "purposes": {
+                                                "description": "Learning purposes",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": [
+                                                    "Professional certification",
+                                                    "Personal interest"
+                                                ]
+                                            },
+                                            "highest_education": {
+                                                "description": "Highest education level",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Master's Degree"
+                                            },
+                                            "schools": {
+                                                "description": "Schools attended",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": [
+                                                    "National Taiwan University",
+                                                    "MIT"
+                                                ]
+                                            },
+                                            "departments": {
+                                                "description": "Departments or majors",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": [
+                                                    "Computer Science",
+                                                    "Engineering"
+                                                ]
+                                            },
+                                            "certificates": {
+                                                "description": "Professional certificates",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "example": [
+                                                    "AWS Certified",
+                                                    "PMP"
+                                                ]
+                                            },
+                                            "languages": {
+                                                "description": "Language IDs from lang_types table",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "integer"
+                                                },
+                                                "example": [
+                                                    1,
+                                                    2,
+                                                    3
+                                                ]
+                                            },
+                                            "levels": {
+                                                "description": "Skill level IDs from level_types table",
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "integer"
+                                                },
+                                                "example": [
+                                                    1,
+                                                    2
+                                                ]
                                             }
                                         },
                                         "type": "object"
@@ -7030,6 +7355,174 @@
                                         "email": {
                                             "type": "string",
                                             "example": "john@example.com"
+                                        },
+                                        "email_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-01-11T10:30:00Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-01-11T10:30:00Z"
+                                        },
+                                        "profile": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "member_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "lastname": {
+                                                    "type": "string",
+                                                    "example": "Doe"
+                                                },
+                                                "firstname": {
+                                                    "type": "string",
+                                                    "example": "John"
+                                                },
+                                                "gender": {
+                                                    "type": "string",
+                                                    "example": "male"
+                                                },
+                                                "birthday": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "1990-01-01"
+                                                },
+                                                "job": {
+                                                    "type": "string",
+                                                    "example": "Software Engineer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "contact": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "member_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Taipei"
+                                                },
+                                                "region": {
+                                                    "type": "string",
+                                                    "example": "Xinyi"
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "example": "No. 123, Section 1, Xinyi Road"
+                                                },
+                                                "mobile": {
+                                                    "type": "string",
+                                                    "example": "0912345678"
+                                                },
+                                                "mobile_valid": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
+                                        },
+                                        "background": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "member_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "goals": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "purposes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "highest_education": {
+                                                    "type": "string",
+                                                    "example": "Master's Degree"
+                                                },
+                                                "schools": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "departments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "certificates": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "languages": {
+                                                    "description": "Related language types",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "English"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "levels": {
+                                                    "description": "Related skill levels",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Beginner"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
@@ -7038,7 +7531,32 @@
                         }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "member.email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The member.email has already been taken."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -7057,7 +7575,7 @@
                     "Members"
                 ],
                 "summary": "Get specific member",
-                "description": "Retrieve detailed information about a specific member including profile, contact, and background",
+                "description": "Retrieve detailed information about a specific member including profile, contact, background, and related language/level types",
                 "operationId": "getMember",
                 "parameters": [
                     {
@@ -7094,8 +7612,34 @@
                                             "type": "string",
                                             "example": "john@example.com"
                                         },
+                                        "email_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-01-11T10:30:00Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2025-01-11T10:30:00Z"
+                                        },
                                         "profile": {
                                             "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "member_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
                                                 "lastname": {
                                                     "type": "string",
                                                     "example": "Doe"
@@ -7116,15 +7660,185 @@
                                                 "job": {
                                                     "type": "string",
                                                     "example": "Software Engineer"
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
                                                 }
                                             },
                                             "type": "object"
                                         },
                                         "contact": {
-                                            "type": "object"
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "member_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Taipei"
+                                                },
+                                                "region": {
+                                                    "type": "string",
+                                                    "example": "Xinyi"
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "example": "No. 123, Section 1, Xinyi Road"
+                                                },
+                                                "mobile": {
+                                                    "type": "string",
+                                                    "example": "0912345678"
+                                                },
+                                                "mobile_valid": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
                                         },
                                         "background": {
-                                            "type": "object"
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "member_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "goals": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "Career advancement",
+                                                        "Skill development"
+                                                    ]
+                                                },
+                                                "purposes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "Professional certification",
+                                                        "Personal interest"
+                                                    ]
+                                                },
+                                                "highest_education": {
+                                                    "type": "string",
+                                                    "example": "Master's Degree"
+                                                },
+                                                "schools": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "National Taiwan University",
+                                                        "MIT"
+                                                    ]
+                                                },
+                                                "departments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "Computer Science",
+                                                        "Engineering"
+                                                    ]
+                                                },
+                                                "certificates": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    },
+                                                    "example": [
+                                                        "AWS Certified",
+                                                        "PMP"
+                                                    ]
+                                                },
+                                                "languages": {
+                                                    "description": "Related language types",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "English"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "levels": {
+                                                    "description": "Related skill levels",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Beginner"
+                                                            },
+                                                            "created_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            },
+                                                            "updated_at": {
+                                                                "type": "string",
+                                                                "format": "date-time"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
@@ -7133,7 +7847,20 @@
                         }
                     },
                     "404": {
-                        "description": "Member not found"
+                        "description": "Member not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Member] 1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -7150,7 +7877,7 @@
                     "Members"
                 ],
                 "summary": "Update member information",
-                "description": "Update an existing member's information including profile, contact, and background data",
+                "description": "Update an existing member's information including profile, contact, and background data. All fields are optional - only provide fields you want to update.",
                 "operationId": "updateMember",
                 "parameters": [
                     {
@@ -7165,36 +7892,48 @@
                     }
                 ],
                 "requestBody": {
-                    "required": true,
+                    "description": "Member data to update (all fields optional)",
+                    "required": false,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "properties": {
                                     "member": {
+                                        "description": "Member basic information",
                                         "properties": {
                                             "nickname": {
+                                                "description": "Member's display name",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "JaneDoe"
                                             },
                                             "account": {
+                                                "description": "Unique account identifier",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "jane.doe"
                                             },
                                             "email": {
+                                                "description": "Unique email address",
                                                 "type": "string",
                                                 "format": "email",
+                                                "maxLength": 255,
                                                 "example": "jane@example.com"
                                             },
                                             "email_valid": {
+                                                "description": "Email verification status",
                                                 "type": "boolean",
                                                 "example": true
                                             },
                                             "password": {
+                                                "description": "New password (min 8 characters)",
                                                 "type": "string",
                                                 "format": "password",
+                                                "minLength": 8,
                                                 "example": "newpassword123"
                                             },
                                             "status": {
+                                                "description": "Account active status",
                                                 "type": "boolean",
                                                 "example": true
                                             }
@@ -7202,50 +7941,69 @@
                                         "type": "object"
                                     },
                                     "profile": {
+                                        "description": "Profile information",
                                         "properties": {
                                             "lastname": {
+                                                "description": "Last name",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "Doe"
                                             },
                                             "firstname": {
+                                                "description": "First name",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "Jane"
                                             },
                                             "gender": {
+                                                "description": "Gender",
                                                 "type": "string",
                                                 "example": "female"
                                             },
                                             "birthday": {
+                                                "description": "Date of birth (YYYY-MM-DD)",
                                                 "type": "string",
                                                 "format": "date",
                                                 "example": "1992-05-15"
                                             },
                                             "job": {
+                                                "description": "Current occupation",
                                                 "type": "string",
+                                                "maxLength": 255,
                                                 "example": "Data Scientist"
                                             }
                                         },
                                         "type": "object"
                                     },
                                     "contact": {
+                                        "description": "Contact information",
                                         "properties": {
                                             "city": {
+                                                "description": "City",
                                                 "type": "string",
-                                                "example": "New York"
+                                                "maxLength": 255,
+                                                "example": "Taipei"
                                             },
                                             "region": {
+                                                "description": "Region or district",
                                                 "type": "string",
-                                                "example": "NY"
+                                                "maxLength": 255,
+                                                "example": "Daan"
                                             },
                                             "address": {
+                                                "description": "Detailed address",
                                                 "type": "string",
-                                                "example": "123 Main St"
+                                                "maxLength": 255,
+                                                "example": "No. 456, Section 2, Roosevelt Road"
                                             },
                                             "mobile": {
+                                                "description": "Mobile phone number (unique)",
                                                 "type": "string",
-                                                "example": "1234567890"
+                                                "maxLength": 20,
+                                                "example": "0987654321"
                                             },
                                             "mobile_valid": {
+                                                "description": "Mobile verification status",
                                                 "type": "boolean",
                                                 "example": true
                                             }
@@ -7253,59 +8011,90 @@
                                         "type": "object"
                                     },
                                     "background": {
+                                        "description": "Educational and professional background",
                                         "properties": {
                                             "goals": {
+                                                "description": "Learning goals",
                                                 "type": "array",
                                                 "items": {
                                                     "type": "string"
-                                                }
+                                                },
+                                                "example": [
+                                                    "Leadership development",
+                                                    "Technical mastery"
+                                                ]
                                             },
                                             "purposes": {
+                                                "description": "Learning purposes",
                                                 "type": "array",
                                                 "items": {
                                                     "type": "string"
-                                                }
+                                                },
+                                                "example": [
+                                                    "Career transition",
+                                                    "Continuous learning"
+                                                ]
                                             },
                                             "highest_education": {
+                                                "description": "Highest education level",
                                                 "type": "string",
-                                                "example": "Master's Degree"
+                                                "maxLength": 255,
+                                                "example": "PhD"
                                             },
                                             "schools": {
+                                                "description": "Schools attended",
                                                 "type": "array",
                                                 "items": {
                                                     "type": "string"
-                                                }
+                                                },
+                                                "example": [
+                                                    "Stanford University",
+                                                    "Harvard"
+                                                ]
                                             },
                                             "departments": {
+                                                "description": "Departments or majors",
                                                 "type": "array",
                                                 "items": {
                                                     "type": "string"
-                                                }
+                                                },
+                                                "example": [
+                                                    "Data Science",
+                                                    "Statistics"
+                                                ]
                                             },
                                             "certificates": {
+                                                "description": "Professional certificates",
                                                 "type": "array",
                                                 "items": {
                                                     "type": "string"
-                                                }
+                                                },
+                                                "example": [
+                                                    "Google Cloud Certified",
+                                                    "Scrum Master"
+                                                ]
                                             },
                                             "languages": {
+                                                "description": "Language IDs from lang_types table (will sync)",
                                                 "type": "array",
                                                 "items": {
                                                     "type": "integer"
                                                 },
                                                 "example": [
                                                     1,
-                                                    2
+                                                    2,
+                                                    3
                                                 ]
                                             },
                                             "levels": {
+                                                "description": "Skill level IDs from level_types table (will sync)",
                                                 "type": "array",
                                                 "items": {
                                                     "type": "integer"
                                                 },
                                                 "example": [
-                                                    1,
-                                                    2
+                                                    2,
+                                                    3
                                                 ]
                                             }
                                         },
@@ -7332,14 +8121,165 @@
                                             "type": "string",
                                             "example": "JaneDoe"
                                         },
+                                        "account": {
+                                            "type": "string",
+                                            "example": "jane.doe"
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "jane@example.com"
+                                        },
+                                        "email_valid": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
                                         "profile": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "member_id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "lastname": {
+                                                    "type": "string",
+                                                    "example": "Doe"
+                                                },
+                                                "firstname": {
+                                                    "type": "string",
+                                                    "example": "Jane"
+                                                },
+                                                "gender": {
+                                                    "type": "string",
+                                                    "example": "female"
+                                                },
+                                                "birthday": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "example": "1992-05-15"
+                                                },
+                                                "job": {
+                                                    "type": "string",
+                                                    "example": "Data Scientist"
+                                                }
+                                            },
                                             "type": "object"
                                         },
                                         "contact": {
-                                            "type": "object"
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "city": {
+                                                    "type": "string",
+                                                    "example": "Taipei"
+                                                },
+                                                "region": {
+                                                    "type": "string",
+                                                    "example": "Daan"
+                                                },
+                                                "address": {
+                                                    "type": "string",
+                                                    "example": "No. 456, Section 2, Roosevelt Road"
+                                                },
+                                                "mobile": {
+                                                    "type": "string",
+                                                    "example": "0987654321"
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
                                         },
                                         "background": {
-                                            "type": "object"
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "goals": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "purposes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "highest_education": {
+                                                    "type": "string",
+                                                    "example": "PhD"
+                                                },
+                                                "schools": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "departments": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "certificates": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "languages": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "English"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "levels": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 2
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Intermediate"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object",
+                                            "nullable": true
                                         }
                                     },
                                     "type": "object"
@@ -7348,10 +8288,48 @@
                         }
                     },
                     "404": {
-                        "description": "Member not found"
+                        "description": "Member not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Member] 1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "422": {
-                        "description": "Validation error"
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        },
+                                        "errors": {
+                                            "properties": {
+                                                "member.email": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string",
+                                                        "example": "The member.email has already been taken."
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -7368,13 +8346,13 @@
                     "Members"
                 ],
                 "summary": "Delete member",
-                "description": "Delete a member and all associated profile, contact, and background information",
+                "description": "Delete a member and all associated profile, contact, and background information. This operation will cascade delete all related data including language and level associations.",
                 "operationId": "deleteMember",
                 "parameters": [
                     {
                         "name": "id",
                         "in": "path",
-                        "description": "Member ID",
+                        "description": "Member ID to delete",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -7400,10 +8378,26 @@
                         }
                     },
                     "404": {
-                        "description": "Member not found"
+                        "description": "Member not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No query results for model [App\\\\Models\\\\Member] 1"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Server error during deletion"
                     }
                 },
                 "security": [
