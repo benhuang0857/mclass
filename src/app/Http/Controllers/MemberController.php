@@ -363,34 +363,44 @@ class MemberController extends Controller
             'contact.mobile' => 'sometimes|required|string|max:20|unique:contacts,mobile',
             'contact.mobile_valid' => 'sometimes|required|boolean',
 
-            // 新的關聯結構
+            // 所具備的語言專長
             'known_langs' => 'sometimes|array',
             'known_langs.*' => 'exists:lang_types,id',
 
-            'learning_langs' => 'sometimes|array',
-            'learning_langs.*' => 'exists:lang_types,id',
-
-            'levels' => 'sometimes|array',
-            'levels.*' => 'exists:level_types,id',
-
+            /* 新的關聯結構 */
+            // 哪裡知道我們的來源種類
             'referral_sources' => 'sometimes|array',
             'referral_sources.*' => 'exists:referral_source_types,id',
-
+            
+            // 欲學習的語言別
+            'learning_langs' => 'sometimes|array',
+            'learning_langs.*' => 'exists:lang_types,id',
+            
+            // 欲達到的目標
             'goals' => 'sometimes|array',
             'goals.*' => 'exists:goal_types,id',
 
+            // 學習語言的目的
             'purposes' => 'sometimes|array',
             'purposes.*' => 'exists:purpose_types,id',
+            
+            // 目前程度
+            'levels' => 'sometimes|array',
+            'levels.*' => 'exists:level_types,id',
 
+            // 最高學歷
             'highest_educations' => 'sometimes|array|max:1',
             'highest_educations.*' => 'exists:education_types,id',
 
+            // 就讀學校(最高學歷所在學校)
             'schools' => 'sometimes|array',
             'schools.*' => 'exists:school_types,id',
 
+            // 就讀科系(最高學歷所在科系)
             'departments' => 'sometimes|array',
             'departments.*' => 'exists:department_types,id',
 
+            // 相關語言證照
             'certificates' => 'sometimes|array',
             'certificates.*' => 'exists:certificate_types,id',
         ]);
@@ -578,45 +588,23 @@ class MemberController extends Controller
      *                 @OA\Property(property="created_at", type="string", format="date-time"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time")
      *             ),
-     *             @OA\Property(
-     *                 property="background",
-     *                 type="object",
-     *                 nullable=true,
+     *             @OA\Property(property="known_langs", type="array", description="所具備的語言專長", @OA\Items(type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="member_id", type="integer", example=1),
-     *                 @OA\Property(property="goals", type="array", @OA\Items(type="string"), example={"Career advancement", "Skill development"}),
-     *                 @OA\Property(property="purposes", type="array", @OA\Items(type="string"), example={"Professional certification", "Personal interest"}),
-     *                 @OA\Property(property="highest_education", type="string", example="Master's Degree"),
-     *                 @OA\Property(property="schools", type="array", @OA\Items(type="string"), example={"National Taiwan University", "MIT"}),
-     *                 @OA\Property(property="departments", type="array", @OA\Items(type="string"), example={"Computer Science", "Engineering"}),
-     *                 @OA\Property(property="certificates", type="array", @OA\Items(type="string"), example={"AWS Certified", "PMP"}),
-     *                 @OA\Property(
-     *                     property="languages",
-     *                     type="array",
-     *                     description="Related language types",
-     *                     @OA\Items(
-     *                         type="object",
-     *                         @OA\Property(property="id", type="integer", example=1),
-     *                         @OA\Property(property="name", type="string", example="English"),
-     *                         @OA\Property(property="created_at", type="string", format="date-time"),
-     *                         @OA\Property(property="updated_at", type="string", format="date-time")
-     *                     )
-     *                 ),
-     *                 @OA\Property(
-     *                     property="levels",
-     *                     type="array",
-     *                     description="Related skill levels",
-     *                     @OA\Items(
-     *                         type="object",
-     *                         @OA\Property(property="id", type="integer", example=1),
-     *                         @OA\Property(property="name", type="string", example="Beginner"),
-     *                         @OA\Property(property="created_at", type="string", format="date-time"),
-     *                         @OA\Property(property="updated_at", type="string", format="date-time")
-     *                     )
-     *                 ),
-     *                 @OA\Property(property="created_at", type="string", format="date-time"),
-     *                 @OA\Property(property="updated_at", type="string", format="date-time")
-     *             )
+     *                 @OA\Property(property="lang_type_id", type="integer", example=1),
+     *                 @OA\Property(property="lang_type", type="object",
+     *                     @OA\Property(property="id", type="integer", example=1),
+     *                     @OA\Property(property="name", type="string", example="English")
+     *                 )
+     *             )),
+     *             @OA\Property(property="referral_sources", type="array", description="哪裡知道我們的來源種類", @OA\Items(type="object")),
+     *             @OA\Property(property="learning_langs", type="array", description="欲學習的語言別", @OA\Items(type="object")),
+     *             @OA\Property(property="goals", type="array", description="欲達到的目標", @OA\Items(type="object")),
+     *             @OA\Property(property="purposes", type="array", description="學習語言的目的", @OA\Items(type="object")),
+     *             @OA\Property(property="levels", type="array", description="目前程度", @OA\Items(type="object")),
+     *             @OA\Property(property="highest_educations", type="array", description="最高學歷", @OA\Items(type="object")),
+     *             @OA\Property(property="schools", type="array", description="就讀學校", @OA\Items(type="object")),
+     *             @OA\Property(property="departments", type="array", description="就讀科系", @OA\Items(type="object")),
+     *             @OA\Property(property="certificates", type="array", description="相關語言證照", @OA\Items(type="object"))
      *         ))
      *     ),
      *     @OA\Response(
@@ -715,19 +703,16 @@ class MemberController extends Controller
      *                 @OA\Property(property="mobile", type="string", maxLength=20, description="Mobile phone number (unique)", example="0987654321"),
      *                 @OA\Property(property="mobile_valid", type="boolean", description="Mobile verification status", example=true)
      *             ),
-     *             @OA\Property(
-     *                 property="background",
-     *                 type="object",
-     *                 description="Educational and professional background",
-     *                 @OA\Property(property="goals", type="array", description="Learning goals", @OA\Items(type="string"), example={"Leadership development", "Technical mastery"}),
-     *                 @OA\Property(property="purposes", type="array", description="Learning purposes", @OA\Items(type="string"), example={"Career transition", "Continuous learning"}),
-     *                 @OA\Property(property="highest_education", type="string", maxLength=255, description="Highest education level", example="PhD"),
-     *                 @OA\Property(property="schools", type="array", description="Schools attended", @OA\Items(type="string"), example={"Stanford University", "Harvard"}),
-     *                 @OA\Property(property="departments", type="array", description="Departments or majors", @OA\Items(type="string"), example={"Data Science", "Statistics"}),
-     *                 @OA\Property(property="certificates", type="array", description="Professional certificates", @OA\Items(type="string"), example={"Google Cloud Certified", "Scrum Master"}),
-     *                 @OA\Property(property="languages", type="array", description="Language IDs from lang_types table (will sync)", @OA\Items(type="integer"), example={1, 2, 3}),
-     *                 @OA\Property(property="levels", type="array", description="Skill level IDs from level_types table (will sync)", @OA\Items(type="integer"), example={2, 3})
-     *             )
+     *             @OA\Property(property="known_langs", type="array", description="所具備的語言專長 IDs", @OA\Items(type="integer"), example={1, 2}),
+     *             @OA\Property(property="referral_sources", type="array", description="哪裡知道我們的來源種類 IDs", @OA\Items(type="integer"), example={1}),
+     *             @OA\Property(property="learning_langs", type="array", description="欲學習的語言別 IDs", @OA\Items(type="integer"), example={1, 2}),
+     *             @OA\Property(property="goals", type="array", description="欲達到的目標 IDs", @OA\Items(type="integer"), example={1, 2, 3}),
+     *             @OA\Property(property="purposes", type="array", description="學習語言的目的 IDs", @OA\Items(type="integer"), example={1, 2}),
+     *             @OA\Property(property="levels", type="array", description="目前程度 IDs", @OA\Items(type="integer"), example={2}),
+     *             @OA\Property(property="highest_educations", type="array", maxItems=1, description="最高學歷 ID (max 1)", @OA\Items(type="integer"), example={3}),
+     *             @OA\Property(property="schools", type="array", description="就讀學校 IDs", @OA\Items(type="integer"), example={1, 2}),
+     *             @OA\Property(property="departments", type="array", description="就讀科系 IDs", @OA\Items(type="integer"), example={5}),
+     *             @OA\Property(property="certificates", type="array", description="相關語言證照 IDs", @OA\Items(type="integer"), example={1, 3, 5})
      *         )
      *     ),
      *     @OA\Response(
@@ -766,36 +751,16 @@ class MemberController extends Controller
      *                 @OA\Property(property="address", type="string", example="No. 456, Section 2, Roosevelt Road"),
      *                 @OA\Property(property="mobile", type="string", example="0987654321")
      *             ),
-     *             @OA\Property(
-     *                 property="background",
-     *                 type="object",
-     *                 nullable=true,
-     *                 @OA\Property(property="id", type="integer", example=1),
-     *                 @OA\Property(property="goals", type="array", @OA\Items(type="string")),
-     *                 @OA\Property(property="purposes", type="array", @OA\Items(type="string")),
-     *                 @OA\Property(property="highest_education", type="string", example="PhD"),
-     *                 @OA\Property(property="schools", type="array", @OA\Items(type="string")),
-     *                 @OA\Property(property="departments", type="array", @OA\Items(type="string")),
-     *                 @OA\Property(property="certificates", type="array", @OA\Items(type="string")),
-     *                 @OA\Property(
-     *                     property="languages",
-     *                     type="array",
-     *                     @OA\Items(
-     *                         type="object",
-     *                         @OA\Property(property="id", type="integer", example=1),
-     *                         @OA\Property(property="name", type="string", example="English")
-     *                     )
-     *                 ),
-     *                 @OA\Property(
-     *                     property="levels",
-     *                     type="array",
-     *                     @OA\Items(
-     *                         type="object",
-     *                         @OA\Property(property="id", type="integer", example=2),
-     *                         @OA\Property(property="name", type="string", example="Intermediate")
-     *                     )
-     *                 )
-     *             )
+     *             @OA\Property(property="known_langs", type="array", description="所具備的語言專長", @OA\Items(type="object")),
+     *             @OA\Property(property="referral_sources", type="array", description="哪裡知道我們的來源種類", @OA\Items(type="object")),
+     *             @OA\Property(property="learning_langs", type="array", description="欲學習的語言別", @OA\Items(type="object")),
+     *             @OA\Property(property="goals", type="array", description="欲達到的目標", @OA\Items(type="object")),
+     *             @OA\Property(property="purposes", type="array", description="學習語言的目的", @OA\Items(type="object")),
+     *             @OA\Property(property="levels", type="array", description="目前程度", @OA\Items(type="object")),
+     *             @OA\Property(property="highest_educations", type="array", description="最高學歷", @OA\Items(type="object")),
+     *             @OA\Property(property="schools", type="array", description="就讀學校", @OA\Items(type="object")),
+     *             @OA\Property(property="departments", type="array", description="就讀科系", @OA\Items(type="object")),
+     *             @OA\Property(property="certificates", type="array", description="相關語言證照", @OA\Items(type="object"))
      *         ))
      *     ),
      *     @OA\Response(
@@ -861,34 +826,44 @@ class MemberController extends Controller
             'contact.mobile' => 'sometimes|string|max:20|unique:contacts,mobile,' . ($member->contact->id ?? 'NULL'),
             'contact.mobile_valid' => 'sometimes|boolean',
 
-            // 新的關聯結構
+            // 所具備的語言專長
             'known_langs' => 'sometimes|array',
             'known_langs.*' => 'exists:lang_types,id',
 
-            'learning_langs' => 'sometimes|array',
-            'learning_langs.*' => 'exists:lang_types,id',
-
-            'levels' => 'sometimes|array',
-            'levels.*' => 'exists:level_types,id',
-
+            /* 新的關聯結構 */
+            // 哪裡知道我們的來源種類
             'referral_sources' => 'sometimes|array',
             'referral_sources.*' => 'exists:referral_source_types,id',
 
+            // 欲學習的語言別
+            'learning_langs' => 'sometimes|array',
+            'learning_langs.*' => 'exists:lang_types,id',
+
+            // 欲達到的目標
             'goals' => 'sometimes|array',
             'goals.*' => 'exists:goal_types,id',
 
+            // 學習語言的目的
             'purposes' => 'sometimes|array',
             'purposes.*' => 'exists:purpose_types,id',
 
+            // 目前程度
+            'levels' => 'sometimes|array',
+            'levels.*' => 'exists:level_types,id',
+
+            // 最高學歷
             'highest_educations' => 'sometimes|array|max:1',
             'highest_educations.*' => 'exists:education_types,id',
 
+            // 就讀學校(最高學歷所在學校)
             'schools' => 'sometimes|array',
             'schools.*' => 'exists:school_types,id',
 
+            // 就讀科系(最高學歷所在科系)
             'departments' => 'sometimes|array',
             'departments.*' => 'exists:department_types,id',
 
+            // 相關語言證照
             'certificates' => 'sometimes|array',
             'certificates.*' => 'exists:certificate_types,id',
         ]);

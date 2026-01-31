@@ -7936,74 +7936,20 @@
                                                     "type": "object",
                                                     "nullable": true
                                                 },
-                                                "background": {
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "member_id": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "goals": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
+                                                "known_langs": {
+                                                    "description": "所具備的語言專長",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
                                                             },
-                                                            "example": [
-                                                                "Career advancement",
-                                                                "Skill development"
-                                                            ]
-                                                        },
-                                                        "purposes": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
+                                                            "lang_type_id": {
+                                                                "type": "integer",
+                                                                "example": 1
                                                             },
-                                                            "example": [
-                                                                "Professional certification",
-                                                                "Personal interest"
-                                                            ]
-                                                        },
-                                                        "highest_education": {
-                                                            "type": "string",
-                                                            "example": "Master's Degree"
-                                                        },
-                                                        "schools": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            },
-                                                            "example": [
-                                                                "National Taiwan University",
-                                                                "MIT"
-                                                            ]
-                                                        },
-                                                        "departments": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            },
-                                                            "example": [
-                                                                "Computer Science",
-                                                                "Engineering"
-                                                            ]
-                                                        },
-                                                        "certificates": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            },
-                                                            "example": [
-                                                                "AWS Certified",
-                                                                "PMP"
-                                                            ]
-                                                        },
-                                                        "languages": {
-                                                            "description": "Related language types",
-                                                            "type": "array",
-                                                            "items": {
+                                                            "lang_type": {
                                                                 "properties": {
                                                                     "id": {
                                                                         "type": "integer",
@@ -8012,55 +7958,76 @@
                                                                     "name": {
                                                                         "type": "string",
                                                                         "example": "English"
-                                                                    },
-                                                                    "created_at": {
-                                                                        "type": "string",
-                                                                        "format": "date-time"
-                                                                    },
-                                                                    "updated_at": {
-                                                                        "type": "string",
-                                                                        "format": "date-time"
                                                                     }
                                                                 },
                                                                 "type": "object"
                                                             }
                                                         },
-                                                        "levels": {
-                                                            "description": "Related skill levels",
-                                                            "type": "array",
-                                                            "items": {
-                                                                "properties": {
-                                                                    "id": {
-                                                                        "type": "integer",
-                                                                        "example": 1
-                                                                    },
-                                                                    "name": {
-                                                                        "type": "string",
-                                                                        "example": "Beginner"
-                                                                    },
-                                                                    "created_at": {
-                                                                        "type": "string",
-                                                                        "format": "date-time"
-                                                                    },
-                                                                    "updated_at": {
-                                                                        "type": "string",
-                                                                        "format": "date-time"
-                                                                    }
-                                                                },
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "created_at": {
-                                                            "type": "string",
-                                                            "format": "date-time"
-                                                        },
-                                                        "updated_at": {
-                                                            "type": "string",
-                                                            "format": "date-time"
-                                                        }
-                                                    },
-                                                    "type": "object",
-                                                    "nullable": true
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "referral_sources": {
+                                                    "description": "哪裡知道我們的來源種類",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "learning_langs": {
+                                                    "description": "欲學習的語言別",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "goals": {
+                                                    "description": "欲達到的目標",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "purposes": {
+                                                    "description": "學習語言的目的",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "levels": {
+                                                    "description": "目前程度",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "highest_educations": {
+                                                    "description": "最高學歷",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "schools": {
+                                                    "description": "就讀學校",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "departments": {
+                                                    "description": "就讀科系",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "certificates": {
+                                                    "description": "相關語言證照",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"
@@ -8243,95 +8210,114 @@
                                         },
                                         "type": "object"
                                     },
-                                    "background": {
-                                        "description": "Educational and professional background",
-                                        "properties": {
-                                            "goals": {
-                                                "description": "Learning goals",
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                },
-                                                "example": [
-                                                    "Leadership development",
-                                                    "Technical mastery"
-                                                ]
-                                            },
-                                            "purposes": {
-                                                "description": "Learning purposes",
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                },
-                                                "example": [
-                                                    "Career transition",
-                                                    "Continuous learning"
-                                                ]
-                                            },
-                                            "highest_education": {
-                                                "description": "Highest education level",
-                                                "type": "string",
-                                                "maxLength": 255,
-                                                "example": "PhD"
-                                            },
-                                            "schools": {
-                                                "description": "Schools attended",
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                },
-                                                "example": [
-                                                    "Stanford University",
-                                                    "Harvard"
-                                                ]
-                                            },
-                                            "departments": {
-                                                "description": "Departments or majors",
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                },
-                                                "example": [
-                                                    "Data Science",
-                                                    "Statistics"
-                                                ]
-                                            },
-                                            "certificates": {
-                                                "description": "Professional certificates",
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "string"
-                                                },
-                                                "example": [
-                                                    "Google Cloud Certified",
-                                                    "Scrum Master"
-                                                ]
-                                            },
-                                            "languages": {
-                                                "description": "Language IDs from lang_types table (will sync)",
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "integer"
-                                                },
-                                                "example": [
-                                                    1,
-                                                    2,
-                                                    3
-                                                ]
-                                            },
-                                            "levels": {
-                                                "description": "Skill level IDs from level_types table (will sync)",
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "integer"
-                                                },
-                                                "example": [
-                                                    2,
-                                                    3
-                                                ]
-                                            }
+                                    "known_langs": {
+                                        "description": "所具備的語言專長 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
                                         },
-                                        "type": "object"
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "referral_sources": {
+                                        "description": "哪裡知道我們的來源種類 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1
+                                        ]
+                                    },
+                                    "learning_langs": {
+                                        "description": "欲學習的語言別 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "goals": {
+                                        "description": "欲達到的目標 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "purposes": {
+                                        "description": "學習語言的目的 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "levels": {
+                                        "description": "目前程度 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            2
+                                        ]
+                                    },
+                                    "highest_educations": {
+                                        "description": "最高學歷 ID (max 1)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "maxItems": 1,
+                                        "example": [
+                                            3
+                                        ]
+                                    },
+                                    "schools": {
+                                        "description": "就讀學校 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "departments": {
+                                        "description": "就讀科系 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            5
+                                        ]
+                                    },
+                                    "certificates": {
+                                        "description": "相關語言證照 IDs",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            3,
+                                            5
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -8444,81 +8430,75 @@
                                                     "type": "object",
                                                     "nullable": true
                                                 },
-                                                "background": {
-                                                    "properties": {
-                                                        "id": {
-                                                            "type": "integer",
-                                                            "example": 1
-                                                        },
-                                                        "goals": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "purposes": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "highest_education": {
-                                                            "type": "string",
-                                                            "example": "PhD"
-                                                        },
-                                                        "schools": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "departments": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "certificates": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "type": "string"
-                                                            }
-                                                        },
-                                                        "languages": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "properties": {
-                                                                    "id": {
-                                                                        "type": "integer",
-                                                                        "example": 1
-                                                                    },
-                                                                    "name": {
-                                                                        "type": "string",
-                                                                        "example": "English"
-                                                                    }
-                                                                },
-                                                                "type": "object"
-                                                            }
-                                                        },
-                                                        "levels": {
-                                                            "type": "array",
-                                                            "items": {
-                                                                "properties": {
-                                                                    "id": {
-                                                                        "type": "integer",
-                                                                        "example": 2
-                                                                    },
-                                                                    "name": {
-                                                                        "type": "string",
-                                                                        "example": "Intermediate"
-                                                                    }
-                                                                },
-                                                                "type": "object"
-                                                            }
-                                                        }
-                                                    },
-                                                    "type": "object",
-                                                    "nullable": true
+                                                "known_langs": {
+                                                    "description": "所具備的語言專長",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "referral_sources": {
+                                                    "description": "哪裡知道我們的來源種類",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "learning_langs": {
+                                                    "description": "欲學習的語言別",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "goals": {
+                                                    "description": "欲達到的目標",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "purposes": {
+                                                    "description": "學習語言的目的",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "levels": {
+                                                    "description": "目前程度",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "highest_educations": {
+                                                    "description": "最高學歷",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "schools": {
+                                                    "description": "就讀學校",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "departments": {
+                                                    "description": "就讀科系",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "certificates": {
+                                                    "description": "相關語言證照",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
                                                 }
                                             },
                                             "type": "object"
