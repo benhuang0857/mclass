@@ -32,6 +32,22 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SlideshowController;
 use App\Http\Controllers\SlideshowTypeController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\VerificationController;
+
+########## Verification API ##########
+
+Route::prefix('verification')->group(function () {
+    // Email verification
+    Route::post('/email/send', [VerificationController::class, 'sendEmailCode']);
+    Route::post('/email/verify', [VerificationController::class, 'verifyEmailCode']);
+
+    // Mobile verification
+    Route::post('/mobile/send', [VerificationController::class, 'sendMobileCode']);
+    Route::post('/mobile/verify', [VerificationController::class, 'verifyMobileCode']);
+
+    // Debug endpoint (only available when APP_DEBUG=true)
+    Route::get('/code/{type}', [VerificationController::class, 'getCode']);
+});
 
 ########## Auth API ##########
 

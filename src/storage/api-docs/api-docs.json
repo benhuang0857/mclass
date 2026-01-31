@@ -837,34 +837,240 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "會員註冊",
+                "summary": "會員註冊（需先完成 Email 驗證）",
                 "operationId": "ed42f392010c301892e640067141676e",
                 "requestBody": {
+                    "description": "會員註冊資料，包含必填的 member 和 profile，以及可選的 contact 和關聯資料",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "account",
-                                    "password",
-                                    "email"
+                                    "member",
+                                    "profile"
                                 ],
                                 "properties": {
-                                    "account": {
-                                        "type": "string",
-                                        "example": "user123"
+                                    "member": {
+                                        "required": [
+                                            "nickname",
+                                            "account",
+                                            "email",
+                                            "password"
+                                        ],
+                                        "properties": {
+                                            "nickname": {
+                                                "description": "會員暱稱",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "JohnDoe"
+                                            },
+                                            "account": {
+                                                "description": "帳號（唯一）",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "john.doe"
+                                            },
+                                            "email": {
+                                                "description": "Email（唯一，需先驗證）",
+                                                "type": "string",
+                                                "format": "email",
+                                                "maxLength": 255,
+                                                "example": "john@example.com"
+                                            },
+                                            "password": {
+                                                "description": "密碼（至少8字元）",
+                                                "type": "string",
+                                                "format": "password",
+                                                "minLength": 8,
+                                                "example": "password123"
+                                            }
+                                        },
+                                        "type": "object"
                                     },
-                                    "password": {
-                                        "type": "string",
-                                        "example": "password123"
+                                    "profile": {
+                                        "required": [
+                                            "lastname",
+                                            "firstname",
+                                            "gender",
+                                            "birthday",
+                                            "job"
+                                        ],
+                                        "properties": {
+                                            "lastname": {
+                                                "description": "姓",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Doe"
+                                            },
+                                            "firstname": {
+                                                "description": "名",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "John"
+                                            },
+                                            "gender": {
+                                                "description": "性別",
+                                                "type": "string",
+                                                "enum": [
+                                                    "male",
+                                                    "female",
+                                                    "other"
+                                                ],
+                                                "example": "male"
+                                            },
+                                            "birthday": {
+                                                "description": "生日 (YYYY-MM-DD)",
+                                                "type": "string",
+                                                "format": "date",
+                                                "example": "1990-01-01"
+                                            },
+                                            "job": {
+                                                "description": "職業",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Software Engineer"
+                                            }
+                                        },
+                                        "type": "object"
                                     },
-                                    "email": {
-                                        "type": "string",
-                                        "example": "user@example.com"
+                                    "contact": {
+                                        "description": "聯絡資訊（可選，若填寫 mobile 則需先完成 SMS 驗證）",
+                                        "properties": {
+                                            "city": {
+                                                "description": "城市",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Taipei"
+                                            },
+                                            "region": {
+                                                "description": "地區",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "Xinyi"
+                                            },
+                                            "address": {
+                                                "description": "地址",
+                                                "type": "string",
+                                                "maxLength": 255,
+                                                "example": "No. 123, Section 1, Xinyi Road"
+                                            },
+                                            "mobile": {
+                                                "description": "手機號碼（唯一，需先完成 SMS 驗證）",
+                                                "type": "string",
+                                                "maxLength": 20,
+                                                "example": "0912345678"
+                                            }
+                                        },
+                                        "type": "object"
                                     },
-                                    "nickname": {
-                                        "type": "string",
-                                        "example": "使用者暱稱"
+                                    "known_langs": {
+                                        "description": "所具備的語言專長 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "learning_langs": {
+                                        "description": "欲學習的語言別 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            3,
+                                            4
+                                        ]
+                                    },
+                                    "levels": {
+                                        "description": "目前程度 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            2
+                                        ]
+                                    },
+                                    "referral_sources": {
+                                        "description": "得知來源 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1
+                                        ]
+                                    },
+                                    "goals": {
+                                        "description": "學習目標 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    },
+                                    "purposes": {
+                                        "description": "學習目的 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "highest_educations": {
+                                        "description": "最高學歷 ID（可選，最多1個）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "maxItems": 1,
+                                        "example": [
+                                            3
+                                        ]
+                                    },
+                                    "schools": {
+                                        "description": "就讀學校 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
+                                    },
+                                    "departments": {
+                                        "description": "就讀科系 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            5
+                                        ]
+                                    },
+                                    "certificates": {
+                                        "description": "語言證照 IDs（可選）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            3,
+                                            5
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -879,11 +1085,16 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
                                         "message": {
                                             "type": "string",
                                             "example": "User registered successfully"
                                         },
-                                        "member": {
+                                        "data": {
+                                            "description": "會員資料含所有關聯",
                                             "type": "object"
                                         },
                                         "access_token": {
@@ -902,8 +1113,14 @@
                             }
                         }
                     },
+                    "400": {
+                        "description": "Email 或手機尚未驗證"
+                    },
                     "422": {
                         "description": "驗證錯誤"
+                    },
+                    "500": {
+                        "description": "伺服器錯誤"
                     }
                 }
             }
@@ -16085,6 +16302,348 @@
                 ]
             }
         },
+        "/verification/email/send": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "summary": "發送 Email 驗證碼",
+                "operationId": "3a1e2003587183f795da2e55bf8e206c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "驗證碼發送成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "驗證碼已發送"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 600
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "驗證錯誤"
+                    },
+                    "429": {
+                        "description": "請求過於頻繁"
+                    }
+                }
+            }
+        },
+        "/verification/email/verify": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "summary": "驗證 Email 驗證碼",
+                "operationId": "9f138e0e59b34748a8880b2ebcf6760a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "code"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "驗證成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "驗證成功"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "verified": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "驗證失敗"
+                    },
+                    "422": {
+                        "description": "驗證錯誤"
+                    }
+                }
+            }
+        },
+        "/verification/mobile/send": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "summary": "發送手機驗證碼",
+                "operationId": "6aaac1010c08fa428106636bf3b27905",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobile"
+                                ],
+                                "properties": {
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "驗證碼發送成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "驗證碼已發送"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "expires_in": {
+                                                    "type": "integer",
+                                                    "example": 600
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "驗證錯誤"
+                    },
+                    "429": {
+                        "description": "請求過於頻繁"
+                    }
+                }
+            }
+        },
+        "/verification/mobile/verify": {
+            "post": {
+                "tags": [
+                    "Verification"
+                ],
+                "summary": "驗證手機驗證碼",
+                "operationId": "d9d22a3abdcb14681da42af3f15d46da",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "mobile",
+                                    "code"
+                                ],
+                                "properties": {
+                                    "mobile": {
+                                        "type": "string",
+                                        "example": "0912345678"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "驗證成功",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "驗證成功"
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "verified": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "驗證失敗"
+                    },
+                    "422": {
+                        "description": "驗證錯誤"
+                    }
+                }
+            }
+        },
+        "/verification/code/{type}": {
+            "get": {
+                "tags": [
+                    "Verification"
+                ],
+                "summary": "取得驗證碼（僅 APP_DEBUG=true 時可用）",
+                "operationId": "bbde1bcda32f3d555d90bf416dcfb610",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "path",
+                        "description": "驗證類型 (email 或 mobile)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "email",
+                                "mobile"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "target",
+                        "in": "query",
+                        "description": "Email 或手機號碼",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "成功取得驗證碼",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "code": {
+                                                    "type": "string",
+                                                    "example": "123456"
+                                                },
+                                                "expires_at": {
+                                                    "type": "string",
+                                                    "format": "date-time"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "此 API 僅在開發模式可用"
+                    },
+                    "404": {
+                        "description": "找不到驗證碼"
+                    }
+                }
+            }
+        },
         "/zoom/check": {
             "get": {
                 "tags": [
@@ -16686,6 +17245,10 @@
         {
             "name": "Search",
             "description": "Search operations for courses and discussions"
+        },
+        {
+            "name": "Verification",
+            "description": "驗證碼相關 API"
         },
         {
             "name": "Attendance",
