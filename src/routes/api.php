@@ -33,6 +33,7 @@ use App\Http\Controllers\SlideshowController;
 use App\Http\Controllers\SlideshowTypeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\OptionController;
 
 ########## Verification API ##########
 
@@ -57,6 +58,13 @@ Route::prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:api');
     Route::get('/me', [AuthController::class, 'me'])->middleware('auth:api');
+});
+
+########## Options API ##########
+
+Route::prefix('options')->group(function () {
+    // 取得註冊頁面所需的所有選項
+    Route::get('/register', [OptionController::class, 'register']);
 });
 
 ########## Resources API ##########
