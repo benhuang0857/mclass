@@ -1071,6 +1071,16 @@
                                             3,
                                             5
                                         ]
+                                    },
+                                    "roles": {
+                                        "description": "角色 IDs（必填，至少選擇一個）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -1193,7 +1203,8 @@
                 "tags": [
                     "Auth"
                 ],
-                "summary": "取得當前使用者資訊",
+                "summary": "取得當前使用者完整資訊",
+                "description": "取得當前登入會員的完整資料，包含個人資料、聯絡資訊、角色權限、選單、以及所有關聯資料",
                 "operationId": "a9c495788506b114956e3f509e5d90a2",
                 "responses": {
                     "200": {
@@ -1202,17 +1213,137 @@
                             "application/json": {
                                 "schema": {
                                     "properties": {
-                                        "id": {
-                                            "type": "integer"
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
                                         },
-                                        "account": {
-                                            "type": "string"
-                                        },
-                                        "email": {
-                                            "type": "string"
-                                        },
-                                        "nickname": {
-                                            "type": "string"
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "nickname": {
+                                                    "type": "string",
+                                                    "example": "JohnDoe"
+                                                },
+                                                "account": {
+                                                    "type": "string",
+                                                    "example": "john.doe"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "john@example.com"
+                                                },
+                                                "email_valid": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "status": {
+                                                    "type": "boolean",
+                                                    "example": true
+                                                },
+                                                "profile": {
+                                                    "description": "個人資料",
+                                                    "type": "object"
+                                                },
+                                                "contact": {
+                                                    "description": "聯絡資訊",
+                                                    "type": "object"
+                                                },
+                                                "roles": {
+                                                    "description": "角色列表",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "menus": {
+                                                    "description": "可存取的選單",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "known_langs": {
+                                                    "description": "熟悉語言",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "learning_langs": {
+                                                    "description": "學習語言",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "levels": {
+                                                    "description": "目前程度",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "referral_sources": {
+                                                    "description": "得知來源",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "goals": {
+                                                    "description": "學習目標",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "purposes": {
+                                                    "description": "學習目的",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "highest_educations": {
+                                                    "description": "最高學歷",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "schools": {
+                                                    "description": "就讀學校",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "departments": {
+                                                    "description": "就讀科系",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "certificates": {
+                                                    "description": "語言證照",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "notification_preferences": {
+                                                    "description": "通知偏好設定",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
                                         }
                                     },
                                     "type": "object"
@@ -7204,6 +7335,27 @@
                                                         "type": "object",
                                                         "nullable": true
                                                     },
+                                                    "roles": {
+                                                        "description": "Member roles",
+                                                        "type": "array",
+                                                        "items": {
+                                                            "properties": {
+                                                                "id": {
+                                                                    "type": "integer",
+                                                                    "example": 1
+                                                                },
+                                                                "name": {
+                                                                    "type": "string",
+                                                                    "example": "學生"
+                                                                },
+                                                                "slug": {
+                                                                    "type": "string",
+                                                                    "example": "student"
+                                                                }
+                                                            },
+                                                            "type": "object"
+                                                        }
+                                                    },
                                                     "known_langs": {
                                                         "description": "Currently known languages",
                                                         "type": "array",
@@ -7651,6 +7803,17 @@
                                             3,
                                             5
                                         ]
+                                    },
+                                    "roles": {
+                                        "description": "Role IDs (optional)",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -7752,6 +7915,27 @@
                                                     },
                                                     "type": "object",
                                                     "nullable": true
+                                                },
+                                                "roles": {
+                                                    "description": "會員角色",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "學生"
+                                                            },
+                                                            "slug": {
+                                                                "type": "string",
+                                                                "example": "student"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 },
                                                 "known_langs": {
                                                     "type": "array",
@@ -8153,6 +8337,27 @@
                                                     "type": "object",
                                                     "nullable": true
                                                 },
+                                                "roles": {
+                                                    "description": "會員角色",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "學生"
+                                                            },
+                                                            "slug": {
+                                                                "type": "string",
+                                                                "example": "student"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
                                                 "known_langs": {
                                                     "description": "所具備的語言專長",
                                                     "type": "array",
@@ -8535,6 +8740,17 @@
                                             3,
                                             5
                                         ]
+                                    },
+                                    "roles": {
+                                        "description": "角色 IDs（會完全取代現有角色）",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2
+                                        ]
                                     }
                                 },
                                 "type": "object"
@@ -8646,6 +8862,27 @@
                                                     },
                                                     "type": "object",
                                                     "nullable": true
+                                                },
+                                                "roles": {
+                                                    "description": "會員角色",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "學生"
+                                                            },
+                                                            "slug": {
+                                                                "type": "string",
+                                                                "example": "student"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
                                                 },
                                                 "known_langs": {
                                                     "description": "所具備的語言專長",
@@ -12888,7 +13125,7 @@
                     "Options"
                 ],
                 "summary": "取得註冊頁面所需的所有選項",
-                "description": "一次取得語言種類、等級種類、來源種類、目標種類、目的種類、學歷種類、學校種類、系所種類、證照種類",
+                "description": "一次取得角色、語言種類、等級種類、來源種類、目標種類、目的種類、學歷種類、學校種類、系所種類、證照種類",
                 "operationId": "b0843168e6cb6262705fa51f9e4c5b6d",
                 "responses": {
                     "200": {
@@ -12903,6 +13140,27 @@
                                         },
                                         "data": {
                                             "properties": {
+                                                "roles": {
+                                                    "description": "角色種類",
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "integer",
+                                                                "example": 1
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "學生"
+                                                            },
+                                                            "slug": {
+                                                                "type": "string",
+                                                                "example": "student"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
                                                 "lang_types": {
                                                     "description": "語言種類",
                                                     "type": "array",

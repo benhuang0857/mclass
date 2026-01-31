@@ -70,7 +70,8 @@ class AuthController extends Controller
      *             @OA\Property(property="highest_educations", type="array", maxItems=1, description="最高學歷 ID（可選，最多1個）", @OA\Items(type="integer"), example={3}),
      *             @OA\Property(property="schools", type="array", description="就讀學校 IDs（可選）", @OA\Items(type="integer"), example={1, 2}),
      *             @OA\Property(property="departments", type="array", description="就讀科系 IDs（可選）", @OA\Items(type="integer"), example={5}),
-     *             @OA\Property(property="certificates", type="array", description="語言證照 IDs（可選）", @OA\Items(type="integer"), example={1, 3, 5})
+     *             @OA\Property(property="certificates", type="array", description="語言證照 IDs（可選）", @OA\Items(type="integer"), example={1, 3, 5}),
+     *             @OA\Property(property="roles", type="array", description="角色 IDs（必填，至少選擇一個）", @OA\Items(type="integer"), example={1})
      *         )
      *     ),
      *     @OA\Response(
@@ -133,6 +134,10 @@ class AuthController extends Controller
             'departments.*' => 'exists:department_types,id',
             'certificates' => 'nullable|array',
             'certificates.*' => 'exists:certificate_types,id',
+
+            // 角色（必填，至少選擇一個）
+            'roles' => 'required|array|min:1',
+            'roles.*' => 'exists:roles,id',
         ]);
 
         // Check if email has been verified (within 30 minutes)
@@ -183,6 +188,9 @@ class AuthController extends Controller
             // 創建關聯資料
             $this->syncMemberRelations($member, $validated);
 
+            // 綁定角色
+            $member->roles()->attach($validated['roles']);
+
             DB::commit();
 
             $token = Auth::guard('api')->login($member);
@@ -193,6 +201,7 @@ class AuthController extends Controller
                 'data' => $member->load([
                     'profile',
                     'contact',
+                    'roles',
                     'knownLangs.langType',
                     'learningLangs.langType',
                     'levels.levelType',
@@ -339,17 +348,38 @@ class AuthController extends Controller
     /**
      * @OA\Get(
      *     path="/auth/me",
-     *     summary="取得當前使用者資訊",
+     *     summary="取得當前使用者完整資訊",
+     *     description="取得當前登入會員的完整資料，包含個人資料、聯絡資訊、角色權限、選單、以及所有關聯資料",
      *     tags={"Auth"},
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *         response=200,
      *         description="成功取得使用者資訊",
      *         @OA\JsonContent(
-     *             @OA\Property(property="id", type="integer"),
-     *             @OA\Property(property="account", type="string"),
-     *             @OA\Property(property="email", type="string"),
-     *             @OA\Property(property="nickname", type="string")
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="nickname", type="string", example="JohnDoe"),
+     *                 @OA\Property(property="account", type="string", example="john.doe"),
+     *                 @OA\Property(property="email", type="string", example="john@example.com"),
+     *                 @OA\Property(property="email_valid", type="boolean", example=true),
+     *                 @OA\Property(property="status", type="boolean", example=true),
+     *                 @OA\Property(property="profile", type="object", description="個人資料"),
+     *                 @OA\Property(property="contact", type="object", description="聯絡資訊"),
+     *                 @OA\Property(property="roles", type="array", description="角色列表", @OA\Items(type="object")),
+     *                 @OA\Property(property="menus", type="array", description="可存取的選單", @OA\Items(type="object")),
+     *                 @OA\Property(property="known_langs", type="array", description="熟悉語言", @OA\Items(type="object")),
+     *                 @OA\Property(property="learning_langs", type="array", description="學習語言", @OA\Items(type="object")),
+     *                 @OA\Property(property="levels", type="array", description="目前程度", @OA\Items(type="object")),
+     *                 @OA\Property(property="referral_sources", type="array", description="得知來源", @OA\Items(type="object")),
+     *                 @OA\Property(property="goals", type="array", description="學習目標", @OA\Items(type="object")),
+     *                 @OA\Property(property="purposes", type="array", description="學習目的", @OA\Items(type="object")),
+     *                 @OA\Property(property="highest_educations", type="array", description="最高學歷", @OA\Items(type="object")),
+     *                 @OA\Property(property="schools", type="array", description="就讀學校", @OA\Items(type="object")),
+     *                 @OA\Property(property="departments", type="array", description="就讀科系", @OA\Items(type="object")),
+     *                 @OA\Property(property="certificates", type="array", description="語言證照", @OA\Items(type="object")),
+     *                 @OA\Property(property="notification_preferences", type="array", description="通知偏好設定", @OA\Items(type="object"))
+     *             )
      *         )
      *     ),
      *     @OA\Response(response=401, description="未認證")
@@ -357,7 +387,43 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(Auth::guard('api')->user());
+        $member = Auth::guard('api')->user();
+
+        // 載入所有關聯資料
+        $member->load([
+            'profile',
+            'contact',
+            'roles.menus' => function ($query) {
+                $query->where('status', true)->orderBy('display_order');
+            },
+            'knownLangs.langType',
+            'learningLangs.langType',
+            'levels.levelType',
+            'referralSources.referralSourceType',
+            'goals.goalType',
+            'purposes.purposeType',
+            'highestEducations.educationType',
+            'schools.schoolType',
+            'departments.departmentType',
+            'certificates.certificateType',
+            'notificationPreferences',
+        ]);
+
+        // 整理可存取的選單（根據角色合併並去重）
+        $menus = collect();
+        foreach ($member->roles as $role) {
+            $menus = $menus->merge($role->menus);
+        }
+        $menus = $menus->unique('id')->sortBy('display_order')->values();
+
+        // 組合回傳資料
+        $data = $member->toArray();
+        $data['menus'] = $menus;
+
+        return response()->json([
+            'success' => true,
+            'data' => $data,
+        ]);
     }
 
     /**

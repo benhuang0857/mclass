@@ -69,6 +69,17 @@ class MemberController extends Controller
      *                     @OA\Property(property="mobile_valid", type="boolean", example=true)
      *                 ),
      *                 @OA\Property(
+     *                     property="roles",
+     *                     type="array",
+     *                     description="Member roles",
+     *                     @OA\Items(
+     *                         type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="name", type="string", example="學生"),
+     *                         @OA\Property(property="slug", type="string", example="student")
+     *                     )
+     *                 ),
+     *                 @OA\Property(
      *                     property="known_langs",
      *                     type="array",
      *                     description="Currently known languages",
@@ -151,6 +162,7 @@ class MemberController extends Controller
             $members = Member::with([
                 'profile',
                 'contact',
+                'roles',
                 'knownLangs.langType',
                 'learningLangs.langType',
                 'levels.levelType',
@@ -228,7 +240,8 @@ class MemberController extends Controller
      *             @OA\Property(property="highest_educations", type="array", maxItems=1, description="Highest education type ID (optional, max 1)", @OA\Items(type="integer"), example={3}),
      *             @OA\Property(property="schools", type="array", description="School type IDs (optional)", @OA\Items(type="integer"), example={1, 2}),
      *             @OA\Property(property="departments", type="array", description="Department type IDs (optional)", @OA\Items(type="integer"), example={5}),
-     *             @OA\Property(property="certificates", type="array", description="Certificate type IDs (optional)", @OA\Items(type="integer"), example={1, 3, 5})
+     *             @OA\Property(property="certificates", type="array", description="Certificate type IDs (optional)", @OA\Items(type="integer"), example={1, 3, 5}),
+     *             @OA\Property(property="roles", type="array", description="Role IDs (optional)", @OA\Items(type="integer"), example={1, 2})
      *         )
      *     ),
      *     @OA\Response(
@@ -264,6 +277,12 @@ class MemberController extends Controller
      *                 @OA\Property(property="id", type="integer", example=1),
      *                 @OA\Property(property="city", type="string", example="Taipei")
      *             ),
+     *             @OA\Property(property="roles", type="array", description="會員角色", @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="學生"),
+     *                 @OA\Property(property="slug", type="string", example="student")
+     *             )),
      *             @OA\Property(property="known_langs", type="array", @OA\Items(
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
@@ -403,6 +422,10 @@ class MemberController extends Controller
             // 相關語言證照
             'certificates' => 'sometimes|array',
             'certificates.*' => 'exists:certificate_types,id',
+
+            // 角色
+            'roles' => 'sometimes|array',
+            'roles.*' => 'exists:roles,id',
         ]);
 
         DB::beginTransaction();
@@ -426,6 +449,11 @@ class MemberController extends Controller
             // 創建關聯資料
             $this->syncMemberRelations($member, $validated);
 
+            // 綁定角色
+            if (isset($validated['roles'])) {
+                $member->roles()->attach($validated['roles']);
+            }
+
             DB::commit();
 
             return response()->json([
@@ -433,6 +461,7 @@ class MemberController extends Controller
                 'data' => $member->load([
                     'profile',
                     'contact',
+                    'roles',
                     'knownLangs.langType',
                     'learningLangs.langType',
                     'levels.levelType',
@@ -588,6 +617,11 @@ class MemberController extends Controller
      *                 @OA\Property(property="created_at", type="string", format="date-time"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time")
      *             ),
+     *             @OA\Property(property="roles", type="array", description="會員角色", @OA\Items(type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="學生"),
+     *                 @OA\Property(property="slug", type="string", example="student")
+     *             )),
      *             @OA\Property(property="known_langs", type="array", description="所具備的語言專長", @OA\Items(type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
      *                 @OA\Property(property="lang_type_id", type="integer", example=1),
@@ -629,6 +663,7 @@ class MemberController extends Controller
             $member = Member::with([
                 'profile',
                 'contact',
+                'roles',
                 'knownLangs.langType',
                 'learningLangs.langType',
                 'levels.levelType',
@@ -712,7 +747,8 @@ class MemberController extends Controller
      *             @OA\Property(property="highest_educations", type="array", maxItems=1, description="最高學歷 ID (max 1)", @OA\Items(type="integer"), example={3}),
      *             @OA\Property(property="schools", type="array", description="就讀學校 IDs", @OA\Items(type="integer"), example={1, 2}),
      *             @OA\Property(property="departments", type="array", description="就讀科系 IDs", @OA\Items(type="integer"), example={5}),
-     *             @OA\Property(property="certificates", type="array", description="相關語言證照 IDs", @OA\Items(type="integer"), example={1, 3, 5})
+     *             @OA\Property(property="certificates", type="array", description="相關語言證照 IDs", @OA\Items(type="integer"), example={1, 3, 5}),
+     *             @OA\Property(property="roles", type="array", description="角色 IDs（會完全取代現有角色）", @OA\Items(type="integer"), example={1, 2})
      *         )
      *     ),
      *     @OA\Response(
@@ -751,6 +787,11 @@ class MemberController extends Controller
      *                 @OA\Property(property="address", type="string", example="No. 456, Section 2, Roosevelt Road"),
      *                 @OA\Property(property="mobile", type="string", example="0987654321")
      *             ),
+     *             @OA\Property(property="roles", type="array", description="會員角色", @OA\Items(type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="學生"),
+     *                 @OA\Property(property="slug", type="string", example="student")
+     *             )),
      *             @OA\Property(property="known_langs", type="array", description="所具備的語言專長", @OA\Items(type="object")),
      *             @OA\Property(property="referral_sources", type="array", description="哪裡知道我們的來源種類", @OA\Items(type="object")),
      *             @OA\Property(property="learning_langs", type="array", description="欲學習的語言別", @OA\Items(type="object")),
@@ -866,6 +907,10 @@ class MemberController extends Controller
             // 相關語言證照
             'certificates' => 'sometimes|array',
             'certificates.*' => 'exists:certificate_types,id',
+
+            // 角色
+            'roles' => 'sometimes|array',
+            'roles.*' => 'exists:roles,id',
         ]);
 
         DB::beginTransaction();
@@ -899,6 +944,11 @@ class MemberController extends Controller
             // 更新關聯資料 (先刪除舊的，再建立新的)
             $this->updateMemberRelations($member, $validated);
 
+            // 更新角色 (sync 會自動處理新增和刪除)
+            if (isset($validated['roles'])) {
+                $member->roles()->sync($validated['roles']);
+            }
+
             DB::commit();
 
             return response()->json([
@@ -906,6 +956,7 @@ class MemberController extends Controller
                 'data' => $member->load([
                     'profile',
                     'contact',
+                    'roles',
                     'knownLangs.langType',
                     'learningLangs.langType',
                     'levels.levelType',
