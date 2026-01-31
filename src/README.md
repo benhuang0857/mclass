@@ -39,3 +39,7 @@ return Application::configure(basePath: dirname(__DIR__))
 - `php artisan db:init-combo`：提供用戶快速生成需要的tables與測試資料
 - `php artisan db:init-necessary`：當有修改`init_necessary.sql`時，可以執行此指令來快速修改tables
 - `php artisan l5-swagger:generate`：生成swagger文件
+
+## 額外
+- Notice = 學校公布欄上的公告（全校都能看）
+- Notification = 寄給個人的通知單（只有特定人收到，有已讀追蹤）

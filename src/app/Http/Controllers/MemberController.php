@@ -33,7 +33,9 @@ class MemberController extends Controller
      *         response=200,
      *         description="Successful operation",
      *         @OA\JsonContent(
-     *             type="array",
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="array",
      *             @OA\Items(
      *                 type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
@@ -124,32 +126,53 @@ class MemberController extends Controller
      *                 @OA\Property(property="schools", type="array", description="Schools attended", @OA\Items(type="object")),
      *                 @OA\Property(property="departments", type="array", description="Departments/Majors", @OA\Items(type="object")),
      *                 @OA\Property(property="certificates", type="array", description="Certificates obtained", @OA\Items(type="object"))
-     *             )
+     *             ))
      *         )
      *     ),
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to retrieve members"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      */
     public function index()
     {
-        $members = Member::with([
-            'profile',
-            'contact',
-            'knownLangs.langType',
-            'learningLangs.langType',
-            'levels.levelType',
-            'referralSources.referralSourceType',
-            'goals.goalType',
-            'purposes.purposeType',
-            'highestEducations.educationType',
-            'schools.schoolType',
-            'departments.departmentType',
-            'certificates.certificateType',
-        ])->get();
-        return response()->json($members);
+        try {
+            $members = Member::with([
+                'profile',
+                'contact',
+                'knownLangs.langType',
+                'learningLangs.langType',
+                'levels.levelType',
+                'referralSources.referralSourceType',
+                'goals.goalType',
+                'purposes.purposeType',
+                'highestEducations.educationType',
+                'schools.schoolType',
+                'departments.departmentType',
+                'certificates.certificateType',
+            ])->get();
+            return response()->json([
+                'success' => true,
+                'data' => $members
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve members',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -213,6 +236,8 @@ class MemberController extends Controller
      *         description="Member created successfully with all relations",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
      *             @OA\Property(property="id", type="integer", example=1),
      *             @OA\Property(property="nickname", type="string", example="JohnDoe"),
      *             @OA\Property(property="account", type="string", example="john.doe"),
@@ -239,9 +264,45 @@ class MemberController extends Controller
      *                 @OA\Property(property="id", type="integer", example=1),
      *                 @OA\Property(property="city", type="string", example="Taipei")
      *             ),
-     *             @OA\Property(property="known_langs", type="array", @OA\Items(ref="#/components/schemas/PivotWithLangType")),
-     *             @OA\Property(property="learning_langs", type="array", @OA\Items(ref="#/components/schemas/PivotWithLangType")),
-     *             @OA\Property(property="levels", type="array", @OA\Items(ref="#/components/schemas/PivotWithLevelType")),
+     *             @OA\Property(property="known_langs", type="array", @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="英文"),
+     *                 @OA\Property(property="slug", type="string", example="english"),
+     *                 @OA\Property(property="note", type="string", example="A english lang type."),
+     *                 @OA\Property(property="sort", type="integer", example=1),
+     *                 @OA\Property(property="status", type="boolean", example=true),
+     *                 @OA\Property(property="pivot", type="object",
+     *                     @OA\Property(property="member_id", type="integer", example=1),
+     *                     @OA\Property(property="lang_type_id", type="integer", example=1)
+     *                 )
+     *             )),
+     *             @OA\Property(property="learning_langs", type="array", @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=2),
+     *                 @OA\Property(property="name", type="string", example="普通話"),
+     *                 @OA\Property(property="slug", type="string", example="mandarin"),
+     *                 @OA\Property(property="note", type="string", example="A mandarin lang type."),
+     *                 @OA\Property(property="sort", type="integer", example=2),
+     *                 @OA\Property(property="status", type="boolean", example=true),
+     *                 @OA\Property(property="pivot", type="object",
+     *                     @OA\Property(property="member_id", type="integer", example=1),
+     *                     @OA\Property(property="lang_type_id", type="integer", example=2)
+     *                 )
+     *             )),
+     *             @OA\Property(property="levels", type="array", @OA\Items(
+     *                 type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="初階"),
+     *                 @OA\Property(property="slug", type="string", example="beginner"),
+     *                 @OA\Property(property="note", type="string", example="A beginner level type."),
+     *                 @OA\Property(property="sort", type="integer", example=1),
+     *                 @OA\Property(property="status", type="boolean", example=true),
+     *                 @OA\Property(property="pivot", type="object",
+     *                     @OA\Property(property="member_id", type="integer", example=1),
+     *                     @OA\Property(property="level_type_id", type="integer", example=1)
+     *                 )
+     *             )),
      *             @OA\Property(property="referral_sources", type="array", @OA\Items(type="object")),
      *             @OA\Property(property="goals", type="array", @OA\Items(type="object")),
      *             @OA\Property(property="purposes", type="array", @OA\Items(type="object")),
@@ -249,7 +310,7 @@ class MemberController extends Controller
      *             @OA\Property(property="schools", type="array", @OA\Items(type="object")),
      *             @OA\Property(property="departments", type="array", @OA\Items(type="object")),
      *             @OA\Property(property="certificates", type="array", @OA\Items(type="object"))
-     *         )
+     *         ))
      *     ),
      *     @OA\Response(
      *         response=422,
@@ -267,6 +328,16 @@ class MemberController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to create member"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      */
@@ -347,23 +418,27 @@ class MemberController extends Controller
 
             DB::commit();
 
-            return response()->json($member->load([
-                'profile',
-                'contact',
-                'knownLangs.langType',
-                'learningLangs.langType',
-                'levels.levelType',
-                'referralSources.referralSourceType',
-                'goals.goalType',
-                'purposes.purposeType',
-                'highestEducations.educationType',
-                'schools.schoolType',
-                'departments.departmentType',
-                'certificates.certificateType',
-            ]), 201);
+            return response()->json([
+                'success' => true,
+                'data' => $member->load([
+                    'profile',
+                    'contact',
+                    'knownLangs.langType',
+                    'learningLangs.langType',
+                    'levels.levelType',
+                    'referralSources.referralSourceType',
+                    'goals.goalType',
+                    'purposes.purposeType',
+                    'highestEducations.educationType',
+                    'schools.schoolType',
+                    'departments.departmentType',
+                    'certificates.certificateType',
+                ])
+            ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
+                'success' => false,
                 'message' => 'Failed to create member',
                 'error' => $e->getMessage()
             ], 500);
@@ -466,6 +541,8 @@ class MemberController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
      *             @OA\Property(property="id", type="integer", example=1),
      *             @OA\Property(property="nickname", type="string", example="JohnDoe"),
      *             @OA\Property(property="account", type="string", example="john.doe"),
@@ -540,14 +617,16 @@ class MemberController extends Controller
      *                 @OA\Property(property="created_at", type="string", format="date-time"),
      *                 @OA\Property(property="updated_at", type="string", format="date-time")
      *             )
-     *         )
+     *         ))
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Member not found",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Member] 1")
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Member not found"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
      *         )
      *     ),
      *     @OA\Response(
@@ -558,21 +637,32 @@ class MemberController extends Controller
      */
     public function show($id)
     {
-        $member = Member::with([
-            'profile',
-            'contact',
-            'knownLangs.langType',
-            'learningLangs.langType',
-            'levels.levelType',
-            'referralSources.referralSourceType',
-            'goals.goalType',
-            'purposes.purposeType',
-            'highestEducations.educationType',
-            'schools.schoolType',
-            'departments.departmentType',
-            'certificates.certificateType',
-        ])->findOrFail($id);
-        return response()->json($member);
+        try {
+            $member = Member::with([
+                'profile',
+                'contact',
+                'knownLangs.langType',
+                'learningLangs.langType',
+                'levels.levelType',
+                'referralSources.referralSourceType',
+                'goals.goalType',
+                'purposes.purposeType',
+                'highestEducations.educationType',
+                'schools.schoolType',
+                'departments.departmentType',
+                'certificates.certificateType',
+            ])->findOrFail($id);
+            return response()->json([
+                'success' => true,
+                'data' => $member
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Member not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
     }
 
     /**
@@ -645,6 +735,8 @@ class MemberController extends Controller
      *         description="Member updated successfully",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
      *             @OA\Property(property="id", type="integer", example=1),
      *             @OA\Property(property="nickname", type="string", example="JaneDoe"),
      *             @OA\Property(property="account", type="string", example="jane.doe"),
@@ -704,14 +796,16 @@ class MemberController extends Controller
      *                     )
      *                 )
      *             )
-     *         )
+     *         ))
      *     ),
      *     @OA\Response(
      *         response=404,
      *         description="Member not found",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Member] 1")
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Member not found"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
      *         )
      *     ),
      *     @OA\Response(
@@ -730,6 +824,16 @@ class MemberController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to update member"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      */
@@ -822,23 +926,27 @@ class MemberController extends Controller
 
             DB::commit();
 
-            return response()->json($member->load([
-                'profile',
-                'contact',
-                'knownLangs.langType',
-                'learningLangs.langType',
-                'levels.levelType',
-                'referralSources.referralSourceType',
-                'goals.goalType',
-                'purposes.purposeType',
-                'highestEducations.educationType',
-                'schools.schoolType',
-                'departments.departmentType',
-                'certificates.certificateType',
-            ]));
+            return response()->json([
+                'success' => true,
+                'data' => $member->load([
+                    'profile',
+                    'contact',
+                    'knownLangs.langType',
+                    'learningLangs.langType',
+                    'levels.levelType',
+                    'referralSources.referralSourceType',
+                    'goals.goalType',
+                    'purposes.purposeType',
+                    'highestEducations.educationType',
+                    'schools.schoolType',
+                    'departments.departmentType',
+                    'certificates.certificateType',
+                ])
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
+                'success' => false,
                 'message' => 'Failed to update member',
                 'error' => $e->getMessage()
             ], 500);
@@ -951,6 +1059,7 @@ class MemberController extends Controller
      *         description="Member deleted successfully",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Member deleted successfully.")
      *         )
      *     ),
@@ -959,7 +1068,9 @@ class MemberController extends Controller
      *         description="Member not found",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="message", type="string", example="No query results for model [App\\Models\\Member] 1")
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Member not found"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
      *         )
      *     ),
      *     @OA\Response(
@@ -968,16 +1079,22 @@ class MemberController extends Controller
      *     ),
      *     @OA\Response(
      *         response=500,
-     *         description="Server error during deletion"
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to delete member"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      */
     public function destroy($id)
     {
-        $member = Member::findOrFail($id);
-
-        DB::beginTransaction();
         try {
+            $member = Member::findOrFail($id);
+
+            DB::beginTransaction();
             // 刪除所有關聯資料 (由於 migration 設定了 onDelete('cascade')，這些會自動刪除)
             // 但為了明確性，我們手動刪除
             $member->knownLangs()->delete();
@@ -999,10 +1116,14 @@ class MemberController extends Controller
             $member->delete();
 
             DB::commit();
-            return response()->json(['message' => 'Member deleted successfully.']);
+            return response()->json([
+                'success' => true,
+                'message' => 'Member deleted successfully.'
+            ]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
+                'success' => false,
                 'message' => 'Failed to delete member',
                 'error' => $e->getMessage()
             ], 500);

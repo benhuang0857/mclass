@@ -53,20 +53,37 @@ class NotificationController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="notifications", type="array",
-     *                 @OA\Items(type="object",
-     *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="type", type="string", example="course_reminder"),
-     *                     @OA\Property(property="title", type="string", example="Course Starting Soon"),
-     *                     @OA\Property(property="content", type="string", example="Your class begins in 1 hour"),
-     *                     @OA\Property(property="is_read", type="boolean", example=false),
-     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-04 09:00:00")
-     *                 )
-     *             ),
-     *             @OA\Property(property="pagination", type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="current_page", type="integer", example=1),
+     *                 @OA\Property(property="data", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="member_id", type="integer", example=1),
+     *                         @OA\Property(property="type", type="string", example="course_reminder"),
+     *                         @OA\Property(property="title", type="string", example="Course Starting Soon"),
+     *                         @OA\Property(property="content", type="string", example="Your class begins in 1 hour"),
+     *                         @OA\Property(property="is_read", type="boolean", example=false),
+     *                         @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-04 09:00:00"),
+     *                         @OA\Property(property="updated_at", type="string", format="date-time", example="2025-12-04 09:00:00")
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="first_page_url", type="string", example="http://localhost/api/notifications?page=1"),
+     *                 @OA\Property(property="from", type="integer", example=1),
      *                 @OA\Property(property="last_page", type="integer", example=5),
+     *                 @OA\Property(property="last_page_url", type="string", example="http://localhost/api/notifications?page=5"),
+     *                 @OA\Property(property="links", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="url", type="string", nullable=true, example="http://localhost/api/notifications?page=1"),
+     *                         @OA\Property(property="label", type="string", example="1"),
+     *                         @OA\Property(property="active", type="boolean", example=true)
+     *                     )
+     *                 ),
+     *                 @OA\Property(property="next_page_url", type="string", nullable=true, example="http://localhost/api/notifications?page=2"),
+     *                 @OA\Property(property="path", type="string", example="http://localhost/api/notifications"),
      *                 @OA\Property(property="per_page", type="integer", example=20),
+     *                 @OA\Property(property="prev_page_url", type="string", nullable=true, example=null),
+     *                 @OA\Property(property="to", type="integer", example=20),
      *                 @OA\Property(property="total", type="integer", example=95)
      *             ),
      *             @OA\Property(property="stats", type="object",
@@ -82,6 +99,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to retrieve notifications"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -89,44 +116,48 @@ class NotificationController extends Controller
      */
     public function index(Request $request)
     {
-        $request->validate([
-            'member_id' => 'required|exists:members,id',
-            'unread_only' => 'sometimes|in:true,false,1,0',
-            'type' => 'string|in:course_reminder,course_change,counseling_reminder,counseling_confirmed,course_follower,counselor_specific,flip_case_assigned,flip_task_assigned,flip_prescription_issued,flip_analysis_completed,flip_cycle_started,flip_case_completed',
-            'limit' => 'integer|min:1|max:100',
-        ]);
+        try {
+            $request->validate([
+                'member_id' => 'required|exists:members,id',
+                'unread_only' => 'sometimes|in:true,false,1,0',
+                'type' => 'string|in:course_reminder,course_change,counseling_reminder,counseling_confirmed,course_follower,counselor_specific,flip_case_assigned,flip_task_assigned,flip_prescription_issued,flip_analysis_completed,flip_cycle_started,flip_case_completed',
+                'limit' => 'integer|min:1|max:100',
+            ]);
 
-        $query = Notification::forMember($request->member_id)
-            ->orderBy('created_at', 'desc');
+            $limit = $request->input('limit', 20);
 
-        // 篩選條件
-        if ($request->boolean('unread_only')) {
-            $query->unread();
+            // 基底 query（給 stats 用）
+            $baseQuery = Notification::forMember($request->member_id);
+
+            // 列表 query
+            $query = (clone $baseQuery)
+                ->orderByDesc('created_at');
+
+            if ($request->boolean('unread_only')) {
+                $query->unread();
+            }
+
+            if ($request->filled('type')) {
+                $query->where('type', $request->type);
+            }
+
+            $notifications = $query->paginate($limit);
+
+            return response()->json([
+                'success' => true,
+                'data' => $notifications,
+                'stats' => [
+                    'total_count' => (clone $baseQuery)->count(),
+                    'unread_count' => (clone $baseQuery)->unread()->count(),
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve notifications',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        if ($request->has('type')) {
-            $query->where('type', $request->type);
-        }
-
-        $limit = $request->input('limit', 20);
-        $notifications = $query->paginate($limit);
-
-        // 統計資料
-        $stats = [
-            'total_count' => Notification::forMember($request->member_id)->count(),
-            'unread_count' => Notification::forMember($request->member_id)->unread()->count(),
-        ];
-
-        return response()->json([
-            'notifications' => $notifications->items(),
-            'pagination' => [
-                'current_page' => $notifications->currentPage(),
-                'last_page' => $notifications->lastPage(),
-                'per_page' => $notifications->perPage(),
-                'total' => $notifications->total(),
-            ],
-            'stats' => $stats,
-        ]);
     }
 
     /**
@@ -149,18 +180,27 @@ class NotificationController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="id", type="integer", example=1),
-     *             @OA\Property(property="member_id", type="integer", example=1),
-     *             @OA\Property(property="type", type="string", example="course_reminder"),
-     *             @OA\Property(property="title", type="string", example="Course Starting Soon"),
-     *             @OA\Property(property="content", type="string", example="Your class begins in 1 hour"),
-     *             @OA\Property(property="is_read", type="boolean", example=false),
-     *             @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-04 09:00:00")
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="member_id", type="integer", example=1),
+     *                 @OA\Property(property="type", type="string", example="course_reminder"),
+     *                 @OA\Property(property="title", type="string", example="Course Starting Soon"),
+     *                 @OA\Property(property="content", type="string", example="Your class begins in 1 hour"),
+     *                 @OA\Property(property="is_read", type="boolean", example=false),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-04 09:00:00")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
      *         response=404,
-     *         description="Notification not found"
+     *         description="Notification not found",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Notification not found"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     ),
      *     @OA\Response(
      *         response=401,
@@ -172,8 +212,19 @@ class NotificationController extends Controller
      */
     public function show($id)
     {
-        $notification = Notification::findOrFail($id);
-        return response()->json($notification);
+        try {
+            $notification = Notification::findOrFail($id);
+            return response()->json([
+                'success' => true,
+                'data' => $notification
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Notification not found',
+                'error' => $e->getMessage(),
+            ], 404);
+        }
     }
 
     /**
@@ -196,8 +247,9 @@ class NotificationController extends Controller
      *         description="Notification marked as read successfully",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Notification marked as read"),
-     *             @OA\Property(property="notification", type="object",
+     *             @OA\Property(property="data", type="object",
      *                 @OA\Property(property="id", type="integer", example=1),
      *                 @OA\Property(property="is_read", type="boolean", example=true)
      *             )
@@ -210,6 +262,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to mark notification as read"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -217,13 +279,22 @@ class NotificationController extends Controller
      */
     public function markAsRead($id)
     {
-        $notification = Notification::findOrFail($id);
-        $notification->markAsRead();
+        try {
+            $notification = Notification::findOrFail($id);
+            $notification->markAsRead();
 
-        return response()->json([
-            'message' => 'Notification marked as read',
-            'notification' => $notification->fresh(),
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Notification marked as read',
+                'data' => $notification->fresh(),
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to mark notification as read',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -248,6 +319,7 @@ class NotificationController extends Controller
      *         description="Notifications marked as read successfully",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Marked 4 notifications as read"),
      *             @OA\Property(property="updated_count", type="integer", example=4)
      *         )
@@ -259,6 +331,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to mark notifications as read"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -272,14 +354,23 @@ class NotificationController extends Controller
             'member_id' => 'required|exists:members,id',
         ]);
 
-        $updated = Notification::whereIn('id', $request->notification_ids)
-            ->where('member_id', $request->member_id)
-            ->update(['is_read' => true]);
+        try {
+            $updated = Notification::whereIn('id', $request->notification_ids)
+                ->where('member_id', $request->member_id)
+                ->update(['is_read' => true]);
 
-        return response()->json([
-            'message' => "Marked {$updated} notifications as read",
-            'updated_count' => $updated,
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => "Marked {$updated} notifications as read",
+                'updated_count' => $updated,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to mark notifications as read',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -303,6 +394,7 @@ class NotificationController extends Controller
      *         description="All notifications marked as read successfully",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Marked all notifications as read"),
      *             @OA\Property(property="updated_count", type="integer", example=12)
      *         )
@@ -314,6 +406,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to mark all notifications as read"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -325,14 +427,23 @@ class NotificationController extends Controller
             'member_id' => 'required|exists:members,id',
         ]);
 
-        $updated = Notification::forMember($request->member_id)
-            ->unread()
-            ->update(['is_read' => true]);
+        try {
+            $updated = Notification::forMember($request->member_id)
+                ->unread()
+                ->update(['is_read' => true]);
 
-        return response()->json([
-            'message' => "Marked all notifications as read",
-            'updated_count' => $updated,
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Marked all notifications as read',
+                'updated_count' => $updated,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to mark all notifications as read',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -355,6 +466,7 @@ class NotificationController extends Controller
      *         description="Notification deleted successfully",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Notification deleted successfully")
      *         )
      *     ),
@@ -365,6 +477,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to delete notification"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -372,12 +494,21 @@ class NotificationController extends Controller
      */
     public function destroy($id)
     {
-        $notification = Notification::findOrFail($id);
-        $notification->delete();
+        try {
+            $notification = Notification::findOrFail($id);
+            $notification->delete();
 
-        return response()->json([
-            'message' => 'Notification deleted successfully',
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Notification deleted successfully',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to delete notification',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -402,9 +533,12 @@ class NotificationController extends Controller
      *         description="Course reminder notifications created",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Course reminder notifications created"),
-     *             @OA\Property(property="course_id", type="integer", example=1),
-     *             @OA\Property(property="minutes_before", type="integer", example=60)
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="course_id", type="integer", example=1),
+     *                 @OA\Property(property="minutes_before", type="integer", example=60)
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -414,6 +548,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to create course reminder notifications"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -426,18 +570,29 @@ class NotificationController extends Controller
             'minutes_before' => 'integer|min:1|max:1440', // 最多提前24小時
         ]);
 
-        $minutesBefore = $request->input('minutes_before', 60);
-        
-        $this->notificationService->createCourseReminderNotifications(
-            $request->course_id, 
-            $minutesBefore
-        );
+        try {
+            $minutesBefore = $request->input('minutes_before', 60);
 
-        return response()->json([
-            'message' => 'Course reminder notifications created',
-            'course_id' => $request->course_id,
-            'minutes_before' => $minutesBefore,
-        ]);
+            $this->notificationService->createCourseReminderNotifications(
+                $request->course_id,
+                $minutesBefore
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Course reminder notifications created',
+                'data' => [
+                    'course_id' => $request->course_id,
+                    'minutes_before' => $minutesBefore,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create course reminder notifications',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -462,9 +617,12 @@ class NotificationController extends Controller
      *         description="Counseling reminder notifications created",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Counseling reminder notifications created"),
-     *             @OA\Property(property="appointment_id", type="integer", example=1),
-     *             @OA\Property(property="minutes_before", type="integer", example=60)
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="appointment_id", type="integer", example=1),
+     *                 @OA\Property(property="minutes_before", type="integer", example=60)
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -474,6 +632,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to create counseling reminder notifications"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -486,18 +654,29 @@ class NotificationController extends Controller
             'minutes_before' => 'integer|min:1|max:1440',
         ]);
 
-        $minutesBefore = $request->input('minutes_before', 60);
-        
-        $this->notificationService->createCounselingReminderNotifications(
-            $request->appointment_id,
-            $minutesBefore
-        );
+        try {
+            $minutesBefore = $request->input('minutes_before', 60);
 
-        return response()->json([
-            'message' => 'Counseling reminder notifications created',
-            'appointment_id' => $request->appointment_id,
-            'minutes_before' => $minutesBefore,
-        ]);
+            $this->notificationService->createCounselingReminderNotifications(
+                $request->appointment_id,
+                $minutesBefore
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Counseling reminder notifications created',
+                'data' => [
+                    'appointment_id' => $request->appointment_id,
+                    'minutes_before' => $minutesBefore,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create counseling reminder notifications',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -520,19 +699,22 @@ class NotificationController extends Controller
      *         description="Successful operation",
      *         @OA\JsonContent(
      *             type="object",
-     *             @OA\Property(property="total_notifications", type="integer", example=95),
-     *             @OA\Property(property="unread_notifications", type="integer", example=12),
-     *             @OA\Property(property="notifications_by_type", type="object",
-     *                 @OA\Property(property="course_reminder", type="integer", example=25),
-     *                 @OA\Property(property="counseling_reminder", type="integer", example=15),
-     *                 @OA\Property(property="flip_case_assigned", type="integer", example=5)
-     *             ),
-     *             @OA\Property(property="recent_notifications", type="array",
-     *                 @OA\Items(type="object",
-     *                     @OA\Property(property="id", type="integer", example=1),
-     *                     @OA\Property(property="type", type="string", example="course_reminder"),
-     *                     @OA\Property(property="title", type="string", example="Course Starting Soon"),
-     *                     @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-04 09:00:00")
+     *             @OA\Property(property="success", type="boolean", example=true),
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="total_notifications", type="integer", example=95),
+     *                 @OA\Property(property="unread_notifications", type="integer", example=12),
+     *                 @OA\Property(property="notifications_by_type", type="object",
+     *                     @OA\Property(property="course_reminder", type="integer", example=25),
+     *                     @OA\Property(property="counseling_reminder", type="integer", example=15),
+     *                     @OA\Property(property="flip_case_assigned", type="integer", example=5)
+     *                 ),
+     *                 @OA\Property(property="recent_notifications", type="array",
+     *                     @OA\Items(type="object",
+     *                         @OA\Property(property="id", type="integer", example=1),
+     *                         @OA\Property(property="type", type="string", example="course_reminder"),
+     *                         @OA\Property(property="title", type="string", example="Course Starting Soon"),
+     *                         @OA\Property(property="created_at", type="string", format="date-time", example="2025-12-04 09:00:00")
+     *                     )
      *                 )
      *             )
      *         )
@@ -544,6 +726,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to retrieve notification stats"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -555,22 +747,33 @@ class NotificationController extends Controller
             'member_id' => 'required|exists:members,id',
         ]);
 
-        $memberId = $request->member_id;
+        try {
+            $memberId = $request->member_id;
 
-        $stats = [
-            'total_notifications' => Notification::forMember($memberId)->count(),
-            'unread_notifications' => Notification::forMember($memberId)->unread()->count(),
-            'notifications_by_type' => Notification::forMember($memberId)
-                ->selectRaw('type, COUNT(*) as count')
-                ->groupBy('type')
-                ->pluck('count', 'type'),
-            'recent_notifications' => Notification::forMember($memberId)
-                ->orderBy('created_at', 'desc')
-                ->limit(5)
-                ->get(),
-        ];
+            $stats = [
+                'total_notifications' => Notification::forMember($memberId)->count(),
+                'unread_notifications' => Notification::forMember($memberId)->unread()->count(),
+                'notifications_by_type' => Notification::forMember($memberId)
+                    ->selectRaw('type, COUNT(*) as count')
+                    ->groupBy('type')
+                    ->pluck('count', 'type'),
+                'recent_notifications' => Notification::forMember($memberId)
+                    ->orderBy('created_at', 'desc')
+                    ->limit(5)
+                    ->get(),
+            ];
 
-        return response()->json($stats);
+            return response()->json([
+                'success' => true,
+                'data' => $stats,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve notification stats',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -594,8 +797,11 @@ class NotificationController extends Controller
      *         description="Counseling confirmation notifications created",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Counseling confirmation notifications created"),
-     *             @OA\Property(property="appointment_id", type="integer", example=1)
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="appointment_id", type="integer", example=1)
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -605,6 +811,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to create counseling confirmation notifications"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -616,14 +832,25 @@ class NotificationController extends Controller
             'appointment_id' => 'required|exists:counseling_appointments,id',
         ]);
 
-        $this->notificationService->createCounselingConfirmationNotifications(
-            $request->appointment_id
-        );
+        try {
+            $this->notificationService->createCounselingConfirmationNotifications(
+                $request->appointment_id
+            );
 
-        return response()->json([
-            'message' => 'Counseling confirmation notifications created',
-            'appointment_id' => $request->appointment_id,
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Counseling confirmation notifications created',
+                'data' => [
+                    'appointment_id' => $request->appointment_id,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create counseling confirmation notifications',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -649,9 +876,12 @@ class NotificationController extends Controller
      *         description="Counseling status change notifications created",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Counseling status change notifications created"),
-     *             @OA\Property(property="appointment_id", type="integer", example=1),
-     *             @OA\Property(property="status_change", type="string", example="pending → confirmed")
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="appointment_id", type="integer", example=1),
+     *                 @OA\Property(property="status_change", type="string", example="pending → confirmed")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -661,6 +891,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to create counseling status change notifications"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -674,17 +914,28 @@ class NotificationController extends Controller
             'new_status' => 'required|string',
         ]);
 
-        $this->notificationService->createCounselingStatusChangeNotifications(
-            $request->appointment_id,
-            $request->old_status,
-            $request->new_status
-        );
+        try {
+            $this->notificationService->createCounselingStatusChangeNotifications(
+                $request->appointment_id,
+                $request->old_status,
+                $request->new_status
+            );
 
-        return response()->json([
-            'message' => 'Counseling status change notifications created',
-            'appointment_id' => $request->appointment_id,
-            'status_change' => "{$request->old_status} → {$request->new_status}",
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Counseling status change notifications created',
+                'data' => [
+                    'appointment_id' => $request->appointment_id,
+                    'status_change' => "{$request->old_status} → {$request->new_status}",
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create counseling status change notifications',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -710,9 +961,12 @@ class NotificationController extends Controller
      *         description="Counseling time change notifications created",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Counseling time change notifications created"),
-     *             @OA\Property(property="appointment_id", type="integer", example=1),
-     *             @OA\Property(property="time_change", type="string", example="2025-12-04 10:00:00 → 2025-12-04 14:00:00")
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="appointment_id", type="integer", example=1),
+     *                 @OA\Property(property="time_change", type="string", example="2025-12-04 10:00:00 → 2025-12-04 14:00:00")
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -722,6 +976,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to create counseling time change notifications"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -735,17 +999,28 @@ class NotificationController extends Controller
             'new_time' => 'required|date',
         ]);
 
-        $this->notificationService->createCounselingTimeChangeNotifications(
-            $request->appointment_id,
-            $request->old_time,
-            $request->new_time
-        );
+        try {
+            $this->notificationService->createCounselingTimeChangeNotifications(
+                $request->appointment_id,
+                $request->old_time,
+                $request->new_time
+            );
 
-        return response()->json([
-            'message' => 'Counseling time change notifications created',
-            'appointment_id' => $request->appointment_id,
-            'time_change' => "{$request->old_time} → {$request->new_time}",
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Counseling time change notifications created',
+                'data' => [
+                    'appointment_id' => $request->appointment_id,
+                    'time_change' => "{$request->old_time} → {$request->new_time}",
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create counseling time change notifications',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -770,9 +1045,12 @@ class NotificationController extends Controller
      *         description="Counselor new service notifications created",
      *         @OA\JsonContent(
      *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=true),
      *             @OA\Property(property="message", type="string", example="Counselor new service notifications created"),
-     *             @OA\Property(property="counselor_id", type="integer", example=2),
-     *             @OA\Property(property="counseling_info_id", type="integer", example=1)
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="counselor_id", type="integer", example=2),
+     *                 @OA\Property(property="counseling_info_id", type="integer", example=1)
+     *             )
      *         )
      *     ),
      *     @OA\Response(
@@ -782,6 +1060,16 @@ class NotificationController extends Controller
      *     @OA\Response(
      *         response=401,
      *         description="Unauthorized"
+     *     ),
+     *     @OA\Response(
+     *         response=500,
+     *         description="Server error",
+     *         @OA\JsonContent(
+     *             type="object",
+     *             @OA\Property(property="success", type="boolean", example=false),
+     *             @OA\Property(property="message", type="string", example="Failed to create counselor new service notifications"),
+     *             @OA\Property(property="error", type="string", example="Error message details")
+     *         )
      *     )
      * )
      *
@@ -794,15 +1082,26 @@ class NotificationController extends Controller
             'counseling_info_id' => 'required|exists:counseling_infos,id',
         ]);
 
-        $this->notificationService->createCounselorNewServiceNotifications(
-            $request->counselor_id,
-            $request->counseling_info_id
-        );
+        try {
+            $this->notificationService->createCounselorNewServiceNotifications(
+                $request->counselor_id,
+                $request->counseling_info_id
+            );
 
-        return response()->json([
-            'message' => 'Counselor new service notifications created',
-            'counselor_id' => $request->counselor_id,
-            'counseling_info_id' => $request->counseling_info_id,
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Counselor new service notifications created',
+                'data' => [
+                    'counselor_id' => $request->counselor_id,
+                    'counseling_info_id' => $request->counseling_info_id,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create counselor new service notifications',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 }
